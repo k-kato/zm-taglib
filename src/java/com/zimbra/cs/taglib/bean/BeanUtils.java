@@ -24,32 +24,28 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.common.calendar.TZIDMapper;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.taglib.ZJspSession;
-import com.zimbra.cs.zclient.ZApptSummary;
 import com.zimbra.cs.zclient.ZEmailAddress;
+import com.zimbra.cs.zclient.ZFolder;
+import com.zimbra.cs.zclient.ZMailbox;
+import com.zimbra.cs.zclient.ZTag;
+import com.zimbra.cs.zclient.ZFilterCondition;
 import com.zimbra.cs.zclient.ZFilterAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZDiscardAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZFileIntoAction;
 import com.zimbra.cs.zclient.ZFilterAction.ZKeepAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZDiscardAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZStopAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZFileIntoAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZTagAction;
 import com.zimbra.cs.zclient.ZFilterAction.ZMarkAction;
 import com.zimbra.cs.zclient.ZFilterAction.ZRedirectAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZStopAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZTagAction;
-import com.zimbra.cs.zclient.ZFilterCondition;
 import com.zimbra.cs.zclient.ZFilterCondition.ZAddressBookCondition;
-import com.zimbra.cs.zclient.ZFilterCondition.ZAttachmentExistsCondition;
 import com.zimbra.cs.zclient.ZFilterCondition.ZBodyCondition;
+import com.zimbra.cs.zclient.ZFilterCondition.ZSizeCondition;
 import com.zimbra.cs.zclient.ZFilterCondition.ZDateCondition;
 import com.zimbra.cs.zclient.ZFilterCondition.ZHeaderCondition;
 import com.zimbra.cs.zclient.ZFilterCondition.ZHeaderExistsCondition;
-import com.zimbra.cs.zclient.ZFilterCondition.ZSizeCondition;
-import com.zimbra.cs.zclient.ZFolder;
-import com.zimbra.cs.zclient.ZFolder.View;
-import com.zimbra.cs.zclient.ZFolder.Color;
-import com.zimbra.cs.zclient.ZMailbox;
-import com.zimbra.cs.zclient.ZTag;
+import com.zimbra.cs.zclient.ZFilterCondition.ZAttachmentExistsCondition;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -63,8 +59,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -194,7 +190,6 @@ public class BeanUtils {
     }
 
     public static String textToHtml(String text) {
-        if (text == null) return null;
         Matcher m = sURL.matcher(text);
         StringBuilder sb = new StringBuilder();
         int lastIndex = 0; // lastIndex we copied from
@@ -299,22 +294,17 @@ public class BeanUtils {
         return df;
     }
 
-    public static String displayMsgDate(PageContext pc, Date msg) throws ServiceException, JspException {
-        ZMailbox mbox = ZJspSession.getZMailbox(pc);
-        TimeZone tz = mbox.getPrefs().getTimeZone();
-        Calendar cal = Calendar.getInstance(tz);
+    public static String displayMsgDate(PageContext pc, Date msg) {
+        GregorianCalendar cal = new GregorianCalendar();
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-
+        cal.set(Calendar.HOUR, 0);
         long nowTime = cal.getTimeInMillis();
         long msgTime = msg.getTime();
         
         if (msgTime >= nowTime) {
             // show hour and return
-            DateFormat df = getDateFormat(pc, DateTimeFmt.DTF_TIME_SHORT);
-            df.setTimeZone(tz);
-            return df.format(msg);
+            return getDateFormat(pc, DateTimeFmt.DTF_TIME_SHORT).format(msg);
         }
         
         long nowYear = cal.get(Calendar.YEAR);
@@ -322,13 +312,9 @@ public class BeanUtils {
         long msgYear = cal.get(Calendar.YEAR);
         
         if (nowYear == msgYear) {
-            DateFormat df = getDateFormat(pc, DateTimeFmt.DTF_DATE_MEDIUM);
-            df.setTimeZone(tz);
-            return df.format(msg);
+            return getDateFormat(pc, DateTimeFmt.DTF_DATE_MEDIUM).format(msg);            
         } else {
-            DateFormat df = getDateFormat(pc, DateTimeFmt.DTF_DATE_SHORT);
-            df.setTimeZone(tz);
-            return df.format(msg);
+            return getDateFormat(pc, DateTimeFmt.DTF_DATE_SHORT).format(msg);                        
         }
     }
     
@@ -396,32 +382,11 @@ public class BeanUtils {
         }
     }
 
-    public static ZTagBean getTag(PageContext pc, String id) throws JspException {
-        try {
-            ZMailbox mbox = ZJspSession.getZMailbox(pc);
-            if (id == null) return null;
-            ZTag tag = mbox.getTagById(id);
-            return tag == null ? null : new ZTagBean(tag);
-        } catch (ServiceException e) {
-            throw new JspTagException(e);
-        }
-    }
-
-
-    public static ZFolderBean getFolder(PageContext pc, String id) throws JspException, ServiceException {
-        ZMailbox mbox = ZJspSession.getZMailbox(pc);
-        if (id == null) return null;
-        ZFolder f = mbox.getFolderById(id);
-        return f == null ? null : new ZFolderBean(f);
-    }
-
     public static String getFolderName(PageContext pc, String id) throws JspException, ServiceException {
         ZMailbox mbox = ZJspSession.getZMailbox(pc);
         if (id == null) return null;
         ZFolder f = mbox.getFolderById(id);
-        if (f == null) return null;
-        String lname = LocaleSupport.getLocalizedMessage(pc, "FOLDER_LABEL_"+f.getId());
-        return (lname == null || lname.startsWith("???")) ? f.getName() : lname;
+        return f == null ? null : f.getName();
     }
 
     private static long sUrlRandSalt = 0;
@@ -553,169 +518,5 @@ public class BeanUtils {
 
     public static ZRedirectAction getRedirect(ZFilterAction action) {
         return isRedirect(action) ? (ZRedirectAction) action : null;
-    }
-
-    public static Calendar getCalendarMidnight(long time, TimeZone tz) {
-        Calendar cal = tz == null ? Calendar.getInstance() : Calendar.getInstance(tz);
-        cal.setTimeInMillis(time);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal;
-    }
-
-    public static Calendar getCalendar(long time, TimeZone tz) {
-        Calendar cal = tz == null ? Calendar.getInstance() : Calendar.getInstance(tz);
-        cal.setTimeInMillis(time);
-        return cal;
-    }
-
-    public static Calendar getToday(TimeZone tz) {
-        Calendar cal = tz == null ? Calendar.getInstance() : Calendar.getInstance(tz);
-        cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal;
-    }
-
-    public static Calendar getTodayHour(int hour, TimeZone tz) {
-        Calendar cal = tz == null ? Calendar.getInstance() : Calendar.getInstance(tz);
-        cal.setTimeInMillis(System.currentTimeMillis());
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal;
-    }
-
-    public static Calendar getFirstDayOfMonthView(java.util.Calendar date, long prefFirstDayOfWeek) {
-         prefFirstDayOfWeek++; // pref goes 0-6, Calendar goes 1-7
-         Calendar cal = Calendar.getInstance(date.getTimeZone());
-         cal.setTimeInMillis(date.getTimeInMillis());
-         cal.set(Calendar.HOUR_OF_DAY, 0);
-         cal.set(Calendar.MINUTE, 0);
-         cal.set(Calendar.SECOND, 0);
-         cal.set(Calendar.MILLISECOND, 0);
-         cal.set(Calendar.DAY_OF_MONTH, 1);
-         int dow = cal.get(Calendar.DAY_OF_WEEK);
-         if (dow == prefFirstDayOfWeek) {
-             cal.add(Calendar.DAY_OF_MONTH, -7);
-         } else {
-             cal.add(Calendar.DAY_OF_MONTH, - ((dow+(7-((int)prefFirstDayOfWeek)))%7));
-         }
-         return cal;
-     }
-
-    public static Calendar getFirstDayOfMultiDayView(java.util.Calendar date, long prefFirstDayOfWeek, String view) {
-
-         Calendar cal = Calendar.getInstance(date.getTimeZone());
-         cal.setTimeInMillis(date.getTimeInMillis());
-         cal.set(Calendar.HOUR_OF_DAY, 0);
-         cal.set(Calendar.MINUTE, 0);
-         cal.set(Calendar.SECOND, 0);
-         cal.set(Calendar.MILLISECOND, 0);
-         int dow = cal.get(Calendar.DAY_OF_WEEK);
-
-        // pref goes 0-6, Calendar goes 1-7
-        if ("workWeek".equalsIgnoreCase(view)) {
-                if (dow == Calendar.SUNDAY)
-                    cal.add(Calendar.DAY_OF_MONTH, 1);
-                else if (dow != Calendar.MONDAY)
-                    cal.add(Calendar.DAY_OF_MONTH, - (dow - Calendar.MONDAY));
-        } else if ("week".equalsIgnoreCase(view)) {
-                if (dow != prefFirstDayOfWeek)
-                    cal.add(Calendar.DAY_OF_MONTH, - (((dow-1) + (7- (int)prefFirstDayOfWeek)) % 7));
-        }
-         return cal;
-     }
-
-    public static void getNextDay(Calendar cal) {
-        cal.add(Calendar.DAY_OF_MONTH, 1);
-    }
-
-    public static Calendar addDay(Calendar cal, int incr) {
-        Calendar other = Calendar.getInstance(cal.getTimeZone());
-        other.setTimeInMillis(cal.getTimeInMillis());
-        other.add(Calendar.DAY_OF_MONTH, incr);
-        return other;
-    }
-
-    public static Calendar addMonth(Calendar cal, int incr) {
-        Calendar other = Calendar.getInstance(cal.getTimeZone());
-        other.setTimeInMillis(cal.getTimeInMillis());
-        other.add(Calendar.MONTH, incr);
-        return other;
-    }
-
-    public static Calendar addYear(Calendar cal, int incr) {
-        Calendar other = Calendar.getInstance(cal.getTimeZone());
-        other.setTimeInMillis(cal.getTimeInMillis());
-        other.add(Calendar.YEAR, incr);
-        return other;
-    }
-
-    public static Calendar relativeDay(Calendar cal, int offset) {
-        Calendar other = Calendar.getInstance(cal.getTimeZone());
-        other.setTimeInMillis(cal.getTimeInMillis());
-        other.add(Calendar.DAY_OF_MONTH, offset);
-        return other;
-    }
-
-    public static boolean isSameDate(Calendar day1, Calendar day2) {
-        return day1.get(Calendar.YEAR) ==  day2.get(Calendar.YEAR) &&
-                day1.get(Calendar.MONTH) ==  day2.get(Calendar.MONTH) &&
-                day1.get(Calendar.DAY_OF_MONTH) ==  day2.get(Calendar.DAY_OF_MONTH);
-    }
-
-    public static boolean isSameMonth(Calendar day1, Calendar day2) {
-        return day1.get(Calendar.YEAR) ==  day2.get(Calendar.YEAR) &&
-                day1.get(Calendar.MONTH) ==  day2.get(Calendar.MONTH);
-
-    }
-
-    public static int getYear(Calendar cal) { return cal.get(Calendar.YEAR); }
-    public static int getMonth(Calendar cal) { return cal.get(Calendar.MONTH); }
-    public static int getDay(Calendar cal) { return cal.get(Calendar.DAY_OF_MONTH); }
-    public static int getDayOfWeek(Calendar cal) { return cal.get(Calendar.DAY_OF_WEEK); }
-
-
-    public static String getCheckedCalendarFolderIds(ZMailboxBean mailbox) throws ServiceException {
-        StringBuilder sb = new StringBuilder();
-        getCheckedCalendarFoldersRecursive(mailbox.getMailbox().getUserRoot(), sb);
-        return sb.toString();
-    }
-
-    private static void getCheckedCalendarFoldersRecursive(ZFolder f, StringBuilder sb) {
-        if (f.getDefaultView() == View.appointment && f.isCheckedInUI()) {
-            if (sb.length() > 0) sb.append(',');
-            sb.append(f.getId());
-        }
-        for (ZFolder child : f.getSubFolders()) {
-            getCheckedCalendarFoldersRecursive(child, sb);
-        }
-    }
-
-    public static boolean hasAnyAppointments(ZApptSummariesBean summary, long start, long end) {
-        for (ZApptSummary appt : summary.getAppointments()) {
-            if (appt.isInRange(start, end)) return true;
-        }
-        return false;
-    }
-
-    private static final long MSECS_PER_MINUTE = 1000*60;
-    private static final long MSECS_PER_HOUR = MSECS_PER_MINUTE * 60;
-
-    public static long MSECS_PER_MINUTE() { return MSECS_PER_MINUTE; }
-    public static long MSECS_PER_HOUR() { return MSECS_PER_HOUR; }
-
-    public static String getWindowsId(TimeZone tz) {
-        return TZIDMapper.toWindows(tz.getID());
-    }
-
-    public static String getFolderStyleColor(String color, String view) throws ServiceException {
-        return ZFolderBean.getStyleColor(Color.fromString(color), View.fromString(view));
     }
 }

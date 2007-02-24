@@ -163,8 +163,6 @@ public class SearchContext {
     }
     
     public ZSearchHitBean getCurrentItem() {
-        if (mResult == null || mResult.getHits() == null)
-            return null;
         int size = mResult.getHits().size();
         if (mItemIndex >= 0 && mItemIndex < size)
             return mResult.getHits().get(mItemIndex);
