@@ -46,6 +46,7 @@ import com.zimbra.cs.zclient.ZFilterCondition.ZDateCondition;
 import com.zimbra.cs.zclient.ZFilterCondition.ZHeaderCondition;
 import com.zimbra.cs.zclient.ZFilterCondition.ZHeaderExistsCondition;
 import com.zimbra.cs.zclient.ZFilterCondition.ZAttachmentExistsCondition;
+import com.zimbra.cs.zclient.ZFolder.Color;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -61,6 +62,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -519,5 +521,9 @@ public class BeanUtils {
 
     public static ZRedirectAction getRedirect(ZFilterAction action) {
         return isRedirect(action) ? (ZRedirectAction) action : null;
+    }
+
+    public static boolean actionSet(Map param, String action) {
+        return param.containsKey(action) || param.containsKey(action+".x");
     }
 }
