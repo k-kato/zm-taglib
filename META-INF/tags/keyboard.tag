@@ -63,9 +63,6 @@
             return true;
         }
     }
-    var eatit = function(type, args, obj) {
-
-    }
     var init = function() {
         var kpl1 = new YAHOO.util.KeyListener(document, { keys: keys }, handler); //, YAHOO.util.KeyListener.KEYUP);
         kpl1.enable();
