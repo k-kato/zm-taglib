@@ -3129,6 +3129,12 @@
     </function>
 
     <function>
+        <name>containsAddress</name>
+        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
+        <function-signature>java.lang.Boolean containsAddress(java.util.Set,java.lang.String)</function-signature>
+    </function>
+
+    <function>
         <name>joinLines</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String joinLines(java.lang.String,java.lang.String)</function-signature>
