@@ -108,6 +108,7 @@ public class LoginTag extends ZimbraSimpleTag {
                     options.setNewPassword(mNewPassword);
             }
             options.setUri(mUrl == null ? ZJspSession.getSoapURL(pageContext): mUrl);
+            options.setClientIp(request.getRemoteAddr());
 
             ZMailbox mbox = ZMailbox.getMailbox(options);
             HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();

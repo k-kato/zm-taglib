@@ -299,6 +299,7 @@ public class ZJspSession {
             // see if we can get a mailbox from the auth token
             ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context));
             options.setAuthAuthToken(true);
+            options.setClientIp(context.getRequest().getRemoteAddr());
             ZMailbox mbox = ZMailbox.getMailbox(options);
 
             HttpServletRequest request = (HttpServletRequest) context.getRequest();
