@@ -2,15 +2,16 @@ package com.zimbra.cs.taglib.tag.folder;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.taglib.bean.ZGrantBean;
+import com.zimbra.cs.taglib.bean.ZMimePartBean;
 import com.zimbra.cs.taglib.tag.ZimbraSimpleTag;
 import com.zimbra.cs.zclient.ZEmailAddress;
 import com.zimbra.cs.zclient.ZGrant;
 import com.zimbra.cs.zclient.ZMailbox;
 
-import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.jstl.fmt.LocaleSupport;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,31 +35,67 @@ import java.util.List;
 
 public class UpdateFolderGrantTag extends ZimbraSimpleTag {
 
-    private String mId;
+    private String mFolderId;
+    private String mFolderName;
+    private String mGrantorId;
+    private String mGrantorName;
     private String mUpdateGrantString;
+    private String mVar;
+    
+    public void setFolderId(String id){
+        this.mFolderId = id;
+    }
 
-    public void setId(String id){
-        this.mId = id;
+    public void setVar(String var){
+        this.mVar = var;
     }
 
     public void setUpdateGrantString(String grantString){
         this.mUpdateGrantString = grantString;
     }
 
+    public void setFolderName(String folderName){
+            this.mFolderName = folderName;
+    }
+
+    public void setGrantorId(String grantorId){
+            this.mGrantorId = grantorId;
+    }
+
+    public void setGrantorName(String grantorName){
+            this.mGrantorName = grantorName;
+    }
+
     public void doTag() throws JspException, IOException {
         try {
             ZMailbox mbox = getMailbox();
             ArrayList <ZGrantBean> updateGrants = getGrantsFromString(this.mUpdateGrantString);
+            ArrayList failures = new ArrayList();
             for (ZGrantBean grant : updateGrants) {
-                mbox.modifyFolderGrant(
-                        mId,
-                        grant.getGranteeType(),
-                        grant.getGranteeId(),
-                        grant.getPermissions(),
-                        null);
-                if (grant.getArgs().equalsIgnoreCase("true")) {
-                    sendMail(mbox, grant.getGranteeId());
+                try{
+                    ZMailbox.ZActionResult result =
+                        mbox.modifyFolderGrant(
+                            mFolderId,
+                            grant.getGranteeType(),
+                            grant.getGranteeId(),
+                            grant.getPermissions(),
+                            null);
+                } catch (ServiceException e){
+                    failures.add(grant.getGranteeId());
                 }
+                try{
+                    if (grant.getArgs().equalsIgnoreCase("true")) {
+                        sendMail(mbox, mFolderId, mFolderName,
+                                this.mGrantorName, this.mGrantorId, grant.getGranteeId());
+                    }
+                } catch (ServiceException e){
+                    // eat the mta exceptions here, we probably need to use bulkmailer here, unclear whether that will
+                    // respond in realtime or not.
+                } catch (JspException e){
+                    // eat the mta exceptions here, we probably need to use bulkmailer here, unclear whether that will
+                    // respond in realtime or not.
+                }
+                getJspContext().setAttribute(this.mVar, failures, PageContext.REQUEST_SCOPE);
             }
         } catch (ServiceException e) {
             throw new JspTagException(e);
@@ -84,40 +121,46 @@ public class UpdateFolderGrantTag extends ZimbraSimpleTag {
         return grants;
     }
 
-    public ZMailbox.ZSendMessageResponse sendMail(ZMailbox mbox, String id)
-            throws IOException, JspTagException {
-        try {
-            ZMailbox.ZOutgoingMessage m = getOutgoingMessage(id);
+    public ZMailbox.ZSendMessageResponse sendMail(ZMailbox mbox, String folderId, String folderName,
+                                                  String grantorName, String grantorId,
+                                                  String granteeId)
+            throws ServiceException, JspException {
+            ZMailbox.ZOutgoingMessage m =
+                    getOutgoingMessage(grantorId, grantorName,
+                                       granteeId, folderId, folderName);
 
             ZMailbox.ZSendMessageResponse response = mbox.sendMessage(m, null, true);
+
             return response;
 
-        } catch (ServiceException e) {
-            throw new JspTagException(e.getMessage(), e);
-        }
     }
 
-    private ZMailbox.ZOutgoingMessage getOutgoingMessage(String id) throws ServiceException {
+    private ZMailbox.ZOutgoingMessage getOutgoingMessage(String grantorId, String grantorName,
+                                                         String granteeId, String linkId, String folderName )
+            throws ServiceException, JspException {
 
         List<ZEmailAddress> addrs = new ArrayList<ZEmailAddress>();
-
-        if (id != null && id.length() > 0)
-            addrs.addAll(ZEmailAddress.parseAddresses(id, ZEmailAddress.EMAIL_TYPE_TO));
-
         List<String> messages = null;
-
         List<ZMailbox.ZOutgoingMessage.AttachedMessagePart> attachments = null;
-
         ZMailbox.ZOutgoingMessage m = new ZMailbox.ZOutgoingMessage();
 
+        String subject =
+            LocaleSupport.getLocalizedMessage((PageContext)getJspContext(),
+                                              "calendarAddShareMailSubject", grantorName);
+
+        String acceptShareLink = "/zimbra/y/calendar?action=acceptShare&np=1&nn=" +
+                                 folderName + "&ng=" + grantorId + "&nl=" + linkId;
+        String [] bodyArgs = {grantorName, folderName, acceptShareLink};
+        String body =
+                LocaleSupport.getLocalizedMessage((PageContext)getJspContext(),
+                            "calendarAddShareMailBody", bodyArgs);
+
+        if (granteeId != null && granteeId.length() > 0)
+            addrs.addAll(ZEmailAddress.parseAddresses(granteeId, ZEmailAddress.EMAIL_TYPE_TO));
         m.setAddresses(addrs);
-
-        m.setSubject("Hello Foo");
-
-        m.setMessagePart(new ZMailbox.ZOutgoingMessage.MessagePart("text/html", ""));
-
+        m.setSubject(subject);
+        m.setMessagePart(new ZMailbox.ZOutgoingMessage.MessagePart(ZMimePartBean.CT_TEXT_HTML, body));
         m.setMessageIdsToAttach(messages);
-
         m.setMessagePartsToAttach(attachments);
 
         return m;
