@@ -11,6 +11,35 @@
     <uri>com.zimbra.zm</uri>
 
     <tag>
+        <description>
+            invokes the RocketStat client to increment a counter
+        </description>
+
+        <name>statClient</name>
+
+        <tag-class>com.zimbra.cs.taglib.tag.StatClientTag</tag-class>
+
+        <body-content>empty</body-content>
+
+        <attribute>
+            <description>
+                increment specified stat
+            </description>
+            <name>stat</name>
+            <required>true</required>
+            <type>java.lang.String</type>
+        </attribute>
+	<attribute>
+	    <description>
+  		increment by specified number (default: 1)
+	    </description>
+	    <name>count</name>
+	    <required>false</required>
+	    <type>int</type>
+	</attribute>
+    </tag>
+
+    <tag>
         <description>sends a message</description>
         <name>sendMessage</name>
         <tag-class>com.zimbra.cs.taglib.tag.SendMessageTag</tag-class>
