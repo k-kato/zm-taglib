@@ -1153,6 +1153,16 @@ public class BeanUtils {
         return cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
     }
 
+    public static Calendar getTodayHourMinute(int hour, int minute, TimeZone tz) {
+        Calendar cal = tz == null ? Calendar.getInstance() : Calendar.getInstance(tz);
+        cal.setTimeInMillis(System.currentTimeMillis());
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal;
+    }
+
     /* End Yahoo! code */
 
 	public static String getImagePath(PageContext pc, String relativePath) {
