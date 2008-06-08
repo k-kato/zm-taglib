@@ -6345,19 +6345,7 @@
 		<function-signature>boolean getIsMyCard(javax.servlet.jsp.PageContext,java.lang.String)</function-signature>
 	</function>
 
-	<function>
-        <name>getYFirstDayOfMonthView</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.util.Calendar getYFirstDayOfMonthView(java.util.Calendar,long)</function-signature>
-    </function>
-
-	<function>
-        <name>getNumberOfWeeksOfMonth</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>int getNumberOfWeeksOfMonth(java.util.Calendar)</function-signature>
-    </function>
-
-	<function>
+    <function>
         <name>getImagePath</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String getImagePath(javax.servlet.jsp.PageContext, java.lang.String)</function-signature>
