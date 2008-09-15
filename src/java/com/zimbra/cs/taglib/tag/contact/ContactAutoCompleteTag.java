@@ -244,9 +244,7 @@ public class ContactAutoCompleteTag extends ZimbraSimpleTag {
 
     static class AContactComparator implements Comparator<AContact> {
         public int compare(AContact a, AContact b) {
-            if (a.gal && !b.gal) return 1;
-            else if (!a.gal && b.gal) return -1;
-            else return a.getSortField().compareToIgnoreCase(b.getSortField());
+            return a.getSortField().compareToIgnoreCase(b.getSortField());
         }
     }
 }
