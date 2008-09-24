@@ -244,8 +244,20 @@ public class ZJspSession {
 
     public static String getChangePasswordUrl(PageContext context, String path) {
         HttpServletRequest request = (HttpServletRequest) context.getRequest();
+        
+        try {
+            ZMailbox mbox = getZMailbox(context);
+            String publicUrl = mbox.getAccountInfo(false).getPublicURLBase();
+            if (publicUrl != null)
+                return getRedirect(request, publicUrl, path, null, null);
+        } catch (JspException e) {
+            // fall through to use the Host header
+        } catch (ServiceException e) {
+            // fall through to use the Host header
+        }
+        
         String proto = MODE_HTTP ? PROTO_HTTP : PROTO_HTTPS;
-        return getRedirect(request, proto, request.getServerName(), path, null, null);
+        return getRedirectToHostHeader(request, proto, path, null, null);
     }
 
     private static int[] sAdminPorts = null;
@@ -422,6 +434,20 @@ public class ZJspSession {
         }
     }
 
+    public static ZMailbox getRestMailbox(PageContext context, ZAuthToken authToken, String targetAccountId) throws ServiceException {
+        if (authToken == null) {
+            return null;
+        } else {
+            // see if we can get a mailbox from the auth token
+            ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context));
+            options.setNoSession(true);
+            options.setAuthAuthToken(false);
+            options.setTargetAccount(targetAccountId);
+            options.setTargetAccountBy(Provisioning.AccountBy.id);
+            options.setClientIp(context.getRequest().getRemoteAddr());
+            return ZMailbox.getMailbox(options);
+        }
+    }
 
     public static void setCollapsed(ZFolder folder, HashMap<String,String> expanded) {
         if (!folder.getSubFolders().isEmpty()) {
