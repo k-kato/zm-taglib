@@ -18,11 +18,10 @@ package com.zimbra.cs.taglib.bean;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.zclient.ZMailbox;
+import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.*;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.PartSource;
@@ -31,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 import java.io.UnsupportedEncodingException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -48,13 +46,12 @@ public class ZFileUploaderBean {
     private Map<String,List<String>> mParamValues;
     private Map<String,String> mParams;
 
-    @SuppressWarnings("unchecked")
     public ZFileUploaderBean(PageContext pageContext, ZMailbox mailbox) throws JspTagException, ServiceException {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-        ServletFileUpload upload = getUploader();
+        DiskFileUpload upload = getUploader();
         try {
 
-            mIsUpload = ServletFileUpload.isMultipartContent(req);
+            mIsUpload = DiskFileUpload.isMultipartContent(req);
             if (mIsUpload) {
                 mParamValues = new HashMap<String, List<String>>();
                 mParams = new HashMap<String, String>();
@@ -112,6 +109,7 @@ public class ZFileUploaderBean {
 
     public boolean hasParam(String name) { return mParamValues.get(name) != null; }
 
+    @SuppressWarnings({"EmptyCatchBlock"})
     public long getParamLong(String name, long defaultValue) {
         String v = getParam(name);
         if (v != null)
@@ -119,6 +117,7 @@ public class ZFileUploaderBean {
         return defaultValue;
     }
 
+    @SuppressWarnings({"EmptyCatchBlock"})
     public int getParamInt(String name, int defaultValue) {
         String v = getParam(name);
         if (v != null)
@@ -158,16 +157,15 @@ public class ZFileUploaderBean {
 
     public boolean getIsUpload() { return mIsUpload;}
 
-    private static ServletFileUpload getUploader() {
+    private static DiskFileUpload getUploader() {
         // look up the maximum file size for uploads
         // TODO: get from config,
-        DiskFileItemFactory dfif = new DiskFileItemFactory();
-        ServletFileUpload upload;
-        
-        dfif.setSizeThreshold(32 * 1024);
-        dfif.setRepository(new File(getTempDirectory()));
-        upload = new ServletFileUpload(dfif);
-        upload.setSizeMax(DEFAULT_MAX_SIZE);
+        long maxSize = DEFAULT_MAX_SIZE;
+
+        DiskFileUpload upload = new DiskFileUpload();
+        upload.setSizeThreshold(4096);     // in-memory limit
+        upload.setSizeMax(maxSize);
+        upload.setRepositoryPath(getTempDirectory());
         return upload;
     }
 
