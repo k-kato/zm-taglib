@@ -27,7 +27,7 @@ import com.zimbra.common.soap.VoiceConstants;
 
 import java.util.List;
 
-public class ZFolderBean {
+public class  ZFolderBean {
 
     private ZFolder mFolder;
     private Boolean hasPublicShare;
@@ -169,6 +169,7 @@ public class ZFolderBean {
     public boolean getIsContacts() { return mFolder.getId().equals(ZFolder.ID_CONTACTS); }
     public boolean getIsCalendar() { return mFolder.getId().equals(ZFolder.ID_CALENDAR); }    
     public boolean getIsNotebook() { return mFolder.getId().equals(ZFolder.ID_NOTEBOOK); }    
+    public boolean getIsDocument() { return mFolder.getId().equals(ZFolder.ID_BRIEFCASE); }
     public boolean getIsAutoContacts() { return mFolder.getId().equals(ZFolder.ID_AUTO_CONTACTS); }
 
     public boolean getIsVoiceMailInbox() { return getIsVoiceView() && VoiceConstants.FNAME_VOICEMAILINBOX.equals(mFolder.getName()); } 
@@ -190,7 +191,8 @@ public class ZFolderBean {
     public boolean getIsWikiView() { return mFolder.getDefaultView() == ZFolder.View.wiki; }
     public boolean getIsTaskView() { return mFolder.getDefaultView() == ZFolder.View.task; }
     public boolean getIsVoiceView() { return mFolder.getDefaultView() == ZFolder.View.voice; }
-
+    public boolean getIsDocumentView() { return mFolder.getDefaultView() == ZFolder.View.document; }
+    
     public boolean getIsSystemFolder() { return mFolder.isSystemFolder(); }
     
     public boolean getIsMountPoint() { return mFolder instanceof ZMountpoint; }
@@ -302,7 +304,11 @@ public class ZFolderBean {
         return getIsTaskView() && !(getIsMountPoint() || getRemoteURL() != null);
     }
 
-
+    public boolean getIsDocumentMoveTarget() {
+        //TODO: handle perm check on mountpoint!
+        return getIsDocumentView() && !(getIsMountPoint() || getRemoteURL() != null);
+    }
+    
     public boolean getIsContactCreateTarget() {
         return (getIsContactView()) &&
                 !(getIsDrafts() || getIsMountPoint() || getIsSearchFolder() || getRemoteURL() != null);

@@ -67,6 +67,8 @@ public class ZMailboxBean {
     public ZFolderBean getCalendar() throws ServiceException { return getFolderBeanById(ZFolder.ID_CALENDAR); }
 
     public ZFolderBean getTasks() throws ServiceException { return getFolderBeanById(ZFolder.ID_TASKS); }
+
+    public ZFolderBean getBriefcase() throws ServiceException { return getFolderBeanById(ZFolder.ID_BRIEFCASE); }
     
     public ZFolderBean getContacts() throws ServiceException { return getFolderBeanById(ZFolder.ID_CONTACTS); }
     
@@ -84,7 +86,7 @@ public class ZMailboxBean {
     
     public ZFeatures getFeatures() throws ServiceException { return mMbox.getFeatures(); }
 
-    public boolean getHasTags() throws ServiceException { return !mMbox.getAllTags().isEmpty(); }
+    public boolean getHasTags() throws ServiceException { return mMbox.hasTags(); }
 
     public List<String> getAvailableSkins() throws ServiceException { return mMbox.getAvailableSkins(); }
 
