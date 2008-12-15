@@ -89,6 +89,10 @@ public class ZSearchResultBean {
                     mHits.add(new ZCallHitBean((ZCallHit)hit));
                 } else if (hit instanceof ZTaskHit) {
                     mHits.add(new ZTaskHitBean((ZTaskHit)hit));
+                } else if (hit instanceof ZDocumentHit) {
+                    mHits.add(new ZDocumentHitBean((ZDocumentHit)hit));
+                } else if (hit instanceof ZAppointmentHit) {
+                    mHits.add(new ZAppointmentHitBean((ZAppointmentHit)hit));
                 }
             }
         }
