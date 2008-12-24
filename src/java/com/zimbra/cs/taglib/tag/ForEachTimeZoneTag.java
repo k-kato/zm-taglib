@@ -36,7 +36,7 @@ public class ForEachTimeZoneTag extends ZimbraSimpleTag {
         JspFragment body = getJspBody();
         if (body == null) return;
         JspContext jctxt = getJspContext();
-        Iterator<TZ> zones = TZIDMapper.iterator(true);
+        Iterator<TZ> zones = TZIDMapper.iterator();
         while (zones.hasNext()) {
             TZ tz = zones.next();
             jctxt.setAttribute(mVar, new ZTimeZoneBean(tz));

@@ -21,27 +21,27 @@ import com.zimbra.cs.zclient.ZSearchHit;
 public abstract class ZSearchHitBean {
     
     public enum HitType { conversation, contact, message, voiceMailItem, call, task, briefcase, appointment }
-
+    
     private HitType mHitType;
     private ZSearchHit mHit;
-
+    
     protected ZSearchHitBean(ZSearchHit hit, HitType hitType) {
         mHit = hit;
         mHitType = hitType;
     }
-
+    
     public final String getId() { return mHit.getId(); }
-
+    
     public final String getSortField() { return mHit.getSortField(); }
-
+    
     public final float getScore() { return mHit.getScore(); }
-
+    
     public final String getHitType() { return mHitType.name(); }
 
     public final boolean getIsConversation() { return mHitType == HitType.conversation; }
-
+    
     public final boolean getIsMessage() { return mHitType == HitType.message; }
-
+    
     public final boolean getIsContact() { return mHitType == HitType.contact; }
 
     public final boolean getIsTask() { return mHitType == HitType.task; }
