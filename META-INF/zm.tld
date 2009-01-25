@@ -4769,104 +4769,6 @@
     </tag>
 
     <tag>
-        <description>create a briefcase</description>
-        <name>saveBriefcase</name>
-        <tag-class>com.zimbra.cs.taglib.tag.briefcase.SaveBriefcaseTag</tag-class>
-        <body-content>empty</body-content>
-        <variable>
-            <name-from-attribute>var</name-from-attribute>
-            <variable-class>java.lang.String[]</variable-class>
-            <scope>AT_END</scope>
-        </variable>
-        <attribute>
-            <description>
-                Name of the exported scoped variable for the result.
-            </description>
-            <name>var</name>
-            <required>true</required>
-        </attribute>
-        <attribute>
-              <description>
-                  message compose bean to use.
-              </description>
-              <name>compose</name>
-              <required>false</required>
-              <rtexprvalue>true</rtexprvalue>
-              <type>com.zimbra.cs.taglib.bean.ZMessageComposeBean</type>
-        </attribute>
-        <attribute>
-             <description>destination folder id</description>
-             <name>folderId</name>
-             <required>false</required>
-             <rtexprvalue>true</rtexprvalue>
-             <type>java.lang.String</type>
-        </attribute>
-    </tag>
-
-    <tag>
-        <description>delete(s) item in briefcase</description>
-
-        <name>deleteBriefcase</name>
-
-        <tag-class>com.zimbra.cs.taglib.tag.briefcase.DeleteBriefcaseTag</tag-class>
-
-        <body-content>empty</body-content>
-
-        <variable>
-            <name-from-attribute>var</name-from-attribute>
-            <variable-class>com.zimbra.cs.taglib.bean.ZActionResultBean</variable-class>
-            <scope>AT_END</scope>
-        </variable>
-
-        <attribute>
-            <description>
-                Name of the exported scoped variable to store the ZActionResultBean in.
-            </description>
-            <name>var</name>
-            <required>true</required>
-        </attribute>
-         <attribute>
-             <description>briefcase id(s) to delete</description>
-             <name>id</name>
-             <required>true</required>
-             <rtexprvalue>true</rtexprvalue>
-             <type>java.lang.String</type>
-         </attribute>
-    </tag>
-
-    <tag>
-        <description>get document info</description>
-        <name>getDocument</name>
-        <tag-class>com.zimbra.cs.taglib.tag.briefcase.GetDocumentTag</tag-class>
-        <body-content>empty</body-content>
-        <variable>
-            <name-from-attribute>var</name-from-attribute>
-            <variable-class>com.zimbra.cs.taglib.bean.ZDocumentBean</variable-class>
-            <scope>AT_END</scope>
-        </variable>
-        <attribute>
-            <description>ZMailboxBean object to use</description>
-            <name>box</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>com.zimbra.cs.taglib.bean.ZMailboxBean</type>
-        </attribute>
-        <attribute>
-            <description>
-                Name of the exported scoped variable for the result.
-            </description>
-            <name>var</name>
-            <required>true</required>
-        </attribute>
-        <attribute>
-            <description>document id</description>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-    </tag>
-
-    <tag>
         <description>
             Move an item to a folder.
         </description>
@@ -5860,12 +5762,6 @@
     </function>
 
     <function>
-        <name>truncateFixed</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String truncateFixed(java.lang.String,int,boolean)</function-signature>
-    </function>
-
-    <function>
         <name>joinLines</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String joinLines(java.lang.String,java.lang.String)</function-signature>
@@ -6295,10 +6191,16 @@
         <function-signature>long MSECS_PER_HOUR()</function-signature>
     </function>
 
+    <function>
+        <name>getWindowsId</name>
+        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
+        <function-signature>java.lang.String getWindowsId(java.util.TimeZone)</function-signature>
+    </function>
+
 	<function>
-		<name>getCanonicalId</name>
+		<name>getJavaId</name>
 		<function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-		<function-signature>java.lang.String getCanonicalId(java.util.TimeZone)</function-signature>
+		<function-signature>java.lang.String getJavaId(java.util.TimeZone)</function-signature>
 	</function>
 
     <function>
@@ -6335,6 +6237,12 @@
         <name>isSameTimeZone</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>boolean isSameTimeZone(java.lang.String,java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <name>getCanonicalTimeZoneId</name>
+        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
+        <function-signature>java.lang.String getCanonicalTimeZoneId(java.lang.String)</function-signature>
     </function>
 
     <function>
@@ -6479,19 +6387,7 @@
 		<function-signature>boolean getIsMyCard(javax.servlet.jsp.PageContext,java.lang.String)</function-signature>
 	</function>
 
-	<function>
-        <name>getYFirstDayOfMonthView</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.util.Calendar getYFirstDayOfMonthView(java.util.Calendar,long)</function-signature>
-    </function>
-
-	<function>
-        <name>getNumberOfWeeksOfMonth</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>int getNumberOfWeeksOfMonth(java.util.Calendar)</function-signature>
-    </function>
-
-	<function>
+    <function>
         <name>getImagePath</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String getImagePath(javax.servlet.jsp.PageContext, java.lang.String)</function-signature>

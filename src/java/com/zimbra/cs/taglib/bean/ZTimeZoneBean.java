@@ -26,7 +26,15 @@ public class ZTimeZoneBean {
         mTz = tz;
     }
 
-    public String getId() {
-        return mTz.getID();
+    public String getDisplay() {
+        return mTz.getWindowsID();
     }
+
+    public String getId() {
+        return mTz.getCanonicalID();
+    }
+
+	public String getJavaId() {
+		return mTz.getJavaID();
+	}
 }

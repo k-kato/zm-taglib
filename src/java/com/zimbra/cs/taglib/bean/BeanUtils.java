@@ -271,17 +271,6 @@ public class BeanUtils {
         return text.subSequence(0, length)+(ellipses ? " ..." : "");
     }
 
-    public static String truncateFixed(String text, int length, boolean ellipses) {
-        if (length <= 0) return ellipses ? "..." : "";
-
-        if (text.length() <= length) {
-            return text;
-        }
-        else{
-            return text.subSequence(0, length)+(ellipses ? "..." : "");    
-        }
-    }
-
     public static String displaySize(long size) {
         return displaySize(size, 0);
     }
@@ -877,12 +866,20 @@ public class BeanUtils {
     public static long MSECS_PER_MINUTE() { return MSECS_PER_MINUTE; }
     public static long MSECS_PER_HOUR() { return MSECS_PER_HOUR; }
 
-	public static String getCanonicalId(TimeZone tz) {
-		return TZIDMapper.canonicalize(tz.getID());
+    public static String getWindowsId(TimeZone tz) {
+        return TZIDMapper.toWindows(tz.getID());
+    }
+
+	public static String getJavaId(TimeZone tz) {
+		return TZIDMapper.toJava(tz.getID());
 	}
 
+    public static String getCanonicalTimeZoneId(String id) {
+        return TZIDMapper.canonicalize(id);
+    }
+
     public static TimeZone getTimeZone(String id) {
-        id = TZIDMapper.canonicalize(id);
+        id = TZIDMapper.toJava(id);
         return id == null ? TimeZone.getDefault() : TimeZone.getTimeZone(id);
     }
 
@@ -1224,32 +1221,6 @@ public class BeanUtils {
 		return mbox.getIsMyCard(ids);
 	}
 	
-	/*
-	 * Start Yahoo! code
-	 */
-	public static Calendar getYFirstDayOfMonthView(java.util.Calendar date, long prefFirstDayOfWeek) {
-         prefFirstDayOfWeek++; // pref goes 0-6, Calendar goes 1-7
-         Calendar cal = Calendar.getInstance(date.getTimeZone());
-         cal.setTimeInMillis(date.getTimeInMillis());
-         cal.set(Calendar.HOUR_OF_DAY, 0);
-         cal.set(Calendar.MINUTE, 0);
-         cal.set(Calendar.SECOND, 0);
-         cal.set(Calendar.MILLISECOND, 0);
-         cal.set(Calendar.DAY_OF_MONTH, 1);
-         int dow = cal.get(Calendar.DAY_OF_WEEK);
-         if (dow != prefFirstDayOfWeek) {
-			cal.add(Calendar.DAY_OF_MONTH, - ((dow+(7-((int)prefFirstDayOfWeek)))%7));
-         }
-         return cal;
-    }
-	
-	public static int getNumberOfWeeksOfMonth(java.util.Calendar date) {
-        Calendar cal = (Calendar)date.clone();
-        return cal.getActualMaximum(Calendar.WEEK_OF_MONTH);
-    }
-
-    /* End Yahoo! code */
-
 	public static String getImagePath(PageContext pc, String relativePath) {
 		final String ZIMBRA_IMAGE_SERVERS = "zimbraImageServers";
 		String[] servers = (String[]) pc.getAttribute(ZIMBRA_IMAGE_SERVERS, PageContext.APPLICATION_SCOPE);
