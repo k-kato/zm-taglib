@@ -1034,7 +1034,7 @@ public class ZMessageComposeBean {
 
             String tz = appt.getStart() != null ? appt.getStart().getTimeZoneId() : null;
             setTimeZone(tz == null ? mailbox.getPrefs().getTimeZoneId() : TZIDMapper.canonicalize(tz));
-            TimeZone apptTz = TimeZone.getTimeZone(TZIDMapper.canonicalize(getTimeZone()));
+            TimeZone apptTz = TimeZone.getTimeZone(TZIDMapper.toJava(getTimeZone()));
             if (apptTz != null) 
                 df.setTimeZone(apptTz);
 
@@ -1051,9 +1051,9 @@ public class ZMessageComposeBean {
 
             setFreeBusyStatus(appt.getFreeBusyStatus().name());
             String tz = appt.getStart() != null ? appt.getStart().getTimeZoneId() : null;
-            setTimeZone(appt.isAllDay() ? mailbox.getPrefs().getTimeZoneId() : tz == null ? tz : TZIDMapper.canonicalize(tz)); //paramInit(req, ZComposeUploaderBean.F_timeZone, mailbox.getPrefs().getTimeZonenId()));
+            setTimeZone(appt.isAllDay() ? mailbox.getPrefs().getTimeZoneId() : tz == null ? tz : TZIDMapper.canonicalize(tz)); //paramInit(req, ZComposeUploaderBean.F_timeZone, mailbox.getPrefs().getTimeZoneWindowsId()));
 
-            TimeZone apptTz = TimeZone.getTimeZone((TZIDMapper.canonicalize(getTimeZone())));
+            TimeZone apptTz = TimeZone.getTimeZone((TZIDMapper.toJava(getTimeZone())));
 
             if (appt.isAllDay()) {
                 ZDateTime st = appt.getStart();
@@ -1360,7 +1360,7 @@ public class ZMessageComposeBean {
         if (mFreeBusyStatus != null) comp.setFreeBusyStatus(ZFreeBusyStatus.fromString(mFreeBusyStatus));
 
         if (mTimeZone == null || mTimeZone.length() == 0)
-            mTimeZone = mailbox.getPrefs().getTimeZoneCanonicalId();
+            mTimeZone = mailbox.getPrefs().getTimeZoneWindowsId();
         if (getStartDate() != null && getStartDate().length() > 0)
             comp.setStart(new ZDateTime(getApptStartTime(), mTimeZone));
         if (getEndDate() != null && getEndDate().length() > 0)
@@ -1659,7 +1659,7 @@ da body
     {
         String mod = msg(pc, "apptModifiedStamp");
         TimeZone tz = mailbox.getPrefs().getTimeZone();
-        String tzId = mailbox.getPrefs().getTimeZoneCanonicalId();
+        String tzId = mailbox.getPrefs().getTimeZoneWindowsId();
         
         StringBuilder sb = new StringBuilder();
 
