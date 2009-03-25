@@ -1,7 +1,8 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009 Zimbra, Inc.
+ * Copyright (C) 2006, 2007 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Yahoo! Public License
  * Version 1.0 ("License"); you may not use this file except in
@@ -10,6 +11,7 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.bean;
@@ -168,24 +170,7 @@ public class ZMessageBean {
         }
         return sb.toString();
     }
-     public boolean isIgnored(ZMimePart top){
-        String type = top.getContentType();
-         return (type.equalsIgnoreCase(ZMimePartBean.CT_MULTI_ALT) ||
-			type.equalsIgnoreCase(ZMimePartBean.CT_MULTI_MIXED) ||
-			type.equalsIgnoreCase(ZMimePartBean.CT_MULTI_RELATED) ||
-			type.equalsIgnoreCase(ZMimePartBean.CT_APP_APPLE_DOUBLE) ||
-			type.equalsIgnoreCase(ZMimePartBean.CT_APP_MS_TNEF) ||
-			type.equalsIgnoreCase(ZMimePartBean.CT_APP_MS_TNEF2));
-    }
-    public boolean isRenderable(ZMimePart top){
-        String type = top.getContentType();
-        return (
-                type.equalsIgnoreCase(ZMimePartBean.CT_TEXT_HTML) ||
-			    type.equalsIgnoreCase(ZMimePartBean.CT_TEXT_PLAIN) ||
-                type.equalsIgnoreCase(ZMimePartBean.CT_IMG_GIF) ||
-                type.equalsIgnoreCase(ZMimePartBean.CT_IMG_JPEG) ||
-                type.equalsIgnoreCase(ZMimePartBean.CT_IMG_PNG) );
-    }
+
     public synchronized List<ZMimePartBean> getAttachments() {
         if (mAttachments == null) {
             mAttachments = new ArrayList<ZMimePartBean>();
@@ -195,9 +180,9 @@ public class ZMessageBean {
                 for (ZMimePart child: top.getChildren()) {
                     addAttachments(mAttachments, child);
                 }
-                if (mAttachments.isEmpty() && !isIgnored(top) && (!isRenderable(top) || !top.isBody())) {
+                if (mAttachments.isEmpty() && !top.isBody()) {
                     ZMimePartBean bb = new ZMimePartBean(top);
-                    if ((bb.getIsVideo() || bb.getIsImage() || bb.getIsAudio() || bb.getIsApp() || !bb.isBody())) {
+                    if (!bb.isBody() && (bb.getIsVideo() || bb.getIsImage() || bb.getIsAudio() || bb.getIsApp())) {
                         mAttachments.add(bb);
                     }
                 }

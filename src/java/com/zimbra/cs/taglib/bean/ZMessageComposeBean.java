@@ -1,7 +1,8 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009 Zimbra, Inc.
+ * Copyright (C) 2006, 2007 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Yahoo! Public License
  * Version 1.0 ("License"); you may not use this file except in
@@ -10,6 +11,7 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.bean;
@@ -123,8 +125,6 @@ public class ZMessageComposeBean {
     private String mTaskStatus;
     private String mTaskPriority;
     private String mTaskPercentComplete;
-    private String mDescription;
-    private String mDescriptionHtml;
 
     private String mOrigOrganizer;
     private String mRepeatBasicType;
@@ -424,12 +424,6 @@ public class ZMessageComposeBean {
     public String getSendUID() { return mSendUID; }
     public void setSendUID(String uid) { mSendUID = uid; }
 
-    public String getDescription() { return mDescription; }
-    public void setDescription(String desc) { mDescription = desc; }
-
-    public String getDescriptionHtml() { return mDescriptionHtml; }
-    public void setDescriptionHtml(String descHtml) { mDescriptionHtml = descHtml; }
-    
     public String paramInit(HttpServletRequest req, String name, String defaultValue) {
         String value = req.getParameter(name);
         return (value == null || value.length()==0) ? defaultValue : value;
@@ -1040,7 +1034,7 @@ public class ZMessageComposeBean {
 
             String tz = appt.getStart() != null ? appt.getStart().getTimeZoneId() : null;
             setTimeZone(tz == null ? mailbox.getPrefs().getTimeZoneId() : TZIDMapper.canonicalize(tz));
-            TimeZone apptTz = TimeZone.getTimeZone(TZIDMapper.canonicalize(getTimeZone()));
+            TimeZone apptTz = TimeZone.getTimeZone(TZIDMapper.toJava(getTimeZone()));
             if (apptTz != null) 
                 df.setTimeZone(apptTz);
 
@@ -1057,9 +1051,9 @@ public class ZMessageComposeBean {
 
             setFreeBusyStatus(appt.getFreeBusyStatus().name());
             String tz = appt.getStart() != null ? appt.getStart().getTimeZoneId() : null;
-            setTimeZone(appt.isAllDay() ? mailbox.getPrefs().getTimeZoneId() : tz == null ? tz : TZIDMapper.canonicalize(tz)); //paramInit(req, ZComposeUploaderBean.F_timeZone, mailbox.getPrefs().getTimeZonenId()));
+            setTimeZone(appt.isAllDay() ? mailbox.getPrefs().getTimeZoneId() : tz == null ? tz : TZIDMapper.canonicalize(tz)); //paramInit(req, ZComposeUploaderBean.F_timeZone, mailbox.getPrefs().getTimeZoneWindowsId()));
 
-            TimeZone apptTz = TimeZone.getTimeZone((TZIDMapper.canonicalize(getTimeZone())));
+            TimeZone apptTz = TimeZone.getTimeZone((TZIDMapper.toJava(getTimeZone())));
 
             if (appt.isAllDay()) {
                 ZDateTime st = appt.getStart();
@@ -1105,11 +1099,6 @@ public class ZMessageComposeBean {
             }
             initRepeat(appt.getSimpleRecurrence(), startDate, pc, mailbox);
             initReminders(appt.getAlarms());
-        }
-
-        if(appt.getIsNoBlob()) {
-            setDescription(appt.getDescription());
-            setDescriptionHtml(appt.getDescriptionHtml());
         }
     }
 
@@ -1371,7 +1360,7 @@ public class ZMessageComposeBean {
         if (mFreeBusyStatus != null) comp.setFreeBusyStatus(ZFreeBusyStatus.fromString(mFreeBusyStatus));
 
         if (mTimeZone == null || mTimeZone.length() == 0)
-            mTimeZone = mailbox.getPrefs().getTimeZoneCanonicalId();
+            mTimeZone = mailbox.getPrefs().getTimeZoneWindowsId();
         if (getStartDate() != null && getStartDate().length() > 0)
             comp.setStart(new ZDateTime(getApptStartTime(), mTimeZone));
         if (getEndDate() != null && getEndDate().length() > 0)
@@ -1670,7 +1659,7 @@ da body
     {
         String mod = msg(pc, "apptModifiedStamp");
         TimeZone tz = mailbox.getPrefs().getTimeZone();
-        String tzId = mailbox.getPrefs().getTimeZoneCanonicalId();
+        String tzId = mailbox.getPrefs().getTimeZoneWindowsId();
         
         StringBuilder sb = new StringBuilder();
 
