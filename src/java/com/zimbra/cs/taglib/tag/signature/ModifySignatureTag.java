@@ -1,5 +1,6 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2007 Zimbra, Inc.
  * 
@@ -10,6 +11,7 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.tag.signature;
@@ -28,12 +30,12 @@ public class ModifySignatureTag extends ZimbraSimpleTag {
     private String mName;
     private String mValue;
     private String mType = "text/plain";
-    
+
     public void setId(String id) { mId = id; }
     public void setName(String name) { mName = name; }
     public void setValue(String value) { mValue = value; }
     public void setType(String type) { mType = type; }
-    
+
     public void doTag() throws JspException, IOException {
         try {
             getMailbox().modifySignature(new ZSignature(mId, mName, mValue, mType));

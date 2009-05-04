@@ -1,7 +1,8 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009 Zimbra, Inc.
+ * Copyright (C) 2006, 2007 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Yahoo! Public License
  * Version 1.0 ("License"); you may not use this file except in
@@ -10,6 +11,7 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.bean;
@@ -26,7 +28,7 @@ import com.zimbra.cs.zclient.ZSearchFolder;
 
 import java.util.List;
 
-public class  ZFolderBean {
+public class ZFolderBean {
 
     private ZFolder mFolder;
     private Boolean hasPublicShare;
@@ -168,7 +170,6 @@ public class  ZFolderBean {
     public boolean getIsContacts() { return mFolder.getId().equals(ZFolder.ID_CONTACTS); }
     public boolean getIsCalendar() { return mFolder.getId().equals(ZFolder.ID_CALENDAR); }    
     public boolean getIsNotebook() { return mFolder.getId().equals(ZFolder.ID_NOTEBOOK); }    
-    public boolean getIsDocument() { return mFolder.getId().equals(ZFolder.ID_BRIEFCASE); }
     public boolean getIsAutoContacts() { return mFolder.getId().equals(ZFolder.ID_AUTO_CONTACTS); }
 
     public boolean getIsVoiceMailInbox() { return getIsVoiceView() && VoiceConstants.FNAME_VOICEMAILINBOX.equals(mFolder.getName()); } 
@@ -190,8 +191,7 @@ public class  ZFolderBean {
     public boolean getIsWikiView() { return mFolder.getDefaultView() == ZFolder.View.wiki; }
     public boolean getIsTaskView() { return mFolder.getDefaultView() == ZFolder.View.task; }
     public boolean getIsVoiceView() { return mFolder.getDefaultView() == ZFolder.View.voice; }
-    public boolean getIsDocumentView() { return mFolder.getDefaultView() == ZFolder.View.document; }
-    
+
     public boolean getIsSystemFolder() { return mFolder.isSystemFolder(); }
     
     public boolean getIsMountPoint() { return mFolder instanceof ZMountpoint; }
@@ -303,15 +303,6 @@ public class  ZFolderBean {
         return getIsTaskView() && !(getIsMountPoint() || getRemoteURL() != null);
     }
 
-    public boolean getIsDocumentMoveTarget() {
-        //TODO: handle perm check on mountpoint!
-        return getIsDocumentView() && !(getIsMountPoint() || getRemoteURL() != null);
-    }
-
-    public boolean getIsWikiMoveTarget() {
-        //TODO: handle perm check on mountpoint!
-        return getIsWikiView() && !(getIsMountPoint() || getRemoteURL() != null);
-    }
 
     public boolean getIsContactCreateTarget() {
         return (getIsContactView()) &&
@@ -408,68 +399,7 @@ public class  ZFolderBean {
             return "startup/ImgFolder.gif";
         }
     }
-    
-    public String getTypes() { return getIsSearchFolder() ? ((ZSearchFolder) mFolder).getTypes() : null; }
 
-    public String getType(){
-        if (getIsSearchFolder()) {
-            return "SearchFolder";
-        } else if (getIsAppointmentView()) {
-            if (getIsMountPoint()) {
-                return "SharedCalendarFolder";
-            } else {
-                return "CalendarFolder";
-            }
-        } else if (getIsContactView()) {
-            if (getIsMountPoint()) {
-                return "SharedContactsFolder";
-            } else if (getIsAutoContacts()) {
-                return "EmailedContacts";
-            } else {
-                return "ContactsFolder";
-            }
-        } else if (getIsTaskView()) {
-            if (getIsMountPoint()) {
-                return "SharedTaskList";
-            } else {
-                return "TaskList";
-            }
-        } else if (getIsSystemFolder()) {
-            if (getIsInbox())
-                return "Inbox";
-            else if (getIsTrash())
-                return "Trash";
-            else if (getIsSpam())
-                return "SpamFolder";
-            else if (getIsSent())
-                return "SentFolder";
-            else if (getIsDrafts())
-                return "DraftFolder";
-            else
-                return "Folder";
-        } else if (getIsMailView() && getIsFeed()) {
-            return "RSS";
-        } else if (getIsMountPoint()) {
-            return "SharedMailFolder";
-        } else if (getIsVoiceView()) {
-            String name = getName();
-            if (VoiceConstants.FNAME_PLACEDCALLS.equals(name)) {
-                return "PlacedCalls";
-            } else if (VoiceConstants.FNAME_ANSWEREDCALLS.equals(name)) {
-                return "AnsweredCalls";
-            } else if (VoiceConstants.FNAME_MISSEDCALLS.equals(name)) {
-                return "MissedCalls";
-            } else if (VoiceConstants.FNAME_VOICEMAILINBOX.equals(name)) {
-                return "Voicemail";
-            } else if (VoiceConstants.FNAME_TRASH.equals(name)) {
-                return "Trash";
-            }
-            return null;
-        } else {
-            return "Folder";
-        }
-    }
-    
     public Boolean getHasPublicShare(){
         if (this.hasPublicShare == null) {
             this.initShareFlags();

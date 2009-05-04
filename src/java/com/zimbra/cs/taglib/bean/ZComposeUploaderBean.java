@@ -1,7 +1,8 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009 Zimbra, Inc.
+ * Copyright (C) 2006, 2007 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Yahoo! Public License
  * Version 1.0 ("License"); you may not use this file except in
@@ -10,6 +11,7 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.bean;
@@ -17,20 +19,14 @@ package com.zimbra.cs.taglib.bean;
 import com.zimbra.cs.taglib.bean.ZMessageComposeBean.MessageAttachment;
 import com.zimbra.cs.zclient.ZMailbox;
 import com.zimbra.common.service.ServiceException;
-import com.zimbra.common.util.ZimbraLog;
-import com.zimbra.cs.account.Provisioning;
-import com.zimbra.cs.service.FileUploadServlet;
+import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.*;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
-
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,7 +100,6 @@ public class ZComposeUploaderBean {
     public static final String F_actionSend = "actionSend";
     public static final String F_actionSave = "actionSave";
     public static final String F_actionCancel = "actionCancel";
-    public static final String F_actionCancelConfirm = "actionCancelConfirm";
     public static final String F_actionDraft = "actionDraft";
     public static final String F_actionApptCancel = "actionApptCancel";
     public static final String F_actionApptDelete = "actionApptDelete";
@@ -156,9 +151,8 @@ public class ZComposeUploaderBean {
     public static final String F_reminderSendEmail = "reminderSendEmail";
     public static final String F_reminderSendMobile = "reminderSendMobile";
     public static final String F_reminderSendYIM = "reminderSendYIM";
-    public static final String F_limitByFileUploadMaxSize = "lbfums";
-    
-    private static final long DEFAULT_MAX_SIZE = 10 * 1024 * 1024;
+
+    private static final long DEFAULT_MAX_SIZE = 100 * 1024 * 1024;
 
     private boolean mIsUpload;
     private List<FileItem> mItems;
@@ -170,16 +164,12 @@ public class ZComposeUploaderBean {
     private Map<String,List<String>> mParamValues;
     private HashMap<String, String> mOrigRepeatParams;
 
-    @SuppressWarnings("unchecked")
     public ZComposeUploaderBean(PageContext pageContext, ZMailbox mailbox) throws JspTagException, ServiceException {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-
-        //bug:32865
-        boolean limitByFileUploadMaxSize = (req.getParameter(F_limitByFileUploadMaxSize) != null);
-        ServletFileUpload upload = getUploader(limitByFileUploadMaxSize);
-
+        DiskFileUpload upload = getUploader();
         try {
-            mIsUpload = ServletFileUpload.isMultipartContent(req);
+
+            mIsUpload = DiskFileUpload.isMultipartContent(req);
             if (mIsUpload) {
                 mParamValues = new HashMap<String, List<String>>();
                 mOrigRepeatParams = new HashMap<String, String>();
@@ -395,10 +385,12 @@ public class ZComposeUploaderBean {
         if (currentValue != null && currentValue.length() > 1) {
             if (currentValue.charAt(currentValue.length()-1) == ',')
                 return currentValue + " " + newValue;
-            return currentValue + ", " + newValue;
+            else
+                return currentValue + ", " + newValue;
 
+        } else {
+            return newValue;
         }
-        return newValue;
     }
 
     public List<FileItem> getItems() {
@@ -407,6 +399,7 @@ public class ZComposeUploaderBean {
 
     public boolean hasParam(String name) { return mParamValues.get(name) != null; }
 
+    @SuppressWarnings({"EmptyCatchBlock"})
     public long getParamLong(String name, long defaultValue) {
         String v = getParam(name);
         if (v != null)
@@ -414,6 +407,7 @@ public class ZComposeUploaderBean {
         return defaultValue;
     }
 
+    @SuppressWarnings({"EmptyCatchBlock"})
     public int getParamInt(String name, int defaultValue) {
         String v = getParam(name);
         if (v != null)
@@ -457,8 +451,6 @@ public class ZComposeUploaderBean {
 
     public boolean getIsCancel() { return hasParam(F_actionCancel); }
 
-    public boolean getIsCancelConfirm() { return hasParam(F_actionCancelConfirm); }
-
     public boolean getIsApptCancel() { return hasParam(F_actionApptCancel); }
 
     public boolean getIsApptDelete() { return hasParam(F_actionApptDelete); }    
@@ -501,25 +493,15 @@ public class ZComposeUploaderBean {
 
     public String getContactLocation() { return getParam(F_contactLocation); }
     
-    private static ServletFileUpload getUploader(boolean limitByFileUploadMaxSize) {
-        DiskFileItemFactory dfif = new DiskFileItemFactory();
-        ServletFileUpload upload;
-        
-        dfif.setSizeThreshold(32 * 1024);
-        dfif.setRepository(new File(getTempDirectory()));
-        upload = new ServletFileUpload(dfif);
-        try {
-            if(limitByFileUploadMaxSize) {
-                upload.setSizeMax(Provisioning.getInstance().getLocalServer().getLongAttr(Provisioning.A_zimbraFileUploadMaxSize, DEFAULT_MAX_SIZE));
-            } else {
-                upload.setSizeMax(Provisioning.getInstance().getConfig().getLongAttr(Provisioning.A_zimbraMtaMaxMessageSize, DEFAULT_MAX_SIZE));
-            }
-        } catch (ServiceException e) {
-            if (ZimbraLog.webclient.isDebugEnabled()) {
-				ZimbraLog.webclient.debug("unable to read " +
-                        ((limitByFileUploadMaxSize) ? Provisioning.A_zimbraFileUploadMaxSize : Provisioning.A_zimbraMtaMaxMessageSize) + "attribute" + e.getMessage());
-			}
-        }
+    private static DiskFileUpload getUploader() {
+        // look up the maximum file size for uploads
+        // TODO: get from config,
+        long maxSize = DEFAULT_MAX_SIZE;
+
+        DiskFileUpload upload = new DiskFileUpload();
+        upload.setSizeThreshold(4096);     // in-memory limit
+        upload.setSizeMax(maxSize);
+        upload.setRepositoryPath(getTempDirectory());
         return upload;
     }
 
