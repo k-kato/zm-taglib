@@ -16,8 +16,6 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.common.soap.VoiceConstants;
-import com.zimbra.common.util.StringUtil;
 import com.zimbra.cs.zclient.ZFolder;
 import com.zimbra.cs.zclient.ZFolder.Color;
 import com.zimbra.cs.zclient.ZFolder.View;
@@ -25,6 +23,8 @@ import com.zimbra.cs.zclient.ZGrant;
 import com.zimbra.cs.zclient.ZMailbox;
 import com.zimbra.cs.zclient.ZMountpoint;
 import com.zimbra.cs.zclient.ZSearchFolder;
+import com.zimbra.common.soap.VoiceConstants;
+import com.zimbra.common.util.StringUtil;
 
 import java.util.List;
 
@@ -132,7 +132,7 @@ public class ZFolderBean {
      * 
      * @return remote url
      */
-    public String getRemoteURL() { return mFolder.getRemoteURL(); }
+    public String getRemoteURL() { return StringUtil.isNullOrEmpty(mFolder.getRemoteURL()) ? null : mFolder.getRemoteURL(); }
     
     /**
      * for remote folders, the access rights the authenticated user has on the folder.
