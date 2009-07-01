@@ -1,5 +1,6 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2006, 2007 Zimbra, Inc.
  * 
@@ -10,6 +11,7 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.tag;
@@ -131,7 +133,7 @@ public class SendMessageTag extends ZimbraSimpleTag {
         if (mAttachments != null && mAttachments.length() > 0) {
             attachments = new ArrayList<AttachedMessagePart>();
             for (String partName : mAttachments.split(",")) {
-                attachments.add(new AttachedMessagePart(mMessageId, partName, null));
+                attachments.add(new AttachedMessagePart(mMessageId, partName));
             }
         } else {
             attachments = null;

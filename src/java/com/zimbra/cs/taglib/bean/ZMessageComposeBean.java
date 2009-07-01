@@ -1,7 +1,8 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009 Zimbra, Inc.
+ * Copyright (C) 2006, 2007 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Yahoo! Public License
  * Version 1.0 ("License"); you may not use this file except in
@@ -10,6 +11,7 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.bean;
@@ -35,7 +37,6 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartSource;
 
@@ -88,18 +89,6 @@ public class ZMessageComposeBean {
         public String getId() { return mId; }
         public String getSubject() { return mSubject; }
     }
-    public static class DocumentAttachment {
-        private String Id;
-        private String mSubject;
-
-        public DocumentAttachment(String id, String subject) {
-            Id = id;
-            mSubject = subject;
-        }
-
-        public String getId() { return Id; }
-        public String getSubject() { return mSubject; }
-    }
     
     public static String RT_BASIC = "BASIC";
     
@@ -108,7 +97,6 @@ public class ZMessageComposeBean {
     public enum Action { NEW, REPLY, REPLY_ALL, FORWARD, RESEND, DRAFT, APPT_NEW, APPT_EDIT, APPT_CANCEL, INVITE_ACCEPT, INVITE_DECLINE, INVITE_TENTATIVE }
 
     private String mAttendees;
-    private String mResources;
     private String mApptFolderId;
     private String mLocation;
     private String mTimeZone;
@@ -137,9 +125,9 @@ public class ZMessageComposeBean {
     private String mTaskStatus;
     private String mTaskPriority;
     private String mTaskPercentComplete;
-    private String mDescription;
-    private String mDescriptionHtml;
-
+	private String mDescription;
+	private String mDescriptionHtml;
+	
     private String mOrigOrganizer;
     private String mRepeatBasicType;
     private String mRepeatType;
@@ -186,8 +174,7 @@ public class ZMessageComposeBean {
     private String mInReplyTo; // original message-id header
     private String mDraftId; // id of draft we are editting
     private List<MessageAttachment> mMessageAttachments;
-    private List<DocumentAttachment> mDocumentAttachments;
-    private Map<String,String> mCheckedAttachmentNames = new HashMap<String, String>();
+    private Map<String,Boolean> mCheckedAttachmentNames = new HashMap<String, Boolean>();
     private List<ZMimePartBean> mOriginalAttachments;
     private List<FileItem> mFileItems = new ArrayList<FileItem>();
     private String mUploadedAttachmentId;
@@ -203,7 +190,6 @@ public class ZMessageComposeBean {
 
     public ZMessageComposeBean(PageContext pageContext) {
         mMessageAttachments = new ArrayList<MessageAttachment>();
-        mDocumentAttachments = new ArrayList<DocumentAttachment>();
         mOriginalAttachments = new ArrayList<ZMimePartBean>();
         mDateFormat = I18nUtil.getLocalizedMessage(pageContext, "CAL_APPT_EDIT_DATE_FORMAT");
     }
@@ -255,9 +241,6 @@ public class ZMessageComposeBean {
 
     public void setAttendees(String attendees) { mAttendees = attendees; }
     public String getAttendees() { return mAttendees; }
-
-    public void setResources(String resources) { mResources = resources; }
-    public String getResources() { return mResources; }
 
     public void setLocation(String location) { mLocation = location; }
     public String getLocation() { return mLocation; }
@@ -349,8 +332,8 @@ public class ZMessageComposeBean {
     public void setDraftId(String id) { mDraftId = id; }
     public String getDraftId() { return mDraftId; }
 
-    public Map<String,String> getCheckedAttachmentNames() { return mCheckedAttachmentNames; }
-    public void setCheckedAttachmentName(String name,String id) { mCheckedAttachmentNames.put(name,  id); }
+    public Map<String,Boolean> getCheckedAttachmentNames() { return mCheckedAttachmentNames; }
+    public void setCheckedAttachmentName(String name) { mCheckedAttachmentNames.put(name,  true); }
 
     public String getUploadedAttachment() { return mUploadedAttachmentId; }
     public void setUploadedAttachment(String id) { mUploadedAttachmentId = id; }
@@ -364,9 +347,6 @@ public class ZMessageComposeBean {
 
     public void setMessageAttachments(List<MessageAttachment> attachments) { mMessageAttachments = attachments; }
     public List<MessageAttachment> getMessageAttachments() { return mMessageAttachments; }
-
-    public void setDocumentAttachments(List<DocumentAttachment> attachments) { mDocumentAttachments = attachments; }
-    public List<DocumentAttachment> getDocumentAttachments() { return mDocumentAttachments; }
 
     public String getRepeatBasicType() { return mRepeatBasicType; }
     public void setRepeatBasicType(String repeatBasicType) { mRepeatBasicType = repeatBasicType; }
@@ -446,12 +426,12 @@ public class ZMessageComposeBean {
     public String getSendUID() { return mSendUID; }
     public void setSendUID(String uid) { mSendUID = uid; }
 
-    public String getDescription() { return mDescription; }
+	public String getDescription() { return mDescription; }
     public void setDescription(String desc) { mDescription = desc; }
 
     public String getDescriptionHtml() { return mDescriptionHtml; }
     public void setDescriptionHtml(String descHtml) { mDescriptionHtml = descHtml; }
-    
+
     public String paramInit(HttpServletRequest req, String name, String defaultValue) {
         String value = req.getParameter(name);
         return (value == null || value.length()==0) ? defaultValue : value;
@@ -798,9 +778,9 @@ public class ZMessageComposeBean {
 
         if (action == Action.REPLY || action == Action.REPLY_ALL ||
                 action == Action.INVITE_ACCEPT || action == Action.INVITE_DECLINE || action == Action.INVITE_TENTATIVE)
-            replyInclude(msg, content, mailbox.getPrefs(), pc, isText);
+            replyInclude(msg, content, mailbox.getPrefs(), pc);
         else if (action == Action.FORWARD)
-            forwardInclude(msg, content, mailbox.getPrefs(), pc, isText);
+            forwardInclude(msg, content, mailbox.getPrefs(), pc);
         else if (action == Action.NEW && req.getParameter("body") != null)
             content.append(req.getParameter("body"));
 
@@ -987,7 +967,6 @@ public class ZMessageComposeBean {
         setLocation(req.getParameter(ZComposeUploaderBean.F_location));
         setAllDay("1".equals(req.getParameter(ZComposeUploaderBean.F_allDay)));
         setAttendees(req.getParameter(ZComposeUploaderBean.F_attendees));
-        setResources(req.getParameter(ZComposeUploaderBean.F_resources));
         setFreeBusyStatus(paramInit(req, ZComposeUploaderBean.F_freeBusyStatus, ZInvite.ZFreeBusyStatus.B.name()));
         setTimeZone(paramInit(req, ZComposeUploaderBean.F_timeZone, mailbox.getPrefs().getTimeZoneId()));
         setApptFolderId(ZFolder.ID_CALENDAR);
@@ -1042,18 +1021,11 @@ public class ZMessageComposeBean {
 
         if (!appt.getAttendees().isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            StringBuilder rs = new StringBuilder();
             for (ZAttendee attendee : appt.getAttendees()) {
-                if(attendee.getCalendarUserType().isResource()){
-                    if (rs.length() > 0) rs.append(", ");
-                    rs.append(attendee.getEmailAddress().getFullAddress());
-                }else{
-                    if (sb.length() > 0) sb.append(", ");
-                    sb.append(attendee.getEmailAddress().getFullAddress());
-                }
+                if (sb.length() > 0) sb.append(", ");
+                sb.append(attendee.getEmailAddress().getFullAddress());
             }
             setAttendees(sb.toString());
-            setResources(rs.toString());
         }
 
         setClassProp(appt.getClassProp().name());
@@ -1070,7 +1042,7 @@ public class ZMessageComposeBean {
 
             String tz = appt.getStart() != null ? appt.getStart().getTimeZoneId() : null;
             setTimeZone(tz == null ? mailbox.getPrefs().getTimeZoneId() : TZIDMapper.canonicalize(tz));
-            TimeZone apptTz = TimeZone.getTimeZone(TZIDMapper.canonicalize(getTimeZone()));
+            TimeZone apptTz = TimeZone.getTimeZone(TZIDMapper.toJava(getTimeZone()));
             if (apptTz != null) 
                 df.setTimeZone(apptTz);
 
@@ -1087,9 +1059,9 @@ public class ZMessageComposeBean {
 
             setFreeBusyStatus(appt.getFreeBusyStatus().name());
             String tz = appt.getStart() != null ? appt.getStart().getTimeZoneId() : null;
-            setTimeZone(appt.isAllDay() ? mailbox.getPrefs().getTimeZoneId() : tz == null ? tz : TZIDMapper.canonicalize(tz)); //paramInit(req, ZComposeUploaderBean.F_timeZone, mailbox.getPrefs().getTimeZonenId()));
+            setTimeZone(appt.isAllDay() ? mailbox.getPrefs().getTimeZoneId() : tz == null ? tz : TZIDMapper.canonicalize(tz)); //paramInit(req, ZComposeUploaderBean.F_timeZone, mailbox.getPrefs().getTimeZoneWindowsId()));
 
-            TimeZone apptTz = TimeZone.getTimeZone((TZIDMapper.canonicalize(getTimeZone())));
+            TimeZone apptTz = TimeZone.getTimeZone((TZIDMapper.toJava(getTimeZone())));
 
             if (appt.isAllDay()) {
                 ZDateTime st = appt.getStart();
@@ -1136,11 +1108,12 @@ public class ZMessageComposeBean {
             initRepeat(appt.getSimpleRecurrence(), startDate, pc, mailbox);
             initReminders(appt.getAlarms());
         }
+		
+		if(appt.getIsNoBlob()) {
+			setDescription(appt.getDescription());
+			setDescriptionHtml(appt.getDescriptionHtml());
+		}
 
-        if(appt.getIsNoBlob()) {
-            setDescription(appt.getDescription());
-            setDescriptionHtml(appt.getDescriptionHtml());
-        }
     }
 
     private void initReminders(List<ZAlarm> alarms){
@@ -1199,22 +1172,19 @@ public class ZMessageComposeBean {
         return org;
     }
 
-    private void forwardInclude(ZMessageBean msg, StringBuilder content, ZPrefs prefs, PageContext pc, boolean isText) {
+    private void forwardInclude(ZMessageBean msg, StringBuilder content, ZPrefs prefs, PageContext pc) {
         if (prefs.getForwardIncludeAsAttachment()) {
             mMessageAttachments = new ArrayList<MessageAttachment>();
             mMessageAttachments.add(new MessageAttachment(msg.getId(), msg.getSubject()));
         } else if (prefs.getForwardIncludeBody()) {
             content.append(CRLF).append(CRLF).append(I18nUtil.getLocalizedMessage(pc, "ZM_forwardedMessage")).append(CRLF);
-            String qHdr = getQuotedHeaders(msg, pc);
-            if(!isText) { qHdr = BeanUtils.htmlEncode(qHdr); }
-            content.append(qHdr).append(CRLF);
+            content.append(getQuotedHeaders(msg, pc)).append(CRLF);
             ZMimePartBean body = msg.getBody();
             content.append(body == null ? "" : body.getContent());
             content.append(CRLF);
             addAttachments(msg, true);
         } else if (prefs.getForwardIncludeBodyWithPrefx()) {
             String org = getQuotedDisplay(msg);
-            if(!isText) { org = BeanUtils.htmlEncode(getQuotedDisplay(msg)); }
             content.append(CRLF).append(CRLF).append(I18nUtil.getLocalizedMessage(pc, "ZM_forwardPrefix", new Object[] {org})).append(CRLF);
             content.append(getQuotedBody(msg, prefs));
             content.append(CRLF);
@@ -1222,21 +1192,18 @@ public class ZMessageComposeBean {
         }
     }
 
-    private void replyInclude(ZMessageBean msg, StringBuilder content, ZPrefs prefs, PageContext pc, boolean isText) {
+    private void replyInclude(ZMessageBean msg, StringBuilder content, ZPrefs prefs, PageContext pc) {
         if (prefs.getReplyIncludeNone()) {
             // nothing to see, move along
         } else if (prefs.getReplyIncludeBody()) {
             content.append(CRLF).append(CRLF).append(I18nUtil.getLocalizedMessage(pc, "ZM_originalMessage")).append(CRLF);
-            String qHdr = getQuotedHeaders(msg, pc);
-            if(!isText) { qHdr = BeanUtils.htmlEncode(qHdr); }
-            content.append(qHdr).append(CRLF);
+            content.append(getQuotedHeaders(msg, pc)).append(CRLF);
             ZMimePartBean body = msg.getBody();
             content.append(body == null ? "" : body.getContent());
             content.append(CRLF);
             addAttachments(msg, false);
         } else if (prefs.getReplyIncludeBodyWithPrefx()) {
             String org = getQuotedDisplay(msg);
-            if(!isText) { org = BeanUtils.htmlEncode(getQuotedDisplay(msg)); }
             content.append(CRLF).append(CRLF).append(I18nUtil.getLocalizedMessage(pc, "ZM_replyPrefix", new Object[] {org})).append(CRLF);
             content.append(getQuotedBody(msg, prefs));
             content.append(CRLF);
@@ -1254,7 +1221,7 @@ public class ZMessageComposeBean {
         setOrignalAttachments(attachments);
         if (checked) {
             for (ZMimePartBean part : attachments) {
-                setCheckedAttachmentName(part.getPartName(),(part.getContentId() == null || part.getContentId().equals("") ? "true" : part.getContentId()));
+                setCheckedAttachmentName(part.getPartName());
             }
         }
     }
@@ -1387,20 +1354,6 @@ public class ZMessageComposeBean {
     </comp></inv>
 
      */
-    public List<ZEmailAddress> getAttendeesAddrs() throws ServiceException{
-        if (mAttendees != null && mAttendees.length() > 0) {
-            return ZEmailAddress.parseAddresses(mAttendees, ZEmailAddress.EMAIL_TYPE_TO);
-        }
-        return null;
-    }
-
-    public List<ZEmailAddress> getResourcesAddrs() throws ServiceException{
-        if (mResources != null && mResources.length() > 0) {
-            return ZEmailAddress.parseAddresses(mResources, ZEmailAddress.EMAIL_TYPE_TO);
-        }
-        return null;
-    }
-
     public ZInvite toInvite(ZMailbox mailbox, ZMessageBean message) throws ServiceException {
         ZInvite existingInvite = message != null ? message.getInvite() : null;
         ZInvite invite = new ZInvite();
@@ -1421,7 +1374,7 @@ public class ZMessageComposeBean {
         if (mFreeBusyStatus != null) comp.setFreeBusyStatus(ZFreeBusyStatus.fromString(mFreeBusyStatus));
 
         if (mTimeZone == null || mTimeZone.length() == 0)
-            mTimeZone = mailbox.getPrefs().getTimeZoneCanonicalId();
+            mTimeZone = mailbox.getPrefs().getTimeZoneWindowsId();
         if (getStartDate() != null && getStartDate().length() > 0)
             comp.setStart(new ZDateTime(getApptStartTime(), mTimeZone));
         if (getEndDate() != null && getEndDate().length() > 0)
@@ -1459,20 +1412,6 @@ public class ZMessageComposeBean {
                 ZAttendee attendee = new ZAttendee();
                 attendee.setAddress(addr.getAddress());
                 attendee.setRole(ZRole.REQ);
-                attendee.setParticipantStatus(ZParticipantStatus.NE);
-                attendee.setRSVP(true);
-                if (addr.getPersonal() != null) attendee.setPersonalName(addr.getPersonal());
-                comp.getAttendees().add(attendee);
-            }
-        }
-        if (mResources != null && mResources.length() > 0) {
-            List<ZEmailAddress> addrs =
-                    ZEmailAddress.parseAddresses(mResources, ZEmailAddress.EMAIL_TYPE_TO);
-            for (ZEmailAddress addr : addrs) {
-                ZAttendee attendee = new ZAttendee();
-                attendee.setAddress(addr.getAddress());
-                attendee.setRole(ZRole.NON);
-                attendee.setCalendarUserType(ZInvite.ZCalendarUserType.RES);
                 attendee.setParticipantStatus(ZParticipantStatus.NE);
                 attendee.setRSVP(true);
                 if (addr.getPersonal() != null) attendee.setPersonalName(addr.getPersonal());
@@ -1734,7 +1673,7 @@ da body
     {
         String mod = msg(pc, "apptModifiedStamp");
         TimeZone tz = mailbox.getPrefs().getTimeZone();
-        String tzId = mailbox.getPrefs().getTimeZoneCanonicalId();
+        String tzId = mailbox.getPrefs().getTimeZoneWindowsId();
         
         StringBuilder sb = new StringBuilder();
 
@@ -1891,9 +1830,6 @@ da body
         if (mAttendees != null && mAttendees.length() > 0)
             addrs.addAll(ZEmailAddress.parseAddresses(mAttendees, ZEmailAddress.EMAIL_TYPE_TO));
 
-        if (mResources != null && mResources.length() > 0)
-                    addrs.addAll(ZEmailAddress.parseAddresses(mResources, ZEmailAddress.EMAIL_TYPE_TO));
-
         ZOutgoingMessage m = new ZOutgoingMessage();
         
         if (mMessageAttachments != null && mMessageAttachments.size() > 0) {
@@ -1904,20 +1840,14 @@ da body
             m.setMessageIdsToAttach(messages);
         }
 
-        if (mDocumentAttachments != null && mDocumentAttachments.size() > 0) {
-            List<String> docs = new ArrayList<String>();
-            for (DocumentAttachment doc : mDocumentAttachments) {
-                docs.add(doc.getId());
-            }
-            m.setDocIdsToAttach(docs);
-        }
-
         if (mCheckedAttachmentNames != null && mCheckedAttachmentNames.size() > 0) {
             List<AttachedMessagePart> attachments = new ArrayList<AttachedMessagePart>();
-            for (Map.Entry<String,String> entry : mCheckedAttachmentNames.entrySet()) {
-                String mid = (mDraftId != null && mDraftId.length() > 0) ? mDraftId : mMessageId;
-                if (mid != null && mid.length() > 0) {
-                    attachments.add(new AttachedMessagePart(mid, entry.getKey(),(entry.getValue() != null && !entry.getValue().equals("true") ? entry.getValue() : null)));
+            for (Map.Entry<String,Boolean> entry : mCheckedAttachmentNames.entrySet()) {
+                if (entry.getValue()) {
+                    String mid = (mDraftId != null && mDraftId.length() > 0) ? mDraftId : mMessageId;
+                    if (mid != null && mid.length() > 0) {
+                        attachments.add(new AttachedMessagePart(mid, entry.getKey()));
+                    }
                 }
             }
             m.setMessagePartsToAttach(attachments);
@@ -1953,32 +1883,12 @@ da body
         boolean hasText = mContent != null;
 
         if (hasHtml && hasText) {
-            List<AttachedMessagePart> inlineAttachments = m.getInlineMessagePartsToAttach();
-            if(inlineAttachments != null && inlineAttachments.size() > 0){
-                MessagePart html = new MessagePart(ZMimePartBean.CT_TEXT_HTML, mHtmlContent, inlineAttachments);
-            	MessagePart related = new MessagePart(ZMimePartBean.CT_MULTI_RELATED, html);                                
-			 	m.setMessagePart(new MessagePart(ZMimePartBean.CT_MULTI_ALT,
-	                    new MessagePart(ZMimePartBean.CT_TEXT_PLAIN, mContent),
-	                    related)
-	                    );
-            }else{
-				 m.setMessagePart(new MessagePart(ZMimePartBean.CT_MULTI_ALT,
-		                    new MessagePart(ZMimePartBean.CT_TEXT_PLAIN, mContent),
-		                    new MessagePart(ZMimePartBean.CT_TEXT_HTML, mHtmlContent)
-		                    ));
-            }
-
+            m.setMessagePart(new MessagePart(ZMimePartBean.CT_MULTI_ALT,
+                    new MessagePart(ZMimePartBean.CT_TEXT_PLAIN, mContent),
+                    new MessagePart(ZMimePartBean.CT_TEXT_HTML, mHtmlContent)
+                    ));
         } else if (hasHtml) {
-
-            List<AttachedMessagePart> inlineAttachments = m.getInlineMessagePartsToAttach();
-            if(inlineAttachments != null && inlineAttachments.size() > 0){
-
-                MessagePart html = new MessagePart(ZMimePartBean.CT_TEXT_HTML, mContent != null ? mContent : "", inlineAttachments);
-            	MessagePart related = new MessagePart(ZMimePartBean.CT_MULTI_RELATED, html);                                
-			 	m.setMessagePart(new MessagePart(ZMimePartBean.CT_MULTI_ALT,related));
-            }else{
-            	m.setMessagePart(new MessagePart(ZMimePartBean.CT_TEXT_HTML, mContent != null ? mContent : ""));
-			}
+            m.setMessagePart(new MessagePart(ZMimePartBean.CT_TEXT_HTML, mContent != null ? mContent : ""));
         } else {
             m.setMessagePart(new MessagePart(mContentType, mContent != null ? mContent : ""));
         }
@@ -1991,26 +1901,12 @@ da body
             for (FileItem item : mFileItems) {
                 if (item.getSize() > 0) num++;
             }
-            Part[] parts = new Part[num*3];
+            Part[] parts = new Part[num];
             int i=0;
-            int j=0;
             for (FileItem item : mFileItems) {
-                if (item.getSize() > 0 ){
-                    String name = item.getName();
-                    try{
-                        name = new String(item.getName().getBytes("UTF-8"),"UTF-8");
-                    }catch(Exception e){
-                        System.out.println("Failed to get UTF8 name for "+ name);  /* TODO: need logging infra */
-                        e.printStackTrace();
-                        name = item.getName();
-                    }
-
-                    parts[i++] = new StringPart("_charset_", "UTF-8","UTF-8");
-                    parts[i++] = new StringPart("filename"+j++, name,"UTF-8");
-                    parts[i++] = new FilePart(item.getFieldName(), new UploadPartSource(item), item.getContentType(), "UTF-8");
-                }
+                if (item.getSize() > 0 )
+                    parts[i++] = new FilePart(item.getFieldName(), new UploadPartSource(item), item.getContentType(), "utf-8");
             }
-
             try {
                 if(parts.length > 0) {
                     attachmentUploadId = mailbox.uploadAttachments(parts, 1000 * 60);  //TODO get timeout from config

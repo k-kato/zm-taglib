@@ -1,7 +1,8 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009 Zimbra, Inc.
+ * Copyright (C) 2006, 2007 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Yahoo! Public License
  * Version 1.0 ("License"); you may not use this file except in
@@ -10,28 +11,22 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.bean;
 
 import com.zimbra.cs.taglib.bean.ZMessageComposeBean.MessageAttachment;
 import com.zimbra.cs.zclient.ZMailbox;
-import com.zimbra.cs.zclient.ZEmailAddress;
 import com.zimbra.common.service.ServiceException;
-import com.zimbra.common.util.ZimbraLog;
-import com.zimbra.cs.account.Provisioning;
-import com.zimbra.cs.service.FileUploadServlet;
+import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.*;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
-
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +38,6 @@ import java.util.Map.Entry;
 public class ZComposeUploaderBean {
 
     public static final String F_attendees = "attendees";
-    public static final String F_resources = "resources";
     public static final String F_apptFolderId = "apptFolderId";
     public static final String F_location = "location";
     public static final String F_timeZone = "timeZone";
@@ -78,7 +72,6 @@ public class ZComposeUploaderBean {
     public static final String F_subject = "subject";
     public static final String F_priority = "priority";
     public static final String F_messageAttachment = "messageAttachment";
-    public static final String F_documentAttachment = "documentAttachment";
     public static final String F_originalAttachment = "originalAttachment";
     public static final String F_uploadedAttachment = "uploadedAttachment";
     public static final String F_body = "body";
@@ -98,18 +91,15 @@ public class ZComposeUploaderBean {
     public static final String F_addCc = "addCc";
     public static final String F_addBcc = "addBcc";
     public static final String F_addAttendees = "addAttendees";
-    public static final String F_addResources = "addResources";
 
     public static final String F_pendingTo = "pendingTo";
     public static final String F_pendingCc = "pendingCc";
     public static final String F_pendingBcc = "pendingBcc";
     public static final String F_pendingAttendees = "pendingAttendees";
-	public static final String F_pendingResources = "pendingResources";
 
     public static final String F_actionSend = "actionSend";
     public static final String F_actionSave = "actionSave";
     public static final String F_actionCancel = "actionCancel";
-    public static final String F_actionCancelConfirm = "actionCancelConfirm";
     public static final String F_actionDraft = "actionDraft";
     public static final String F_actionApptCancel = "actionApptCancel";
     public static final String F_actionApptDelete = "actionApptDelete";
@@ -161,9 +151,8 @@ public class ZComposeUploaderBean {
     public static final String F_reminderSendEmail = "reminderSendEmail";
     public static final String F_reminderSendMobile = "reminderSendMobile";
     public static final String F_reminderSendYIM = "reminderSendYIM";
-    public static final String F_limitByFileUploadMaxSize = "lbfums";
-    
-    private static final long DEFAULT_MAX_SIZE = 10 * 1024 * 1024;
+
+    private static final long DEFAULT_MAX_SIZE = 100 * 1024 * 1024;
 
     private boolean mIsUpload;
     private List<FileItem> mItems;
@@ -172,21 +161,15 @@ public class ZComposeUploaderBean {
     private String mPendingCc;
     private String mPendingBcc;
     private String mPendingAttendees;
-    private String mPendingResources;
-
     private Map<String,List<String>> mParamValues;
     private HashMap<String, String> mOrigRepeatParams;
 
-    @SuppressWarnings("unchecked")
     public ZComposeUploaderBean(PageContext pageContext, ZMailbox mailbox) throws JspTagException, ServiceException {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-
-        //bug:32865
-        boolean limitByFileUploadMaxSize = (req.getParameter(F_limitByFileUploadMaxSize) != null);
-        ServletFileUpload upload = getUploader(limitByFileUploadMaxSize);
-
+        DiskFileUpload upload = getUploader();
         try {
-            mIsUpload = ServletFileUpload.isMultipartContent(req);
+
+            mIsUpload = DiskFileUpload.isMultipartContent(req);
             if (mIsUpload) {
                 mParamValues = new HashMap<String, List<String>>();
                 mOrigRepeatParams = new HashMap<String, String>();
@@ -207,7 +190,7 @@ public class ZComposeUploaderBean {
 
     private ZMessageComposeBean getComposeBean(PageContext pageContext, List<FileItem> items, ZMailbox mailbox) throws ServiceException {
         ZMessageComposeBean compose = new ZMessageComposeBean(pageContext);
-        StringBuilder addTo = null, addCc = null, addBcc = null, addAttendees = null, addResources = null;
+        StringBuilder addTo = null, addCc = null, addBcc = null, addAttendees = null;
 
         for (FileItem item : items) {
             if (!item.isFormField()) {
@@ -224,22 +207,8 @@ public class ZComposeUploaderBean {
                     String id = i == -1 ? value : value.substring(0, i);
                     String subject = i == -1 ? null : value.substring(i+1);
                     compose.getMessageAttachments().add(new MessageAttachment(id, subject));
-                }else if (name.equals(F_documentAttachment)) {
-                    String[] vals = value.split(",");
-                    for(int i=0;vals != null && i < vals.length; i++){
-                        if(vals[i] == null || vals[i].equals("")) continue;
-                        int j = vals[i].indexOf(':');
-                        String id = j == -1 ? vals[i] : vals[i].substring(0, j);
-                        String subject = j == -1 ? null : vals[i].substring(j+1);
-                        compose.getDocumentAttachments().add(new ZMessageComposeBean.DocumentAttachment(id, subject));
-                    }
                 } else if (name.equals(F_originalAttachment)) {
-                    String[] nameId = value.split(",");
-                    if(nameId.length > 1 ){
-                        compose.setCheckedAttachmentName(nameId[0],nameId[1]);
-                    }else{
-                        compose.setCheckedAttachmentName(nameId[0],null);                        
-                    }
+                    compose.setCheckedAttachmentName(value);
                 } else if (name.equals(F_uploadedAttachment)) {
                     compose.setUploadedAttachment(value);
                 } else if (name.equals(F_addTo)) {
@@ -258,11 +227,7 @@ public class ZComposeUploaderBean {
                     if (addAttendees == null) addAttendees = new StringBuilder();
                     if (addAttendees.length() > 0) addAttendees.append(", ");
                     addAttendees.append(value);
-                } else if (name.equals(F_addResources)) {
-                    if (addResources == null) addResources = new StringBuilder();
-                    if (addResources.length() > 0) addResources.append(", ");
-                    addResources.append(value);
-				} else if (name.equals(F_pendingTo)) {
+                } else if (name.equals(F_pendingTo)) {
                     mPendingTo = value;
                 } else if (name.equals(F_pendingCc)) {
                     mPendingCc = value;
@@ -270,9 +235,7 @@ public class ZComposeUploaderBean {
                     mPendingBcc = value;
                 } else if (name.equals(F_pendingAttendees)) {
                     mPendingAttendees = value;
-                } else if (name.equals(F_pendingResources)) {
-                    mPendingResources = value;
-				} else if (name.startsWith("orig_repeat")) {
+                } else if (name.startsWith("orig_repeat")) {
                     mOrigRepeatParams.put(name, value);
                 } else {
                     // normalize action params from image submits
@@ -331,7 +294,6 @@ public class ZComposeUploaderBean {
         compose.setTaskPercentComplete(getParam(F_taskPercentComplete));
 
         compose.setAttendees(getParam(F_attendees));
-        compose.setResources(getParam(F_resources));
         compose.setInviteId(getParam(F_invId));
         compose.setCompNum(getParam(F_compNum));
         compose.setExceptionInviteId(getParam(F_exInvId));
@@ -394,19 +356,15 @@ public class ZComposeUploaderBean {
             if (mPendingCc != null) compose.setCc(addToList(compose.getCc(), mPendingCc));
             if (mPendingBcc != null) compose.setBcc(addToList(compose.getBcc(), mPendingBcc));
             if (mPendingAttendees != null) compose.setAttendees(addToList(compose.getAttendees(), mPendingAttendees));
-            if (mPendingResources != null) compose.setResources(addToList(compose.getResources(), mPendingResources));
-			if (addTo != null) compose.setTo(addToList(compose.getTo(), addTo.toString()));
+            if (addTo != null) compose.setTo(addToList(compose.getTo(), addTo.toString()));
             if (addCc != null) compose.setCc(addToList(compose.getCc(), addCc.toString()));
             if (addBcc != null) compose.setBcc(addToList(compose.getBcc(), addBcc.toString()));
             if (addAttendees != null) compose.setAttendees(addToList(compose.getAttendees(), addAttendees.toString()));
-			if (addResources != null) compose.setResources(addToList(compose.getResources(), addResources.toString()));
         } else {
             if (addTo != null) mPendingTo = addToList(mPendingTo, addTo.toString());
             if (addCc != null) mPendingCc = addToList(mPendingCc, addCc.toString());
             if (addBcc != null) mPendingBcc = addToList(mPendingBcc, addBcc.toString());
             if (addAttendees != null) mPendingAttendees = addToList(mPendingAttendees, addAttendees.toString());
-			if (addResources != null) mPendingResources = addToList(mPendingResources, addResources.toString());
-
         }
 
         if (getIsRepeatEdit()) {
@@ -427,10 +385,12 @@ public class ZComposeUploaderBean {
         if (currentValue != null && currentValue.length() > 1) {
             if (currentValue.charAt(currentValue.length()-1) == ',')
                 return currentValue + " " + newValue;
-            return currentValue + ", " + newValue;
+            else
+                return currentValue + ", " + newValue;
 
+        } else {
+            return newValue;
         }
-        return newValue;
     }
 
     public List<FileItem> getItems() {
@@ -439,6 +399,7 @@ public class ZComposeUploaderBean {
 
     public boolean hasParam(String name) { return mParamValues.get(name) != null; }
 
+    @SuppressWarnings({"EmptyCatchBlock"})
     public long getParamLong(String name, long defaultValue) {
         String v = getParam(name);
         if (v != null)
@@ -446,6 +407,7 @@ public class ZComposeUploaderBean {
         return defaultValue;
     }
 
+    @SuppressWarnings({"EmptyCatchBlock"})
     public int getParamInt(String name, int defaultValue) {
         String v = getParam(name);
         if (v != null)
@@ -489,8 +451,6 @@ public class ZComposeUploaderBean {
 
     public boolean getIsCancel() { return hasParam(F_actionCancel); }
 
-    public boolean getIsCancelConfirm() { return hasParam(F_actionCancelConfirm); }
-
     public boolean getIsApptCancel() { return hasParam(F_actionApptCancel); }
 
     public boolean getIsApptDelete() { return hasParam(F_actionApptDelete); }    
@@ -531,100 +491,17 @@ public class ZComposeUploaderBean {
 
     public String getPendingAttendees() { return mPendingAttendees; }
 
-    public String getPendingResources() { return mPendingResources; }
-
-    public void setPendingAttendees(String mPendingAttendees) { this.mPendingAttendees = mPendingAttendees; }
-
-    public void setPendingResources(String mPendingresources) { this.mPendingResources = mPendingresources; }
-
     public String getContactLocation() { return getParam(F_contactLocation); }
+    
+    private static DiskFileUpload getUploader() {
+        // look up the maximum file size for uploads
+        // TODO: get from config,
+        long maxSize = DEFAULT_MAX_SIZE;
 
-    public List<ZEmailAddress>  getPendingAttendeesList() {
-        try{
-            if(mPendingAttendees != null && mPendingAttendees.length() > 0){
-                return ZEmailAddress.parseAddresses(mPendingAttendees, ZEmailAddress.EMAIL_TYPE_TO);
-            }
-        }catch (Exception e){
-            ZimbraLog.webclient.debug("Parse attendees failed for:" + mPendingAttendees);
-        }
-        return null;
-    }
-
-    public List<ZEmailAddress>  getPendingResourcesList() {
-        try{
-            if(mPendingResources != null && mPendingResources.length() > 0){
-                return ZEmailAddress.parseAddresses(mPendingResources, ZEmailAddress.EMAIL_TYPE_TO);
-            }
-        }catch (Exception e){
-            ZimbraLog.webclient.debug("Parse resources failed for:" + mPendingResources);
-        }
-        return null;
-    }
-
-    public List<ZEmailAddress>  getAllAttendeesAndResourcesList() {
-        List<ZEmailAddress> l1 = getPendingAttendeesList();
-        List<ZEmailAddress> l2 = getPendingResourcesList();
-        List<ZEmailAddress> l3 = null;
-        List<ZEmailAddress> l4 = null;
-
-        try{
-            l3 = getCompose().getAttendeesAddrs();
-        }catch (ServiceException se ){
-            ZimbraLog.webclient.debug("compose bean getAttendiesAddrs failed");
-        }
-        try{
-            l4 = getCompose().getResourcesAddrs();
-        }catch (ServiceException se ){
-            ZimbraLog.webclient.debug("compose bean getResourcesAddrs failed");            
-        }
-        if(l1 != null){
-            if(l2 != null){
-                l1.addAll(l2);
-            }
-            if(l3 != null){
-                l1.addAll(l3);
-            }
-            if(l4 != null){
-                l1.addAll(l4);
-            }
-            return l1;
-        }else if(l2 != null){
-            if(l3 != null){
-                l2.addAll(l3);
-            }
-            if(l4 != null){
-                l2.addAll(l4);
-            }
-            return l2;
-        }else if(l3 != null){
-            if(l4 != null){
-                l3.addAll(l4);
-            }
-            return l3;
-        }else{
-            return l4;
-        }
-    }
-
-    private static ServletFileUpload getUploader(boolean limitByFileUploadMaxSize) {
-        DiskFileItemFactory dfif = new DiskFileItemFactory();
-        ServletFileUpload upload;
-        
-        dfif.setSizeThreshold(32 * 1024);
-        dfif.setRepository(new File(getTempDirectory()));
-        upload = new ServletFileUpload(dfif);
-        try {
-            if(limitByFileUploadMaxSize) {
-                upload.setSizeMax(Provisioning.getInstance().getLocalServer().getLongAttr(Provisioning.A_zimbraFileUploadMaxSize, DEFAULT_MAX_SIZE));
-            } else {
-                upload.setSizeMax(Provisioning.getInstance().getConfig().getLongAttr(Provisioning.A_zimbraMtaMaxMessageSize, DEFAULT_MAX_SIZE));
-            }
-        } catch (ServiceException e) {
-            if (ZimbraLog.webclient.isDebugEnabled()) {
-				ZimbraLog.webclient.debug("unable to read " +
-                        ((limitByFileUploadMaxSize) ? Provisioning.A_zimbraFileUploadMaxSize : Provisioning.A_zimbraMtaMaxMessageSize) + "attribute" + e.getMessage());
-			}
-        }
+        DiskFileUpload upload = new DiskFileUpload();
+        upload.setSizeThreshold(4096);     // in-memory limit
+        upload.setSizeMax(maxSize);
+        upload.setRepositoryPath(getTempDirectory());
         return upload;
     }
 

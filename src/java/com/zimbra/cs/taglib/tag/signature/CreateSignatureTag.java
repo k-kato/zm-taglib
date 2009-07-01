@@ -1,5 +1,6 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2007 Zimbra, Inc.
  * 
@@ -10,6 +11,7 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.tag.signature;
@@ -29,7 +31,7 @@ public class CreateSignatureTag extends ZimbraSimpleTag {
     private String mVar;
     private String mValue;
     private String mType = "text/plain";
-    
+
     public void setName(String name) { mName = name; }
     public void setValue(String value) { mValue = value; }
     public void setVar(String var) { mVar = var; }
@@ -42,6 +44,7 @@ public class CreateSignatureTag extends ZimbraSimpleTag {
             sig.setType(mType);
             
             String id = getMailbox().createSignature(sig);
+
             getJspContext().setAttribute(mVar, id, PageContext.PAGE_SCOPE);
         } catch (ServiceException e) {
             throw new JspTagException(e);

@@ -1,7 +1,8 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008 Zimbra, Inc.
+ * Copyright (C) 2006, 2007 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Yahoo! Public License
  * Version 1.0 ("License"); you may not use this file except in
@@ -10,13 +11,13 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib;
 
 import com.zimbra.common.auth.ZAuthToken;
 import com.zimbra.common.service.ServiceException;
-import com.zimbra.common.util.RemoteIP;
 import com.zimbra.cs.taglib.bean.BeanUtils;
 import com.zimbra.cs.zclient.ZAuthResult;
 import com.zimbra.cs.zclient.ZFolder;
@@ -87,7 +88,6 @@ public class ZJspSession {
 
     private static final String sAdminUrl = BeanUtils.getEnvString("adminUrl", null);
 
-    private static final RemoteIP.TrustedIPs sTrustedIPs = new RemoteIP.TrustedIPs(BeanUtils.getEnvString("trustedIPs", "").split(" "));
 
     public static boolean secureAuthTokenCookie(HttpServletRequest request) {
         String initMode = request.getParameter(Q_ZINITMODE);
@@ -410,7 +410,7 @@ public class ZJspSession {
         } else {
             // see if we can get a mailbox from the auth token
             ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context));
-            options.setClientIp(getRemoteAddr(context));
+            options.setClientIp(context.getRequest().getRemoteAddr());
 
             //options.setAuthAuthToken(true);
             ZMailbox mbox = ZMailbox.getMailbox(options);
@@ -429,7 +429,7 @@ public class ZJspSession {
             options.setAuthAuthToken(false);
             options.setTargetAccount(targetAccountId);
             options.setTargetAccountBy(Provisioning.AccountBy.id);
-            options.setClientIp(getRemoteAddr(context));
+            options.setClientIp(context.getRequest().getRemoteAddr());
             return ZMailbox.getMailbox(options);
         }
     }
@@ -444,7 +444,7 @@ public class ZJspSession {
             options.setAuthAuthToken(false);
             options.setTargetAccount(targetAccountId);
             options.setTargetAccountBy(Provisioning.AccountBy.id);
-            options.setClientIp(getRemoteAddr(context));
+            options.setClientIp(context.getRequest().getRemoteAddr());
             return ZMailbox.getMailbox(options);
         }
     }
@@ -485,12 +485,6 @@ public class ZJspSession {
         } catch (Exception e) {
             // ignore if the session is already gone
         }
-    }
-    
-    public static String getRemoteAddr(PageContext context) {
-        HttpServletRequest req = (HttpServletRequest)context.getRequest();
-        RemoteIP remoteIp = new RemoteIP(req, sTrustedIPs);
-        return remoteIp.getRequestIP();
     }
 
 }

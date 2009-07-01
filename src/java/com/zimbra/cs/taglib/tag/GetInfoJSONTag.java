@@ -1,7 +1,8 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
+ * 
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2008 Zimbra, Inc.
+ * Copyright (C) 2007 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Yahoo! Public License
  * Version 1.0 ("License"); you may not use this file except in
@@ -10,6 +11,7 @@
  * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * 
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.tag;
@@ -45,7 +47,7 @@ public class GetInfoJSONTag extends ZimbraSimpleTag {
             JspContext ctxt = getJspContext();
             PageContext pageContext = (PageContext) ctxt;
             String url = ZJspSession.getSoapURL(pageContext);
-            String remoteAddr = ZJspSession.getRemoteAddr(pageContext);
+            String remoteAddr = pageContext.getRequest().getRemoteAddr();
             Element e = ZMailbox.getBootstrapJSON(url, remoteAddr, mAuthToken, mDoSearch, mItemsPerPage, mTypes);
 			ctxt.setAttribute(mVar, e.toString(),  PageContext.REQUEST_SCOPE);
         } catch (ServiceException e) {
