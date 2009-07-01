@@ -125,7 +125,9 @@ public class ZMessageComposeBean {
     private String mTaskStatus;
     private String mTaskPriority;
     private String mTaskPercentComplete;
-
+	private String mDescription;
+	private String mDescriptionHtml;
+	
     private String mOrigOrganizer;
     private String mRepeatBasicType;
     private String mRepeatType;
@@ -423,6 +425,12 @@ public class ZMessageComposeBean {
 
     public String getSendUID() { return mSendUID; }
     public void setSendUID(String uid) { mSendUID = uid; }
+
+	public String getDescription() { return mDescription; }
+    public void setDescription(String desc) { mDescription = desc; }
+
+    public String getDescriptionHtml() { return mDescriptionHtml; }
+    public void setDescriptionHtml(String descHtml) { mDescriptionHtml = descHtml; }
 
     public String paramInit(HttpServletRequest req, String name, String defaultValue) {
         String value = req.getParameter(name);
@@ -1100,6 +1108,12 @@ public class ZMessageComposeBean {
             initRepeat(appt.getSimpleRecurrence(), startDate, pc, mailbox);
             initReminders(appt.getAlarms());
         }
+		
+		if(appt.getIsNoBlob()) {
+			setDescription(appt.getDescription());
+			setDescriptionHtml(appt.getDescriptionHtml());
+		}
+
     }
 
     private void initReminders(List<ZAlarm> alarms){
