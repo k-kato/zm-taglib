@@ -30,16 +30,16 @@ public class ZCallFeatureBean {
     }
 
     public boolean getIsActive() {
-		return mFeature.getIsActive();
-	}
+	return mFeature.getIsActive();
+    }
 
     public boolean getIsSubscribed() {
-		return mFeature.getIsSubscribed();
-	}
+	return mFeature.getIsSubscribed();
+    }
 
     public String getName() {
-		return mFeature.getName();
-	}
+	return mFeature.getName();
+    }
 
     protected ZCallFeature getFeature() {
         return mFeature;

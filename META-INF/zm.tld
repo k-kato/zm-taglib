@@ -5555,6 +5555,62 @@
 
     </tag>
 
+  <tag>
+        <description>
+    	    Interface for ZPhone    
+        </description>
+
+        <name>phone</name>
+
+        <tag-class>com.zimbra.cs.taglib.tag.voice.PhoneTag</tag-class>
+
+        <body-content>empty</body-content>
+
+        <variable>
+            <name-from-attribute>var</name-from-attribute>
+            <variable-class>java.lang.Boolean</variable-class>
+            <scope>AT_END</scope>
+        </variable>
+
+        <attribute>
+            <description>
+				Name of the variable that says whether the phone number is valid
+            </description>
+            <name>var</name>
+            <required>false</required>
+        </attribute>
+
+		<attribute>
+            <description>
+                Name of phone account
+            </description>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+		<attribute>
+            <description>
+                Name of the var that will hold the formatted phone number
+            </description>
+            <name>displayVar</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+		<attribute>
+            <description>
+                Name of the var that will hold any error strings
+            </description>
+            <name>errorVar</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
     <tag>
         <description>
             Changes the voice prefs.

@@ -31,6 +31,19 @@ public class ZCallForwardingBean extends ZCallFeatureBean {
         String name = ZPhone.getName(phone);
         getFeature().setData(VoiceConstants.A_FORWARD_TO, name);
     }
+    
+    public int getNumberOfRings() {
+	String rings = getFeature().getData(VoiceConstants.A_NUM_RING_CYCLES);
+	try {
+	    return Integer.parseInt(rings);
+	} catch (NumberFormatException ex) {
+	    return -1;
+	}
+    }
+    
+    public void setNumberOfRings(int rings) {
+	getFeature().setData(VoiceConstants.A_NUM_RING_CYCLES, Integer.toString(rings));
+    }
 
     public String getForwardTo() throws ServiceException {
 		String name = getFeature().getData(VoiceConstants.A_FORWARD_TO);
