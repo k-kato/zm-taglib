@@ -25,29 +25,29 @@ import java.util.ArrayList;
 abstract public class CallFeaturesTagBase extends ZimbraSimpleTag {
 	protected String mVar;
 	protected String mPhone;
-	protected boolean mEmailNotificationActive;
+	protected Boolean mEmailNotificationActive;
 	protected String mEmailNotificationAddress;
 	
 	protected String mAddEmailNotificationaddress;
 	protected String mRemoveEmailNotificationaddress;
 	
-	protected boolean mCallForwardingActive;
+	protected Boolean mCallForwardingActive;
 	protected String mCallForwardingForwardTo;
-	protected boolean mSelectiveCallForwardingActive;
+	protected Boolean mSelectiveCallForwardingActive;
 	protected String mSelectiveCallForwardingForwardTo;
 	protected List<String> mSelectiveCallForwardingForwardFrom;
 	
-	protected boolean mAnonymousCallRejectionActive;
-	protected boolean mSelectiveCallRejectionActive;
+	protected Boolean mAnonymousCallRejectionActive;
+	protected Boolean mSelectiveCallRejectionActive;
 	protected List<String> mSelectiveCallRejectionRejectFrom;
 	
-	protected long mNumberPerPage;
-	protected int mNumberOfRings;
+	protected Long mNumberPerPage;
+	protected Integer mNumberOfRings;
 	
-	protected boolean mPlayDateAndTimeInMsgEnv;
-	protected boolean mPlayCallerNameInMsgEnv;
-	protected boolean mAutoPlayNewMsgs;
-	protected boolean mSkipPinEntry;
+	protected Boolean mPlayDateAndTimeInMsgEnv;
+	protected Boolean mPlayCallerNameInMsgEnv;
+	protected Boolean mAutoPlayNewMsgs;
+	protected Boolean mSkipPinEntry;
 	protected String mPromptLevel;
 	protected String mAnsweringLocale;
 	protected String mUserLocale;	
@@ -79,8 +79,20 @@ abstract public class CallFeaturesTagBase extends ZimbraSimpleTag {
 		}
 	}
 	
-	public void setNumberPerPage(String number) { mNumberPerPage = Long.parseLong(number); }
-	public void setNumberOfRings(String rings) { mNumberOfRings = Integer.parseInt(rings); }
+	public void setNumberPerPage(String number) {
+	    try {
+		mNumberPerPage = Long.decode(number);
+	    } catch (NumberFormatException ex) {
+		mNumberPerPage = null;
+	    }
+	}
+	public void setNumberOfRings(String rings) {
+	    try {
+		mNumberOfRings = Integer.decode(rings);
+	    } catch (NumberFormatException ex) {
+		mNumberOfRings = null;
+	    }
+	}
 	
 	public void setPromptLevel(String level) { mPromptLevel = level; }
 	public void setAnsweringLocale(String locale) { mAnsweringLocale = locale; }
@@ -91,7 +103,7 @@ abstract public class CallFeaturesTagBase extends ZimbraSimpleTag {
 	public void setSkipPinEntry(String skip) { mSkipPinEntry = booleanValue(skip); }
 	public void setRequirePinEntry(String require) { mSkipPinEntry = !booleanValue(require); }
 
-	private boolean booleanValue(String value) {
-		return "TRUE".equalsIgnoreCase(value) || "on".equalsIgnoreCase(value);
+	private Boolean booleanValue(String value) {
+		return Boolean.valueOf("TRUE".equalsIgnoreCase(value) || "on".equalsIgnoreCase(value));
 	}
 }

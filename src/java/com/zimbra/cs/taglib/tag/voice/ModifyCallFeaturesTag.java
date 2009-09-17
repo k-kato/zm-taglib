@@ -47,64 +47,70 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
             ZVoiceMailPrefsBean voiceMailPrefs = oldFeatures.getVoiceMailPrefs();
 	    ZCallForwardingBean callForwardingNoAnswer = oldFeatures.getCallForwardingNoAnswer();
 	    
-            if ((!mEmailNotificationActive && (voiceMailPrefs.getEmailNotificationAddress().length() > 0)) || !voiceMailPrefs.getEmailNotificationAddress().equalsIgnoreCase(mEmailNotificationAddress)) {
-                String address = mEmailNotificationActive ? mEmailNotificationAddress : "";
+            if (mEmailNotificationActive!=null && mEmailNotificationAddress!=null && 
+		((!mEmailNotificationActive.booleanValue() && 
+		(voiceMailPrefs.getEmailNotificationAddress() != null && voiceMailPrefs.getEmailNotificationAddress().length() > 0)) || !voiceMailPrefs.getEmailNotificationAddress().equalsIgnoreCase(mEmailNotificationAddress))) {
+                String address = mEmailNotificationActive.booleanValue() ? mEmailNotificationAddress : "";
                 newFeatures.getVoiceMailPrefs().setEmailNotificationAddress(address);
             }
 	    
 	    ZCallForwardingBean callForwarding = oldFeatures.getCallForwardingAll();
-            if (callForwarding.getIsActive() != mCallForwardingActive || !callForwarding.getForwardTo().equals(mCallForwardingForwardTo)) {
+            if (mCallForwardingActive!=null && mCallForwardingForwardTo!=null && 
+		(callForwarding.getIsActive() != mCallForwardingActive.booleanValue() || !callForwarding.getForwardTo().equals(mCallForwardingForwardTo))) {
                 ZCallForwardingBean newCallForwarding = newFeatures.getCallForwardingAll();
-                newCallForwarding.setIsActive(mCallForwardingActive);
+                newCallForwarding.setIsActive(mCallForwardingActive.booleanValue());
                 newCallForwarding.setForwardTo(mCallForwardingForwardTo);
             }
 	    
 	    ZSelectiveCallForwardingBean selectiveCallForwarding = oldFeatures.getSelectiveCallForwarding();
-	    if (selectiveCallForwarding.getIsActive() != mSelectiveCallForwardingActive || !selectiveCallForwarding.getForwardTo().equals(mSelectiveCallForwardingForwardTo) || !selectiveCallForwarding.getForwardFrom().equals(mSelectiveCallForwardingForwardFrom)) {
+	    if (mSelectiveCallForwardingActive!=null && mSelectiveCallForwardingForwardTo!=null && mSelectiveCallForwardingForwardFrom!=null && 
+		(selectiveCallForwarding.getIsActive() != mSelectiveCallForwardingActive.booleanValue() || !selectiveCallForwarding.getForwardTo().equals(mSelectiveCallForwardingForwardTo) || !selectiveCallForwarding.getForwardFrom().equals(mSelectiveCallForwardingForwardFrom))) {
 		ZSelectiveCallForwardingBean newSelectiveCallForwarding = newFeatures.getSelectiveCallForwarding();
-		newSelectiveCallForwarding.setIsActive(mSelectiveCallForwardingActive);
+		newSelectiveCallForwarding.setIsActive(mSelectiveCallForwardingActive.booleanValue());
 		newSelectiveCallForwarding.setForwardTo(mSelectiveCallForwardingForwardTo);
 		newSelectiveCallForwarding.setForwardFrom(mSelectiveCallForwardingForwardFrom);
 	    }
 	    
 	    ZCallFeatureBean anonymousCallRejection = oldFeatures.getAnonymousCallRejection();
-	    if (anonymousCallRejection.getIsActive() != mAnonymousCallRejectionActive) {
-		newFeatures.getAnonymousCallRejection().setIsActive(mAnonymousCallRejectionActive);
+	    if (mAnonymousCallRejectionActive!=null && 
+		(anonymousCallRejection.getIsActive() != mAnonymousCallRejectionActive.booleanValue())) {
+		newFeatures.getAnonymousCallRejection().setIsActive(mAnonymousCallRejectionActive.booleanValue());
 	    }
 	    
 	    /* Uncomment when selective call rejection is implemented in the soap interface
 	    
 	    ZSelectiveCallRejectionBean selectiveCallRejection = oldFeatures.getSelectiveCallRejection();
-	    if (selectiveCallRejection.getIsActive() != mSelectiveCallRejectionActive || !selectiveCallRejection.getRejectFrom().equals(mSelectiveCallRejectionRejectFrom)) {
+	    if (mSelectiveCallRejectionActive!=null && mSelectiveCallRejectionRejectFrom!=null &&
+		(selectiveCallRejection.getIsActive() != mSelectiveCallRejectionActive.booleanValue() || !selectiveCallRejection.getRejectFrom().equals(mSelectiveCallRejectionRejectFrom))) {
 		ZSelectiveCallRejectionBean newSelectiveCallRejection = newFeatures.getSelectiveCallRejection();
-		newSelectiveCallRejection.setIsActive(mSelectiveCallRejectionActive);
+		newSelectiveCallRejection.setIsActive(mSelectiveCallRejectionActive.booleanValue());
 		newSelectiveCallRejection.setRejectFrom(mSelectiveCallRejectionRejectFrom);
 	    }
 	    
 	    */
 	    
-	    if (callForwardingNoAnswer.getNumberOfRings() != mNumberOfRings) {
-		newFeatures.getCallForwardingNoAnswer().setNumberOfRings(mNumberOfRings);
+	    if (mNumberOfRings!=null && callForwardingNoAnswer.getNumberOfRings() != mNumberOfRings.intValue()) {
+		newFeatures.getCallForwardingNoAnswer().setNumberOfRings(mNumberOfRings.intValue());
 	    }	
-	    if (voiceMailPrefs.getAutoPlayNewMsgs() != mAutoPlayNewMsgs) {
-		newFeatures.getVoiceMailPrefs().setAutoPlayNewMsgs(mAutoPlayNewMsgs);
+	    if (mAutoPlayNewMsgs!=null && voiceMailPrefs.getAutoPlayNewMsgs() != mAutoPlayNewMsgs.booleanValue()) {
+		newFeatures.getVoiceMailPrefs().setAutoPlayNewMsgs(mAutoPlayNewMsgs.booleanValue());
 	    }
-	    if (voiceMailPrefs.getPlayDateAndTimeInMsgEnv() != mPlayDateAndTimeInMsgEnv) {
-		newFeatures.getVoiceMailPrefs().setPlayDateAndTimeInMsgEnv(mPlayDateAndTimeInMsgEnv);
+	    if (mPlayDateAndTimeInMsgEnv!=null && voiceMailPrefs.getPlayDateAndTimeInMsgEnv() != mPlayDateAndTimeInMsgEnv.booleanValue()) {
+		newFeatures.getVoiceMailPrefs().setPlayDateAndTimeInMsgEnv(mPlayDateAndTimeInMsgEnv.booleanValue());
 	    }
-	    if (voiceMailPrefs.getSkipPinEntry() != mSkipPinEntry) {
-		newFeatures.getVoiceMailPrefs().setSkipPinEntry(mSkipPinEntry);
+	    if (mSkipPinEntry!=null && voiceMailPrefs.getSkipPinEntry() != mSkipPinEntry.booleanValue()) {
+		newFeatures.getVoiceMailPrefs().setSkipPinEntry(mSkipPinEntry.booleanValue());
 	    }
-	    if (voiceMailPrefs.getPlayCallerNameInMsgEnv() != mPlayCallerNameInMsgEnv) {
-		newFeatures.getVoiceMailPrefs().setPlayCallerNameInMsgEnv(mPlayCallerNameInMsgEnv);
+	    if (mPlayCallerNameInMsgEnv!=null && voiceMailPrefs.getPlayCallerNameInMsgEnv() != mPlayCallerNameInMsgEnv.booleanValue()) {
+		newFeatures.getVoiceMailPrefs().setPlayCallerNameInMsgEnv(mPlayCallerNameInMsgEnv.booleanValue());
 	    }
-	    if (mAutoPlayNewMsgs && !voiceMailPrefs.getPromptLevel().equals(mPromptLevel)) {
+	    if (mPromptLevel!=null && mAutoPlayNewMsgs!=null && mAutoPlayNewMsgs.booleanValue() && !voiceMailPrefs.getPromptLevel().equals(mPromptLevel)) {
 		newFeatures.getVoiceMailPrefs().setPromptLevel(mPromptLevel);
 	    }
-	    if (!voiceMailPrefs.getAnsweringLocale().equals(mAnsweringLocale)) {
+	    if (mAnsweringLocale!=null && !voiceMailPrefs.getAnsweringLocale().equals(mAnsweringLocale)) {
 		newFeatures.getVoiceMailPrefs().setAnsweringLocale(mAnsweringLocale);
 	    }
-	    if (!voiceMailPrefs.getUserLocale().equals(mUserLocale)) {
+	    if (mUserLocale!=null && !voiceMailPrefs.getUserLocale().equals(mUserLocale)) {
 		newFeatures.getVoiceMailPrefs().setUserLocale(mUserLocale);
 	    }
 	    
@@ -114,9 +120,9 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
             	mailbox.saveCallFeatures(newFeatures.getCallFeatures());
 		update = true;
 	    }
-	    if (mailbox.getPrefs().getVoiceItemsPerPage() != mNumberPerPage) {
+	    if (mNumberPerPage!=null && mailbox.getPrefs().getVoiceItemsPerPage() != mNumberPerPage.longValue()) {
 		Map<String, Object> attrs = new HashMap<String,Object>();
-		attrs.put(Provisioning.A_zimbraPrefVoiceItemsPerPage, Long.toString(mNumberPerPage));
+		attrs.put(Provisioning.A_zimbraPrefVoiceItemsPerPage, Long.toString(mNumberPerPage.longValue()));
 		mailbox.modifyPrefs(attrs);
 		update = true;
 		mailbox.getPrefs(true);
