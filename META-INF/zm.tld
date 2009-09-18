@@ -5651,7 +5651,7 @@
                 Is email notification active.
             </description>
             <name>emailnotificationactive</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
         </attribute>
@@ -5661,7 +5661,7 @@
                 Email notification address.
             </description>
             <name>emailnotificationaddress</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
         </attribute>
@@ -5671,7 +5671,7 @@
                 Is call forwarding active.
             </description>
             <name>callforwardingactive</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
         </attribute>
@@ -5681,9 +5681,69 @@
                 Call forwarding number
             </description>
             <name>callforwardingforwardto</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Is selective call forwarding active.
+            </description>
+            <name>selectivecallforwardingactive</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Selective call forwarding "forward to" number
+            </description>
+            <name>selectivecallforwardingforwardto</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Selective call forwarding "forward from" numbers
+            </description>
+            <name>selectivecallforwardingforwardfrom</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Anonymous Call rejection
+            </description>
+            <name>anonymouscallrejectionactive</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Is selective call rejection active.
+            </description>
+            <name>selectivecallrejectionactive</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Selective call rejection "reject from" numbers
+            </description>
+            <name>selectivecallrejectionrejectfrom</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
         </attribute>
 
         <attribute>
@@ -5691,10 +5751,110 @@
                 Number of voice items per page
             </description>
             <name>numberPerPage</name>
-            <required>true</required>
+            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
         </attribute>
+
+	<attribute>
+            <description>
+                Call forwarding retention
+            </description>
+            <name>numberOfRings</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+	<attribute>
+	    <description>
+		Automatically play messages when entering UI
+	    </description>
+	    <name>autoPlayNewMsgs</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+	    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute>
+	    <description>
+		Play date and time as part of messages
+	    </description>
+	    <name>playDateAndTimeInMsgEnv</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+	    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute>
+	    <description>
+		Skip pin entry
+	    </description>
+	    <name>skipPinEntry</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+	    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute>
+	    <description>
+		Require pin entry (opposite of the above)
+	    </description>
+	    <name>requirePinEntry</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+	    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute>
+	    <description>
+		Play caller name when playing messages
+	    </description>
+	    <name>playCallerNameInMsgEnv</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+	    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute>
+	    <description>
+		Automatically play new messages in UI?
+	    </description>
+	    <name>autoPlayNewMsgs</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+	    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute>
+	    <description>
+		Prompt length
+	    </description>
+	    <name>promptLevel</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+	    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute>
+	    <description>
+		Outgoing message language
+	    </description>
+	    <name>answeringLocale</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+	    <type>java.lang.String</type>
+	</attribute>
+
+	<attribute>
+	    <description>
+		Checking message language
+	    </description>
+	    <name>userLocale</name>
+	    <required>false</required>
+	    <rtexprvalue>true</rtexprvalue>
+	    <type>java.lang.String</type>
+	</attribute>
     </tag>
 
 	<!-- These tags are copied from jstl.tld because we implement our own
