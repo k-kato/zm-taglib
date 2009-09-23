@@ -5857,6 +5857,120 @@
 	</attribute>
     </tag>
 
+    <tag>
+        <description>
+            Adds the phone numbers of voice mail/call log entries to selective call rejection.
+        </description>
+
+        <name>addToRejectFeature</name>
+
+        <tag-class>com.zimbra.cs.taglib.tag.voice.AddToRejectFeatureTag</tag-class>
+
+        <body-content>empty</body-content>
+
+        <variable>
+            <name-from-attribute>var</name-from-attribute>
+            <variable-class>java.lang.Integer</variable-class>
+            <scope>AT_END</scope>
+        </variable>
+
+        <attribute>
+            <description>
+                Name of the variable that says how many numbers were successfully added
+            </description>
+            <name>var</name>
+            <required>false</required>
+        </attribute>
+
+        <attribute>
+            <description>
+                Name of phone account
+            </description>
+            <name>phone</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Id array of voice mail entries
+            </description>
+            <name>voiceId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String[]</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Output variable for error constants (constants of ZPhone)
+            </description>
+            <name>error</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
+
+
+    <tag>
+        <description>
+            Adds the phone numbers of voice mail/call log entries to selective call forwarding.
+        </description>
+
+        <name>addToForwardFeature</name>
+
+        <tag-class>com.zimbra.cs.taglib.tag.voice.AddToForwardFeatureTag</tag-class>
+
+        <body-content>empty</body-content>
+
+        <variable>
+            <name-from-attribute>var</name-from-attribute>
+            <variable-class>java.lang.Integer</variable-class>
+            <scope>AT_END</scope>
+        </variable>
+
+        <attribute>
+            <description>
+                Name of the variable that says how many numbers were successfully added
+            </description>
+            <name>var</name>
+            <required>false</required>
+        </attribute>
+
+        <attribute>
+            <description>
+                Name of phone account
+            </description>
+            <name>phone</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Id array of voice mail entries
+            </description>
+            <name>voiceId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String[]</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Output variable for error constants (constants of ZPhone)
+            </description>
+            <name>error</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
 	<!-- These tags are copied from jstl.tld because we implement our own
 	     versions but want to keep API compatibility. -->
 	<!--
