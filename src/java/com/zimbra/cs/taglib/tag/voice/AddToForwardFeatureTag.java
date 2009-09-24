@@ -39,19 +39,27 @@ public class AddToForwardFeatureTag extends CallFeaturesTagBase {
 	private String[] mVoiceId;
 	private String mVar;
 	private String mError;
+	private int mMax = 12;
 	
 	public void setVoiceId(String[] voiceId) {
-	mVoiceId = voiceId;
+		mVoiceId = voiceId;
 	}
 	
 	public void setVar(String var) {
-	mVar = var;
+		mVar = var;
 	}
 	
 	public void setError(String error) {
-	mError = error;
+		mError = error;
 	}
-	
+
+	public void setMax(String max) {
+		try {
+			mMax = Integer.parseInt(max);
+		} catch (NumberFormatException ex) {
+			mMax = 12;
+		}
+	}
 
 	public void doTag() throws JspException, IOException {
 	
@@ -61,44 +69,48 @@ public class AddToForwardFeatureTag extends CallFeaturesTagBase {
 			ZCallFeaturesBean oldFeatures = new ZCallFeaturesBean(account.getCallFeatures(), false);
 			ZCallFeaturesBean newFeatures = new ZCallFeaturesBean(new ZCallFeatures(mailbox, account.getPhone()), true);
 		
-		ZSelectiveCallForwardingBean selectiveCallForwarding = oldFeatures.getSelectiveCallForwarding();
-		ZSelectiveCallForwardingBean newSelectiveCallForwarding = newFeatures.getSelectiveCallForwarding();
+			ZSelectiveCallForwardingBean selectiveCallForwarding = oldFeatures.getSelectiveCallForwarding();
+			ZSelectiveCallForwardingBean newSelectiveCallForwarding = newFeatures.getSelectiveCallForwarding();
 		
-		List<String> forwardFrom = selectiveCallForwarding.getForwardFrom();
-		String firstError=null;
-		int added = 0;
-		for (String id : mVoiceId) {
-			ZVoiceMailItemHitBean hit = ZVoiceMailItemHitBean.deserialize(id, account.getPhone().getDisplay());
-			ZPhone caller = hit.getCaller();
-		
-			if (account.getPhone().getName().equals(caller.getName())) {
-				firstError = ZPhone.INVALID_PHNUM_OWN_PHONE_NUMBER;
+			List<String> forwardFrom = selectiveCallForwarding.getForwardFrom();
+			String firstError=null;
+			int added = 0;
+
+			if (forwardFrom.size()>=mMax) {
+				firstError = ZCallFeatures.SELECTIVE_CALL_FORWARD_LIST_FULL;
 			} else {
-				String validity = caller.getValidity();
-				if (validity.equals(ZPhone.VALID)) {
-					String displayName = caller.getDisplay();
-					if (!forwardFrom.contains(displayName)) {
-						forwardFrom.add(displayName);
-						added++;
-					}
-				} else if (firstError==null) {
-					firstError = validity;
-				}
-			}
-		}
-
-		newSelectiveCallForwarding.setIsActive(true);
-		newSelectiveCallForwarding.setForwardTo(selectiveCallForwarding.getForwardTo());
-		newSelectiveCallForwarding.setForwardFrom(forwardFrom);
-
-		boolean update = false;
-		if (!newFeatures.isEmpty()) {
-			mailbox.saveCallFeatures(newFeatures.getCallFeatures());
-			update = true;
-		}
-		if (mVar!=null) getJspContext().setAttribute(mVar, update ? added : 0, PageContext.PAGE_SCOPE);
-		if (mError!=null) getJspContext().setAttribute(mError, firstError, PageContext.PAGE_SCOPE);
+				for (String id : mVoiceId) {
+					ZVoiceMailItemHitBean hit = ZVoiceMailItemHitBean.deserialize(id, account.getPhone().getDisplay());
+					ZPhone caller = hit.getCaller();
 		
+					if (account.getPhone().getName().equals(caller.getName())) {
+						firstError = ZPhone.INVALID_PHNUM_OWN_PHONE_NUMBER;
+					} else {
+						String validity = caller.getValidity();
+						if (validity.equals(ZPhone.VALID)) {
+							String displayName = caller.getDisplay();
+							if (!forwardFrom.contains(displayName) && forwardFrom.size() < mMax) {
+								forwardFrom.add(displayName);
+								added++;
+							}
+						} else if (firstError==null) {
+							firstError = validity;
+						}
+					}
+				}
+				newSelectiveCallForwarding.setIsActive(true);
+				newSelectiveCallForwarding.setForwardTo(selectiveCallForwarding.getForwardTo());
+				newSelectiveCallForwarding.setForwardFrom(forwardFrom);
+			}
+
+			boolean update = false;
+			if (!newFeatures.isEmpty()) {
+				mailbox.saveCallFeatures(newFeatures.getCallFeatures());
+				update = true;
+			}
+			if (mVar!=null) getJspContext().setAttribute(mVar, update ? added : 0, PageContext.PAGE_SCOPE);
+			if (mError!=null) getJspContext().setAttribute(mError, firstError, PageContext.PAGE_SCOPE);
+
 		} catch (ServiceException e) {
 			throw new JspTagException(e);
 		}

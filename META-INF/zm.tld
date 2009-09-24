@@ -5574,13 +5574,13 @@
 
         <attribute>
             <description>
-				Name of the variable that says whether the phone number is valid
+		Name of the variable that says whether the phone number is valid
             </description>
             <name>var</name>
             <required>false</required>
         </attribute>
 
-		<attribute>
+	<attribute>
             <description>
                 Name of phone account
             </description>
@@ -5590,7 +5590,7 @@
             <type>java.lang.String</type>
         </attribute>
 
-		<attribute>
+	<attribute>
             <description>
                 Name of the var that will hold the formatted phone number
             </description>
@@ -5600,7 +5600,7 @@
             <type>java.lang.String</type>
         </attribute>
 
-		<attribute>
+	<attribute>
             <description>
                 Name of the var that will hold any error strings
             </description>
@@ -5904,9 +5904,19 @@
 
         <attribute>
             <description>
-                Output variable for error constants (constants of ZPhone)
+                Output variable for error constants (constants of ZPhone and ZCallFeatures)
             </description>
             <name>error</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+	<attribute>
+            <description>
+                Max entries in list (defaults to 12 if unset)
+            </description>
+            <name>max</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
@@ -5962,9 +5972,19 @@
 
         <attribute>
             <description>
-                Output variable for error constants (constants of ZPhone)
+                Output variable for error constants (constants of ZPhone and ZCallFeatures)
             </description>
             <name>error</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+	<attribute>
+            <description>
+                Max entries in list (defaults to 12 if unset)
+            </description>
+            <name>max</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>

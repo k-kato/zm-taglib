@@ -39,19 +39,27 @@ public class AddToRejectFeatureTag extends CallFeaturesTagBase {
 	private String[] mVoiceId;
 	private String mVar;
 	private String mError;
+	private int mMax = 12;
 	
 	public void setVoiceId(String[] voiceId) {
-	mVoiceId = voiceId;
+		mVoiceId = voiceId;
 	}
 	
 	public void setVar(String var) {
-	mVar = var;
+		mVar = var;
 	}
 	
 	public void setError(String error) {
-	mError = error;
+		mError = error;
 	}
-	
+
+	public void setMax(String max) {
+		try {
+			mMax = Integer.parseInt(max);
+		} catch (NumberFormatException ex) {
+			mMax = 12;
+		}
+	}
 
 	public void doTag() throws JspException, IOException {
 	
@@ -67,29 +75,33 @@ public class AddToRejectFeatureTag extends CallFeaturesTagBase {
 			List<String> rejectFrom = selectiveCallRejection.getRejectFrom();
 			String firstError=null;
 			int added = 0;
-			for (String id : mVoiceId) {
-				ZVoiceMailItemHitBean hit = ZVoiceMailItemHitBean.deserialize(id, account.getPhone().getDisplay());
-				ZPhone caller = hit.getCaller();
+
+			if (rejectFrom.size() >= mMax) {
+				firstError = ZCallFeatures.SELECTIVE_CALL_REJECT_LIST_FULL;
+			} else {
+				for (String id : mVoiceId) {
+					ZVoiceMailItemHitBean hit = ZVoiceMailItemHitBean.deserialize(id, account.getPhone().getDisplay());
+					ZPhone caller = hit.getCaller();
 		
-				if (account.getPhone().getName().equals(caller.getName())) {
-					firstError = ZPhone.INVALID_PHNUM_OWN_PHONE_NUMBER;
-				} else {
-					String validity = caller.getValidity();
-					if (validity.equals(ZPhone.VALID)) {
-						String displayName = caller.getDisplay();
-						if (!rejectFrom.contains(displayName)) {
-							rejectFrom.add(displayName);
-							added++;
+					if (account.getPhone().getName().equals(caller.getName())) {
+						firstError = ZPhone.INVALID_PHNUM_OWN_PHONE_NUMBER;
+					} else {
+						String validity = caller.getValidity();
+						if (validity.equals(ZPhone.VALID)) {
+							String displayName = caller.getDisplay();
+							if (!rejectFrom.contains(displayName) && rejectFrom.size() < mMax) {
+								rejectFrom.add(displayName);
+								added++;
+							}
+						} else if (firstError==null) {
+							firstError = validity;
 						}
-					} else if (firstError==null) {
-						firstError = validity;
 					}
 				}
+
+				newSelectiveCallRejection.setIsActive(true);
+				newSelectiveCallRejection.setRejectFrom(rejectFrom);
 			}
-
-			newSelectiveCallRejection.setIsActive(true);
-			newSelectiveCallRejection.setRejectFrom(rejectFrom);
-
 			boolean update = false;
 			if (!newFeatures.isEmpty()) {
 				mailbox.saveCallFeatures(newFeatures.getCallFeatures());
