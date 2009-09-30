@@ -98,12 +98,13 @@ public class AddToRejectFeatureTag extends CallFeaturesTagBase {
 						}
 					}
 				}
-
-				newSelectiveCallRejection.setIsActive(true);
-				newSelectiveCallRejection.setRejectFrom(rejectFrom);
+				if (added > 0) {
+					newSelectiveCallRejection.setIsActive(true);
+					newSelectiveCallRejection.setRejectFrom(rejectFrom);
+				}
 			}
 			boolean update = false;
-			if (!newFeatures.isEmpty()) {
+			if (!newFeatures.isEmpty() && added > 0) {
 				mailbox.saveCallFeatures(newFeatures.getCallFeatures());
 				update = true;
 			}

@@ -98,13 +98,15 @@ public class AddToForwardFeatureTag extends CallFeaturesTagBase {
 						}
 					}
 				}
-				newSelectiveCallForwarding.setIsActive(true);
-				newSelectiveCallForwarding.setForwardTo(selectiveCallForwarding.getForwardTo());
-				newSelectiveCallForwarding.setForwardFrom(forwardFrom);
+				if (added > 0) {
+					newSelectiveCallForwarding.setIsActive(true);
+					newSelectiveCallForwarding.setForwardTo(selectiveCallForwarding.getForwardTo());
+					newSelectiveCallForwarding.setForwardFrom(forwardFrom);
+				}
 			}
 
 			boolean update = false;
-			if (!newFeatures.isEmpty()) {
+			if (!newFeatures.isEmpty() && added > 0) {
 				mailbox.saveCallFeatures(newFeatures.getCallFeatures());
 				update = true;
 			}
