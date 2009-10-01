@@ -89,31 +89,30 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 	    
 	    */
 	    
-	    if (mNumberOfRings!=null && callForwardingNoAnswer.getNumberOfRings() != mNumberOfRings.intValue()) {
+	    if (mNumberOfRings != null && (callForwardingNoAnswer == null || callForwardingNoAnswer.getNumberOfRings() != mNumberOfRings.intValue())) {
 		newFeatures.getCallForwardingNoAnswer().setNumberOfRings(mNumberOfRings.intValue());
 	    }	
-	    if (mAutoPlayNewMsgs!=null && voiceMailPrefs.getAutoPlayNewMsgs() != mAutoPlayNewMsgs.booleanValue()) {
+	    if (mAutoPlayNewMsgs != null && (voiceMailPrefs == null || voiceMailPrefs.getAutoPlayNewMsgs() != mAutoPlayNewMsgs.booleanValue())) {
 		newFeatures.getVoiceMailPrefs().setAutoPlayNewMsgs(mAutoPlayNewMsgs.booleanValue());
 	    }
-	    if (mPlayDateAndTimeInMsgEnv!=null && voiceMailPrefs.getPlayDateAndTimeInMsgEnv() != mPlayDateAndTimeInMsgEnv.booleanValue()) {
+	    if (mPlayDateAndTimeInMsgEnv != null && (voiceMailPrefs == null || voiceMailPrefs.getPlayDateAndTimeInMsgEnv() != mPlayDateAndTimeInMsgEnv.booleanValue())) {
 		newFeatures.getVoiceMailPrefs().setPlayDateAndTimeInMsgEnv(mPlayDateAndTimeInMsgEnv.booleanValue());
 	    }
-	    if (mSkipPinEntry!=null && voiceMailPrefs.getSkipPinEntry() != mSkipPinEntry.booleanValue()) {
+	    if (mSkipPinEntry != null && (voiceMailPrefs == null || voiceMailPrefs.getSkipPinEntry() != mSkipPinEntry.booleanValue())) {
 		newFeatures.getVoiceMailPrefs().setSkipPinEntry(mSkipPinEntry.booleanValue());
 	    }
-	    if (mPlayCallerNameInMsgEnv!=null && voiceMailPrefs.getPlayCallerNameInMsgEnv() != mPlayCallerNameInMsgEnv.booleanValue()) {
+	    if (mPlayCallerNameInMsgEnv != null && (voiceMailPrefs == null || voiceMailPrefs.getPlayCallerNameInMsgEnv() != mPlayCallerNameInMsgEnv.booleanValue())) {
 		newFeatures.getVoiceMailPrefs().setPlayCallerNameInMsgEnv(mPlayCallerNameInMsgEnv.booleanValue());
 	    }
-	    if (mPromptLevel!=null && mAutoPlayNewMsgs!=null && mAutoPlayNewMsgs.booleanValue() && !voiceMailPrefs.getPromptLevel().equals(mPromptLevel)) {
+	    if (mPromptLevel != null && mAutoPlayNewMsgs != null && mAutoPlayNewMsgs.booleanValue() && (voiceMailPrefs == null || voiceMailPrefs.getPromptLevel() == null || !voiceMailPrefs.getPromptLevel().equals(mPromptLevel))) {
 		newFeatures.getVoiceMailPrefs().setPromptLevel(mPromptLevel);
 	    }
-	    if (mAnsweringLocale!=null && !voiceMailPrefs.getAnsweringLocale().equals(mAnsweringLocale)) {
-		newFeatures.getVoiceMailPrefs().setAnsweringLocale(mAnsweringLocale);
+	    if (mAnsweringLocale != null && (voiceMailPrefs == null || voiceMailPrefs.getAnsweringLocale() == null || !voiceMailPrefs.getAnsweringLocale().equals(mAnsweringLocale))) {
+	        newFeatures.getVoiceMailPrefs().setAnsweringLocale(mAnsweringLocale);
 	    }
-	    if (mUserLocale!=null && !voiceMailPrefs.getUserLocale().equals(mUserLocale)) {
-		newFeatures.getVoiceMailPrefs().setUserLocale(mUserLocale);
+	    if (mUserLocale != null && (voiceMailPrefs == null || voiceMailPrefs.getUserLocale() == null || !voiceMailPrefs.getUserLocale().equals(mUserLocale))) {
+	        newFeatures.getVoiceMailPrefs().setUserLocale(mUserLocale);
 	    }
-	    
             
 	    boolean update = false;
             if (!newFeatures.isEmpty()) {
