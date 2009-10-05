@@ -89,11 +89,15 @@ public class AddToRejectFeatureTag extends CallFeaturesTagBase {
 						String validity = caller.getValidity();
 						if (validity.equals(ZPhone.VALID)) {
 							String displayName = caller.getDisplay();
-							if (!rejectFrom.contains(displayName) && rejectFrom.size() < mMax) {
+							if (rejectFrom.contains(displayName)) {
+								if (firstError==null)
+									firstError = ZCallFeatures.SELECTIVE_CALL_REJECT_ALREADY_IN_LIST;
+							} else if (rejectFrom.size()<mMax) {
 								rejectFrom.add(displayName);
 								added++;
 							}
 						} else if (firstError==null) {
+							firstError						} else if (firstError==null) {
 							firstError = validity;
 						}
 					}

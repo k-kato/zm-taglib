@@ -89,11 +89,15 @@ public class AddToForwardFeatureTag extends CallFeaturesTagBase {
 						String validity = caller.getValidity();
 						if (validity.equals(ZPhone.VALID)) {
 							String displayName = caller.getDisplay();
-							if (!forwardFrom.contains(displayName) && forwardFrom.size() < mMax) {
+							if (forwardFrom.contains(displayName)) {
+								if (firstError==null)
+									firstError = ZCallFeatures.SELECTIVE_CALL_FORWARD_ALREADY_IN_LIST;
+							} else if (forwardFrom.size() < mMax) {
 								forwardFrom.add(displayName);
 								added++;
 							}
 						} else if (firstError==null) {
+							firstError 						} else if (firstError==null) {
 							firstError = validity;
 						}
 					}
