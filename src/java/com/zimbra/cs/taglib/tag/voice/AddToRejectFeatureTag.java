@@ -97,7 +97,6 @@ public class AddToRejectFeatureTag extends CallFeaturesTagBase {
 								added++;
 							}
 						} else if (firstError==null) {
-							firstError						} else if (firstError==null) {
 							firstError = validity;
 						}
 					}
