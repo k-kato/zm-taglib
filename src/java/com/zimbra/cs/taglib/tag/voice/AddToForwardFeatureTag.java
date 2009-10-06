@@ -71,18 +71,18 @@ public class AddToForwardFeatureTag extends CallFeaturesTagBase {
 		
 			ZSelectiveCallForwardingBean selectiveCallForwarding = oldFeatures.getSelectiveCallForwarding();
 			ZSelectiveCallForwardingBean newSelectiveCallForwarding = newFeatures.getSelectiveCallForwarding();
-		
+
 			List<String> forwardFrom = selectiveCallForwarding.getForwardFrom();
 			String firstError=null;
 			int added = 0;
 
 			if (forwardFrom.size()>=mMax) {
 				firstError = ZCallFeatures.SELECTIVE_CALL_FORWARD_LIST_FULL;
-			} else if (newSelectiveCallForwarding.getIsSubscribed()) {
+			} else if (selectiveCallForwarding.getIsSubscribed()) {
 				for (String id : mVoiceId) {
 					ZVoiceMailItemHitBean hit = ZVoiceMailItemHitBean.deserialize(id, account.getPhone().getDisplay());
 					ZPhone caller = hit.getCaller();
-	
+
 					if (account.getPhone().getName().equals(caller.getName())) {
 						firstError = ZPhone.INVALID_PHNUM_OWN_PHONE_NUMBER;
 					} else {

@@ -78,7 +78,7 @@ public class AddToRejectFeatureTag extends CallFeaturesTagBase {
 
 			if (rejectFrom.size() >= mMax) {
 				firstError = ZCallFeatures.SELECTIVE_CALL_REJECT_LIST_FULL;
-			} else if (newSelectiveCallRejection.getIsSubscribed()) {
+			} else if (selectiveCallRejection.getIsSubscribed()) {
 				for (String id : mVoiceId) {
 					ZVoiceMailItemHitBean hit = ZVoiceMailItemHitBean.deserialize(id, account.getPhone().getDisplay());
 					ZPhone caller = hit.getCaller();
