@@ -63,12 +63,26 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
             }
 	    
 	    ZSelectiveCallForwardingBean selectiveCallForwarding = oldFeatures.getSelectiveCallForwarding();
-	    if (mSelectiveCallForwardingActive!=null && mSelectiveCallForwardingForwardTo!=null && mSelectiveCallForwardingForwardFrom!=null && 
-		(selectiveCallForwarding.getIsActive() != mSelectiveCallForwardingActive.booleanValue() || !selectiveCallForwarding.getForwardTo().equals(mSelectiveCallForwardingForwardTo) || !selectiveCallForwarding.getForwardFrom().equals(mSelectiveCallForwardingForwardFrom))) {
-		ZSelectiveCallForwardingBean newSelectiveCallForwarding = newFeatures.getSelectiveCallForwarding();
-		newSelectiveCallForwarding.setIsActive(mSelectiveCallForwardingActive.booleanValue());
-		newSelectiveCallForwarding.setForwardTo(mSelectiveCallForwardingForwardTo);
-		newSelectiveCallForwarding.setForwardFrom(mSelectiveCallForwardingForwardFrom);
+
+	    if (mSelectiveCallForwardingActive!=null) {
+		    ZSelectiveCallForwardingBean newSelectiveCallForwarding = newFeatures.getSelectiveCallForwarding();
+		    if (selectiveCallForwarding.getIsActive() != mSelectiveCallForwardingActive.booleanValue()) {
+			    newSelectiveCallForwarding.setIsActive(mSelectiveCallForwardingActive.booleanValue());
+		    }
+		    if (mSelectiveCallForwardingForwardTo!=null && mSelectiveCallForwardingForwardTo.length()>0) {
+			    if (!selectiveCallForwarding.getForwardTo().equals(mSelectiveCallForwardingForwardTo)) {
+				    newSelectiveCallForwarding.setForwardTo(mSelectiveCallForwardingForwardTo);
+			    }
+			    if (mSelectiveCallForwardingForwardFrom!=null && mSelectiveCallForwardingForwardFrom.size()>0) {
+				    if (!selectiveCallForwarding.getForwardFrom().equals(mSelectiveCallForwardingForwardFrom)) {
+					    newSelectiveCallForwarding.setForwardFrom(mSelectiveCallForwardingForwardFrom);
+				    }
+			    } else {
+				    newSelectiveCallForwarding.setIsActive(false);
+			    }
+		    } else {
+			    newSelectiveCallForwarding.setIsActive(false);
+		    }
 	    }
 	    
 	    ZCallFeatureBean anonymousCallRejection = oldFeatures.getAnonymousCallRejection();
