@@ -5991,6 +5991,104 @@
         </attribute>
     </tag>
 
+    <tag>
+        <description>
+            Handles lists associated with phone numbers
+        </description>
+
+        <name>listObject</name>
+
+        <tag-class>com.zimbra.cs.taglib.tag.voice.ListObjectTag</tag-class>
+
+        <body-content>empty</body-content>
+
+        <variable>
+            <name-from-attribute>var</name-from-attribute>
+            <variable-class>java.util.HashMap</variable-class>
+            <scope>AT_END</scope>
+        </variable>
+
+        <attribute>
+            <description>
+                
+            </description>
+            <name>var</name>
+            <required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                
+            </description>
+            <name>scope</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                Name of phone account
+            </description>
+            <name>phone</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                
+            </description>
+            <name>csep</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+            <description>
+                
+            </description>
+            <name>strArr</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+	
+	    <attribute>
+            <description>
+                
+            </description>
+            <name>map</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.HashMap</type>
+        </attribute>
+
+		<attribute>
+            <description>
+                
+            </description>
+            <name>add</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+		<attribute>
+            <description>
+                
+            </description>
+            <name>remove</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
 	<!-- These tags are copied from jstl.tld because we implement our own
 	     versions but want to keep API compatibility. -->
 	<!--

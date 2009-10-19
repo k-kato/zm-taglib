@@ -70,13 +70,9 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 			    newSelectiveCallForwarding.setIsActive(mSelectiveCallForwardingActive.booleanValue());
 		    }
 		    if (mSelectiveCallForwardingForwardTo!=null && mSelectiveCallForwardingForwardTo.length()>0) {
-			    if (!selectiveCallForwarding.getForwardTo().equals(mSelectiveCallForwardingForwardTo)) {
-				    newSelectiveCallForwarding.setForwardTo(mSelectiveCallForwardingForwardTo);
-			    }
+			    newSelectiveCallForwarding.setForwardTo(mSelectiveCallForwardingForwardTo);
 			    if (mSelectiveCallForwardingForwardFrom!=null && mSelectiveCallForwardingForwardFrom.size()>0) {
-				    if (!selectiveCallForwarding.getForwardFrom().equals(mSelectiveCallForwardingForwardFrom)) {
-					    newSelectiveCallForwarding.setForwardFrom(mSelectiveCallForwardingForwardFrom);
-				    }
+				    newSelectiveCallForwarding.setForwardFrom(mSelectiveCallForwardingForwardFrom);
 			    } else {
 				    newSelectiveCallForwarding.setIsActive(false);
 			    }
@@ -91,6 +87,9 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 		newFeatures.getAnonymousCallRejection().setIsActive(mAnonymousCallRejectionActive.booleanValue());
 	    }
 	    
+	    /* Uncomment when selective call rejection is implemented in the soap interface
+	    
+	    ZSelectiveCallRejectionBean selectiveCallRejection = oldFeatures.getSelectiveCallRejection(	    
 	    /* Uncomment when selective call rejection is implemented in the soap interface
 	    
 	    ZSelectiveCallRejectionBean selectiveCallRejection = oldFeatures.getSelectiveCallRejection();
