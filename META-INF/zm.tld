@@ -5994,7 +5994,7 @@
     <tag>
         <description>
             Handles lists associated with phone numbers. Implements a Hashmap of ArrayLists:
-            HashMap<String, ArrayList<String, String>>
+            HashMap(String, ArrayList(String, String))
             entries in the hashmap are referred to by the [phone] attribute, and the map may be inspected in jsp as mapvar[phonenumber] (this would yield an iteratable list whose length may be found with fn:length())
             If the input map is null, a new map will be created.
             After every call, the map is outputted in the var variable (to be stored and used again as input to the tag)
