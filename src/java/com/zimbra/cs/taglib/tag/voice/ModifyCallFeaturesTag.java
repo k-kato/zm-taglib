@@ -64,21 +64,23 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 	    
 	    ZSelectiveCallForwardingBean selectiveCallForwarding = oldFeatures.getSelectiveCallForwarding();
 
-	    if (mSelectiveCallForwardingActive!=null) {
-		    ZSelectiveCallForwardingBean newSelectiveCallForwarding = newFeatures.getSelectiveCallForwarding();
-		    if (selectiveCallForwarding.getIsActive() != mSelectiveCallForwardingActive.booleanValue()) {
-			    newSelectiveCallForwarding.setIsActive(mSelectiveCallForwardingActive.booleanValue());
-		    }
-		    if (mSelectiveCallForwardingForwardTo!=null && mSelectiveCallForwardingForwardTo.length()>0) {
-			    newSelectiveCallForwarding.setForwardTo(mSelectiveCallForwardingForwardTo);
-			    if (mSelectiveCallForwardingForwardFrom!=null && mSelectiveCallForwardingForwardFrom.size()>0) {
-				    newSelectiveCallForwarding.setForwardFrom(mSelectiveCallForwardingForwardFrom);
-			    } else {
-				    newSelectiveCallForwarding.setIsActive(false);
-			    }
-		    } else {
-			    newSelectiveCallForwarding.setIsActive(false);
-		    }
+            if (mSelectiveCallForwardingActive!=null) {
+                ZSelectiveCallForwardingBean newSelectiveCallForwarding = newFeatures.getSelectiveCallForwarding();
+                if (selectiveCallForwarding.getIsActive() != mSelectiveCallForwardingActive.booleanValue()) {
+                    newSelectiveCallForwarding.setIsActive(mSelectiveCallForwardingActive.booleanValue());
+                }
+                if (mSelectiveCallForwardingActive.booleanValue()) {
+                    if (mSelectiveCallForwardingForwardTo!=null && mSelectiveCallForwardingForwardTo.length()>0) {
+                        newSelectiveCallForwarding.setForwardTo(mSelectiveCallForwardingForwardTo);
+                        if (mSelectiveCallForwardingForwardFrom!=null && mSelectiveCallForwardingForwardFrom.size()>0) {
+                            newSelectiveCallForwarding.setForwardFrom(mSelectiveCallForwardingForwardFrom);
+                        } else {
+                            newSelectiveCallForwarding.setIsActive(false);
+                        }
+                    } else {
+                        newSelectiveCallForwarding.setIsActive(false);
+                    }
+                }
 	    }
 	    
 	    ZCallFeatureBean anonymousCallRejection = oldFeatures.getAnonymousCallRejection();
@@ -89,15 +91,18 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 	    
 	    /* Uncomment when selective call rejection is implemented in the soap interface
 	    
-	    ZSelectiveCallRejectionBean selectiveCallRejection = oldFeatures.getSelectiveCallRejection(	    
-	    /* Uncomment when selective call rejection is implemented in the soap interface
-	    
 	    ZSelectiveCallRejectionBean selectiveCallRejection = oldFeatures.getSelectiveCallRejection();
 	    if (mSelectiveCallRejectionActive!=null && mSelectiveCallRejectionRejectFrom!=null &&
-		(selectiveCallRejection.getIsActive() != mSelectiveCallRejectionActive.booleanValue() || !selectiveCallRejection.getRejectFrom().equals(mSelectiveCallRejectionRejectFrom))) {
-		ZSelectiveCallRejectionBean newSelectiveCallRejection = newFeatures.getSelectiveCallRejection();
-		newSelectiveCallRejection.setIsActive(mSelectiveCallRejectionActive.booleanValue());
-		newSelectiveCallRejection.setRejectFrom(mSelectiveCallRejectionRejectFrom);
+                (selectiveCallRejection.getIsActive() != mSelectiveCallRejectionActive.booleanValue() || !selectiveCallRejection.getRejectFrom().equals(mSelectiveCallRejectionRejectFrom))) {
+                ZSelectiveCallRejectionBean newSelectiveCallRejection = newFeatures.getSelectiveCallRejection();
+                newSelectiveCallRejection.setIsActive(mSelectiveCallRejectionActive.booleanValue());
+                if (mSelectiveCallRejectionActive.booleanValue()) {
+                    if (mSelectiveCallRejectionRejectFrom!=null && mSelectiveCallRejectionRejectFrom.size() > 0) {
+                        newSelectiveCallRejection.setRejectFrom(mSelectiveCallRejectionRejectFrom);
+                    } else {
+                        newSelectiveCallRejection.setIsActive(false);
+                    }
+                }
 	    }
 	    
 	    */

@@ -31,6 +31,7 @@ public class ListObjectTag extends ZimbraSimpleTag {
   private String mPhone;
   private String mAdd;
   private String mRemove;
+  private Boolean mClear = Boolean.FALSE;
 
   public void setVar(String var) {
     mVar = var;
@@ -69,6 +70,10 @@ public class ListObjectTag extends ZimbraSimpleTag {
 
   public void setRemove(String remove) {
     mRemove = remove;
+  }
+
+  public void setClear(boolean clear) {
+    mClear = new Boolean(clear);
   }
 
   private String getCsepString(ArrayList<String> list) {
@@ -117,6 +122,11 @@ public class ListObjectTag extends ZimbraSimpleTag {
             list.remove(list.indexOf(items[i]));
           }
         }
+
+        if (mClear != null && mClear.booleanValue()) {
+          list.clear();
+        }
+
         if (mCsep != null) {
           getJspContext().setAttribute(mCsep, getCsepString(list), mScope);
         }

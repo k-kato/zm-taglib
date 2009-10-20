@@ -5993,7 +5993,11 @@
 
     <tag>
         <description>
-            Handles lists associated with phone numbers
+            Handles lists associated with phone numbers. Implements a Hashmap of ArrayLists:
+            HashMap<String, ArrayList<String, String>>
+            entries in the hashmap are referred to by the [phone] attribute, and the map may be inspected in jsp as mapvar[phonenumber] (this would yield an iteratable list whose length may be found with fn:length())
+            If the input map is null, a new map will be created.
+            After every call, the map is outputted in the var variable (to be stored and used again as input to the tag)
         </description>
 
         <name>listObject</name>
@@ -6010,17 +6014,17 @@
 
         <attribute>
             <description>
-                
+                Output variable name to save resulting map into
             </description>
             <name>var</name>
             <required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>java.lang.String</type>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
         </attribute>
 
         <attribute>
             <description>
-                
+                Scope to save output variables into
             </description>
             <name>scope</name>
             <required>false</required>
@@ -6040,7 +6044,7 @@
 
         <attribute>
             <description>
-                
+                Output variable name to save a comma-separated String into
             </description>
             <name>csep</name>
             <required>false</required>
@@ -6050,7 +6054,7 @@
 
         <attribute>
             <description>
-                
+                Output variable name to save a String array into
             </description>
             <name>strArr</name>
             <required>false</required>
@@ -6058,9 +6062,9 @@
             <type>java.lang.String</type>
         </attribute>
 	
-	    <attribute>
+	<attribute>
             <description>
-                
+                Map to edit
             </description>
             <name>map</name>
             <required>false</required>
@@ -6068,9 +6072,9 @@
             <type>java.util.HashMap</type>
         </attribute>
 
-		<attribute>
+	<attribute>
             <description>
-                
+                Value to add
             </description>
             <name>add</name>
             <required>false</required>
@@ -6078,14 +6082,24 @@
             <type>java.lang.String</type>
         </attribute>
 
-		<attribute>
+	<attribute>
             <description>
-                
+                Value to remove, if found
             </description>
             <name>remove</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
+        </attribute>
+
+	<attribute>
+            <description>
+                Set to true to clear all elements from the list
+            </description>
+            <name>clear</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
         </attribute>
     </tag>
 
