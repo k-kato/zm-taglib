@@ -119,7 +119,9 @@ public class ListObjectTag extends ZimbraSimpleTag {
         if (mRemove != null) {
           String[] items = mRemove.split(",");
           for (int i = 0; i < items.length; i++) {
-            list.remove(list.indexOf(items[i]));
+            int position = list.indexOf(items[i]);
+            if (position >= 0 && position < list.size())
+              list.remove(position);
           }
         }
 
