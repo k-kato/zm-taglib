@@ -1226,8 +1226,8 @@ public class BeanUtils {
 		sPHONE_FIELDS.put(Contact.A_workMobile, "AB_FIELD_workMobile");
 		sPHONE_FIELDS.put(Contact.A_workAltPhone, "AB_FIELD_workAlternatePhone");
 		sPHONE_FIELDS.put(Contact.A_otherFax, "AB_FIELD_otherFax");
-		sPHONE_FIELDS.put(Contact.A_assistantPhone, "AB_FIELD_assistantPhone");
-		sPHONE_FIELDS.put(Contact.A_companyPhone, "AB_FIELD_companyPhone");
+		sPHONE_FIELDS.put(Contact.A_assistantPhone, "phoneLabelAssistant");
+		sPHONE_FIELDS.put(Contact.A_companyPhone, "AB_FIELD_company");
 	}
 	public static String getDisplayCaller(PageContext pc, ZPhone phone) throws ServiceException, JspException {
 		ZMailbox mbox = ZJspSession.getZMailbox(pc);
