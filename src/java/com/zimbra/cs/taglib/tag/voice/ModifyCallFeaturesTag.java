@@ -119,7 +119,7 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 	    if (mPlayCallerNameInMsgEnv != null && (voiceMailPrefs == null || voiceMailPrefs.getPlayCallerNameInMsgEnv() != mPlayCallerNameInMsgEnv.booleanValue())) {
 		newFeatures.getVoiceMailPrefs().setPlayCallerNameInMsgEnv(mPlayCallerNameInMsgEnv.booleanValue());
 	    }
-	    if (mPromptLevel != null && mAutoPlayNewMsgs != null && mAutoPlayNewMsgs.booleanValue() && (voiceMailPrefs == null || voiceMailPrefs.getPromptLevel() == null || !voiceMailPrefs.getPromptLevel().equals(mPromptLevel))) {
+	    if (mPromptLevel != null && (voiceMailPrefs == null || voiceMailPrefs.getPromptLevel() == null || !voiceMailPrefs.getPromptLevel().equals(mPromptLevel))) {
 		newFeatures.getVoiceMailPrefs().setPromptLevel(mPromptLevel);
 	    }
 	    if (mAnsweringLocale != null && (voiceMailPrefs == null || voiceMailPrefs.getAnsweringLocale() == null || !voiceMailPrefs.getAnsweringLocale().equals(mAnsweringLocale))) {
