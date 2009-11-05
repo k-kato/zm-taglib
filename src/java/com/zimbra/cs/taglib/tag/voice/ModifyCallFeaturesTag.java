@@ -66,20 +66,18 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 
             if (mSelectiveCallForwardingActive!=null) {
                 ZSelectiveCallForwardingBean newSelectiveCallForwarding = newFeatures.getSelectiveCallForwarding();
-                if (mSelectiveCallForwardingActive.booleanValue()) {
-                    if (mSelectiveCallForwardingForwardTo!=null && mSelectiveCallForwardingForwardTo.length()>0) {
-                        newSelectiveCallForwarding.setForwardTo(mSelectiveCallForwardingForwardTo);
-                        if (mSelectiveCallForwardingForwardFrom!=null && mSelectiveCallForwardingForwardFrom.size()>0) {
-                            newSelectiveCallForwarding.setForwardFrom(mSelectiveCallForwardingForwardFrom);
-                            newSelectiveCallForwarding.setIsActive(true);
-                        } else {
-                            newSelectiveCallForwarding.setIsActive(false);
-                        }
+		if (mSelectiveCallForwardingForwardTo!=null && mSelectiveCallForwardingForwardTo.length()>0) {
+		    newSelectiveCallForwarding.setForwardTo(mSelectiveCallForwardingForwardTo);
+                    if (mSelectiveCallForwardingForwardFrom!=null && mSelectiveCallForwardingForwardFrom.size()>0) {
+                	newSelectiveCallForwarding.setForwardFrom(mSelectiveCallForwardingForwardFrom);
+			newSelectiveCallForwarding.setIsActive(mSelectiveCallForwardingActive.booleanValue());
                     } else {
                         newSelectiveCallForwarding.setIsActive(false);
                     }
+		} else {
+                    newSelectiveCallForwarding.setIsActive(false);
                 }
-	    }
+            }
 	        
 	    ZCallFeatureBean anonymousCallRejection = oldFeatures.getAnonymousCallRejection();
 	    if (mAnonymousCallRejectionActive!=null && 
@@ -91,16 +89,13 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 	    if (mSelectiveCallRejectionActive!=null && mSelectiveCallRejectionRejectFrom!=null && selectiveCallRejection!=null &&
                 (selectiveCallRejection.getIsActive() != mSelectiveCallRejectionActive.booleanValue() || (selectiveCallRejection.getRejectFrom() != null && !selectiveCallRejection.getRejectFrom().equals(mSelectiveCallRejectionRejectFrom)))) {
                 ZSelectiveCallRejectionBean newSelectiveCallRejection = newFeatures.getSelectiveCallRejection();
-                newSelectiveCallRejection.setIsActive(mSelectiveCallRejectionActive.booleanValue());
-                if (mSelectiveCallRejectionActive.booleanValue()) {
-                    if (mSelectiveCallRejectionRejectFrom!=null && mSelectiveCallRejectionRejectFrom.size() > 0) {
-                        newSelectiveCallRejection.setRejectFrom(mSelectiveCallRejectionRejectFrom);
-                    } else {
-                        newSelectiveCallRejection.setIsActive(false);
-                    }
+                if (mSelectiveCallRejectionRejectFrom!=null && mSelectiveCallRejectionRejectFrom.size() > 0) {
+                    newSelectiveCallRejection.setRejectFrom(mSelectiveCallRejectionRejectFrom);
+                    newSelectiveCallRejection.setIsActive(mSelectiveCallRejectionActive.booleanValue());
+                } else {
+                    newSelectiveCallRejection.setIsActive(false);
                 }
-	    }
-	        
+	    }	        
 	        
 	        
 	    if (mNumberOfRings != null && newFeatures.getCallForwardingNoAnswer() != null && (callForwardingNoAnswer == null || callForwardingNoAnswer.getNumberOfRings() != mNumberOfRings.intValue())) {
