@@ -28,7 +28,7 @@ public class ZCallForwardingBean extends ZCallFeatureBean {
     }
 
     public void setForwardTo(String phone) {
-        String name = ZPhone.getName(phone);
+        String name = ZPhone.getNonFullName(phone);
         getFeature().setData(VoiceConstants.A_FORWARD_TO, name);
     }
     

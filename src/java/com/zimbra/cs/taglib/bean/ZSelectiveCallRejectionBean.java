@@ -41,7 +41,7 @@ public class ZSelectiveCallRejectionBean extends ZCallFeatureBean {
     public void setRejectFrom(List<String> list) {
         List<String> names = new ArrayList<String>(list.size());
         for (String display : list) {
-            names.add(ZPhone.getName(display));
+            names.add(ZPhone.getNonFullName(display));
         }
         getFeature().setRejectFrom(names);
     }
