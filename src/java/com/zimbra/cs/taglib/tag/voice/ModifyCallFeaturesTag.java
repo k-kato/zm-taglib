@@ -46,10 +46,12 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 		
 			ZVoiceMailPrefsBean voiceMailPrefs = oldFeatures.getVoiceMailPrefs();
 			ZCallForwardingBean callForwardingNoAnswer = oldFeatures.getCallForwardingNoAnswer();
+
+			boolean ignoreVMPrefEquality = true; // Should VM prefs be submitted regardless of whether they're changed?
 		
 			if (mEmailNotificationActive!=null && mEmailNotificationAddress!=null && 
 				((!mEmailNotificationActive.booleanValue() && 
-				(voiceMailPrefs.getEmailNotificationAddress() != null && voiceMailPrefs.getEmailNotificationAddress().length() > 0)) || !voiceMailPrefs.getEmailNotificationAddress().equalsIgnoreCase(mEmailNotificationAddress))) {
+				(voiceMailPrefs.getEmailNotificationAddress() != null && voiceMailPrefs.getEmailNotificationAddress().length() > 0)) || (ignoreVMPrefEquality || !voiceMailPrefs.getEmailNotificationAddress().equalsIgnoreCase(mEmailNotificationAddress)))) {
 				String address = mEmailNotificationActive.booleanValue() ? mEmailNotificationAddress : "";
 				newFeatures.getVoiceMailPrefs().setEmailNotificationAddress(address);
 			}
@@ -102,25 +104,25 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 				newFeatures.getCallForwardingNoAnswer().setIsActive(true);
 				newFeatures.getCallForwardingNoAnswer().setNumberOfRings(mNumberOfRings.intValue());
 			}	
-			if (mAutoPlayNewMsgs != null && (voiceMailPrefs == null || voiceMailPrefs.getAutoPlayNewMsgs() != mAutoPlayNewMsgs.booleanValue())) {
+			if (mAutoPlayNewMsgs != null && (voiceMailPrefs == null || (ignoreVMPrefEquality || voiceMailPrefs.getAutoPlayNewMsgs() != mAutoPlayNewMsgs.booleanValue()))) {
 				newFeatures.getVoiceMailPrefs().setAutoPlayNewMsgs(mAutoPlayNewMsgs.booleanValue());
 			}
-			if (mPlayDateAndTimeInMsgEnv != null && (voiceMailPrefs == null || voiceMailPrefs.getPlayDateAndTimeInMsgEnv() != mPlayDateAndTimeInMsgEnv.booleanValue())) {
+			if (mPlayDateAndTimeInMsgEnv != null && (voiceMailPrefs == null || (ignoreVMPrefEquality || voiceMailPrefs.getPlayDateAndTimeInMsgEnv() != mPlayDateAndTimeInMsgEnv.booleanValue()))) {
 				newFeatures.getVoiceMailPrefs().setPlayDateAndTimeInMsgEnv(mPlayDateAndTimeInMsgEnv.booleanValue());
 			}
-			if (mSkipPinEntry != null && (voiceMailPrefs == null || voiceMailPrefs.getSkipPinEntry() != mSkipPinEntry.booleanValue())) {
+			if (mSkipPinEntry != null && (voiceMailPrefs == null || (ignoreVMPrefEquality || voiceMailPrefs.getSkipPinEntry() != mSkipPinEntry.booleanValue()))) {
 				newFeatures.getVoiceMailPrefs().setSkipPinEntry(mSkipPinEntry.booleanValue());
 			}
-			if (mPlayCallerNameInMsgEnv != null && (voiceMailPrefs == null || voiceMailPrefs.getPlayCallerNameInMsgEnv() != mPlayCallerNameInMsgEnv.booleanValue())) {
+			if (mPlayCallerNameInMsgEnv != null && (voiceMailPrefs == null || (ignoreVMPrefEquality || voiceMailPrefs.getPlayCallerNameInMsgEnv() != mPlayCallerNameInMsgEnv.booleanValue()))) {
 				newFeatures.getVoiceMailPrefs().setPlayCallerNameInMsgEnv(mPlayCallerNameInMsgEnv.booleanValue());
 			}
-			if (mPromptLevel != null && (voiceMailPrefs == null || voiceMailPrefs.getPromptLevel() == null || !voiceMailPrefs.getPromptLevel().equals(mPromptLevel))) {
+			if (mPromptLevel != null && (voiceMailPrefs == null || voiceMailPrefs.getPromptLevel() == null || (ignoreVMPrefEquality || !voiceMailPrefs.getPromptLevel().equals(mPromptLevel)))) {
 				newFeatures.getVoiceMailPrefs().setPromptLevel(mPromptLevel);
 			}
-			if (mAnsweringLocale != null && (voiceMailPrefs == null || voiceMailPrefs.getAnsweringLocale() == null || !voiceMailPrefs.getAnsweringLocale().equals(mAnsweringLocale))) {
+			if (mAnsweringLocale != null && (voiceMailPrefs == null || voiceMailPrefs.getAnsweringLocale() == null || (ignoreVMPrefEquality || !voiceMailPrefs.getAnsweringLocale().equals(mAnsweringLocale)))) {
 				newFeatures.getVoiceMailPrefs().setAnsweringLocale(mAnsweringLocale);
 			}
-			if (mUserLocale != null && (voiceMailPrefs == null || voiceMailPrefs.getUserLocale() == null || !voiceMailPrefs.getUserLocale().equals(mUserLocale))) {
+			if (mUserLocale != null && (voiceMailPrefs == null || voiceMailPrefs.getUserLocale() == null || (ignoreVMPrefEquality || !voiceMailPrefs.getUserLocale().equals(mUserLocale)))) {
 				newFeatures.getVoiceMailPrefs().setUserLocale(mUserLocale);
 			}
 				
