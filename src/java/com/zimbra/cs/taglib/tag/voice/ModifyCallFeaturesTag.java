@@ -51,7 +51,7 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 		
 			if (mEmailNotificationActive!=null && mEmailNotificationAddress!=null && 
 				((!mEmailNotificationActive.booleanValue() && 
-				(voiceMailPrefs.getEmailNotificationAddress() != null && voiceMailPrefs.getEmailNotificationAddress().length() > 0)) || (ignoreVMPrefEquality || !voiceMailPrefs.getEmailNotificationAddress().equalsIgnoreCase(mEmailNotificationAddress)))) {
+				(voiceMailPrefs.getEmailNotificationAddress() != null && voiceMailPrefs.getEmailNotificationAddress().length() > 0)) || !voiceMailPrefs.getEmailNotificationAddress().equalsIgnoreCase(mEmailNotificationAddress))) {
 				String address = mEmailNotificationActive.booleanValue() ? mEmailNotificationAddress : "";
 				newFeatures.getVoiceMailPrefs().setEmailNotificationAddress(address);
 			}
