@@ -49,6 +49,19 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 
 			boolean ignoreVMPrefEquality = true; // Should VM prefs be submitted regardless of whether they're changed?
 		
+			if (voiceMailPrefs != null && (mAutoPlayNewMsgs != null || mPlayDateAndTimeInMsgEnv != null || mSkipPinEntry != null || mPlayCallerNameInMsgEnv != null || mPromptLevel != null || mAnsweringLocale != null || mUserLocale != null)) {
+				newFeatures.getVoiceMailPrefs().setPlayDateAndTimeInMsgEnv(voiceMailPrefs.getPlayDateAndTimeInMsgEnv());
+				newFeatures.getVoiceMailPrefs().setAutoPlayNewMsgs(voiceMailPrefs.getAutoPlayNewMsgs());
+				newFeatures.getVoiceMailPrefs().setPromptLevel(voiceMailPrefs.getPromptLevel());
+				newFeatures.getVoiceMailPrefs().setPlayCallerNameInMsgEnv(voiceMailPrefs.getPlayCallerNameInMsgEnv());
+				newFeatures.getVoiceMailPrefs().setSkipPinEntry(voiceMailPrefs.getSkipPinEntry());
+				newFeatures.getVoiceMailPrefs().setUserLocale(voiceMailPrefs.getUserLocale());
+				newFeatures.getVoiceMailPrefs().setAnsweringLocale(voiceMailPrefs.getAnsweringLocale());
+				newFeatures.getVoiceMailPrefs().setGreetingType(voiceMailPrefs.getGreetingType());
+				newFeatures.getVoiceMailPrefs().setPlayTutorial(voiceMailPrefs.getPlayTutorial());
+				newFeatures.getVoiceMailPrefs().setVoiceItemsPerPage(voiceMailPrefs.getVoiceItemsPerPage());
+			}
+
 			if (mEmailNotificationActive!=null && mEmailNotificationAddress!=null && 
 				((!mEmailNotificationActive.booleanValue() && 
 				(voiceMailPrefs.getEmailNotificationAddress() != null && voiceMailPrefs.getEmailNotificationAddress().length() > 0)) || !voiceMailPrefs.getEmailNotificationAddress().equalsIgnoreCase(mEmailNotificationAddress))) {
@@ -97,8 +110,7 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 					} else {
 						newSelectiveCallRejection.setIsActive(false);
 					}
-			}			
-			
+			}
 			
 			if (mNumberOfRings != null && (callForwardingNoAnswer == null || callForwardingNoAnswer.getNumberOfRings() != mNumberOfRings.intValue())) {
 				newFeatures.getCallForwardingNoAnswer().setIsActive(true);

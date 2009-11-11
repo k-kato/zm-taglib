@@ -95,6 +95,38 @@ public class ZVoiceMailPrefsBean extends ZCallFeatureBean {
 	getFeature().setAnsweringLocale(locale);
     }
 
+    public String getGreetingType() {
+        return getFeature().getGreetingType();
+    }
+
+    public void setGreetingType(String type) {
+        getFeature().setGreetingType(type);
+    }
+
+    public boolean getEmailNotifStatus() {
+        return getFeature().getEmailNotifStatus();
+    }
+    
+    public void setEmailNotifStatus(boolean value) {
+        getFeature().setEmailNotifStatus(value);
+    }
+
+    public boolean getPlayTutorial() {
+        return getFeature().getPlayTutorial();
+    }
+    
+    public void setPlayTutorial(boolean value) {
+        getFeature().setPlayTutorial(value);
+    }
+
+    public int getVoiceItemsPerPage() {
+        return getFeature().getVoiceItemsPerPage();
+    }
+    
+    public void setVoiceItemsPerPage(int value) {
+        getFeature().setVoiceItemsPerPage(value);
+    }
+
     
     protected ZVoiceMailPrefs getFeature() {
         return (ZVoiceMailPrefs) super.getFeature();
