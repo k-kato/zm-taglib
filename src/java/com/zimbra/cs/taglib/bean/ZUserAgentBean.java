@@ -104,7 +104,6 @@ public class ZUserAgentBean {
                     geckoDate = Float.parseFloat(token.substring(index + 6));
                 } else if ((index = token.indexOf("rv:")) != -1){
                     mozVersion = new Version(token.substring(index + 3));
-                    browserVersion = mozVersion;
                 } else if ((index = token.indexOf("firefox/")) != -1){
                     isFirefox = true;
                     browserVersion = new Version(token.substring(index + 8));
@@ -116,7 +115,6 @@ public class ZUserAgentBean {
                     browserVersion = new Version(token.substring(index + 9));
                 } else if ((index = token.indexOf("safari/")) != -1){
                     isSafari = true;
-                    browserVersion = new Version(token.substring(index + 7));
                 } else if ((index = token.indexOf("chrome/")) != -1){
                     isChrome = true;
                     browserVersion = new Version(token.substring(index + 7));
@@ -127,6 +125,9 @@ public class ZUserAgentBean {
                     isOsMac = true;
                 } else if (token.indexOf("linux") != -1){
                     isOsLinux = true;
+                } else if ((index = token.indexOf("version/")) != -1){
+                    //In case of safari, get the browser version here
+                    browserVersion = new Version(token.substring(index + 8));
                 }
 
                 token = agtArr.hasMoreTokens() ? agtArr.nextToken() : null;
@@ -161,6 +162,8 @@ public class ZUserAgentBean {
     public boolean getIsChrome() { return isChrome; }
     
 	public boolean getIsSafari3Up() { return ((isSafari && browserVersion.greaterOrEqual(3,0)) || isChrome); }
+
+    public boolean getIsSafari4Up() { return ((isSafari && browserVersion.greaterOrEqual(4,0))); }
 
 	public boolean getIsWebTv() { return isWebTv; }
 
@@ -209,8 +212,10 @@ public class ZUserAgentBean {
     public boolean getIsFirefox1_5up() { return (isFirefox && browserVersion.greaterOrEqual(1,5)); }
 
     public boolean getIsFirefox2up() { return (isFirefox && browserVersion.greaterOrEqual(2,0)); }
-    
-	public boolean getIsGecko1_8up() { return (isGeckoBased && browserVersion.greaterOrEqual(1,8)); }
+
+    public boolean getIsFirefox3up() { return (isFirefox && browserVersion.greaterOrEqual(3,0)); }
+
+	public boolean getIsGecko1_9up() { return (isGeckoBased && mozVersion.greaterOrEqual(1,9)); }
 
     public boolean getIsGecko() { return isGeckoBased; }
     
