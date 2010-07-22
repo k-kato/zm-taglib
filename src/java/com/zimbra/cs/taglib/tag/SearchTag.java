@@ -21,14 +21,13 @@ import com.zimbra.cs.zclient.ZMailbox.Fetch;
 import com.zimbra.cs.zclient.ZMailbox.SearchSortBy;
 import com.zimbra.cs.zclient.ZSearchParams;
 import com.zimbra.cs.zclient.ZSearchResult;
-import com.zimbra.common.util.MapUtil;
+import org.apache.commons.collections.map.LRUMap;
 
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 import java.io.IOException;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class SearchTag extends ZimbraSimpleTag {
@@ -148,10 +147,10 @@ public class SearchTag extends ZimbraSimpleTag {
         }
     }
 
-    private static Map getSearchContextCache(JspContext ctxt) {
-        Map cache = (Map) ctxt.getAttribute("SearchTag.queryCache", PageContext.SESSION_SCOPE);
+    private static LRUMap getSearchContextCache(JspContext ctxt) {
+        LRUMap cache = (LRUMap) ctxt.getAttribute("SearchTag.queryCache", PageContext.SESSION_SCOPE);
         if (cache == null) {
-            cache = MapUtil.newLruMap(MAX_QUERY_CACHE);
+            cache = new LRUMap(MAX_QUERY_CACHE);
             ctxt.setAttribute("SearchTag.queryCache", cache, PageContext.SESSION_SCOPE);
         }
 
@@ -159,13 +158,13 @@ public class SearchTag extends ZimbraSimpleTag {
     }
 
     static SearchContext getSearchContext(JspContext ctxt, long searchContext) {
-        Map cache = getSearchContextCache(ctxt);
+        LRUMap cache = getSearchContextCache(ctxt);
         return (SearchContext) cache.get(searchContext);
     }
 
     static long putSearchContext(JspContext ctxt, ZSearchResult result) {
         long context = nextSearchContext();
-        Map cache = getSearchContextCache(ctxt);
+        LRUMap cache = getSearchContextCache(ctxt);
         SearchContext sc = new SearchContext();
         sc.setSearchResult(result);
         cache.put(context, sc);
