@@ -34,13 +34,13 @@ public class CreateFilterRuleTag extends ZimbraSimpleTag {
     public void doTag() throws JspException, IOException {
         try {
             ZMailbox mbox = getMailbox();
-            ZFilterRules rules = mbox.getIncomingFilterRules(true);
+            ZFilterRules rules = mbox.getFilterRules(true);
             for (ZFilterRule rule: rules.getRules()) {
                 if (rule.getName().equalsIgnoreCase(mRule.getName()))
                     throw ZTagLibException.FILTER_EXISTS("filter with name "+mRule.getName()+" already exists", null);
             }
             rules.getRules().add(mRule);
-            mbox.saveIncomingFilterRules(rules);
+            mbox.saveFilterRules(rules);
         } catch (ServiceException e) {
             throw new JspTagException(e);
         }

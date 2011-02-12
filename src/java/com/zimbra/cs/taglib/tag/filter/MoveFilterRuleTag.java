@@ -43,7 +43,7 @@ public class MoveFilterRuleTag extends ZimbraSimpleTag {
     public void doTag() throws JspException, IOException {
         try {
             ZMailbox mbox = getMailbox();
-            ZFilterRules zrules = mbox.getIncomingFilterRules(true);
+            ZFilterRules zrules = mbox.getFilterRules(true);
             List<ZFilterRule> rules = zrules.getRules();
             int index = -1;
             for (int i=0; i < rules.size(); i++) {
@@ -69,7 +69,7 @@ public class MoveFilterRuleTag extends ZimbraSimpleTag {
                 else
                     rules.add(index, rule);
             }
-            mbox.saveIncomingFilterRules(new ZFilterRules(rules));
+            mbox.saveFilterRules(new ZFilterRules(rules));
         } catch (ServiceException e) {
             throw new JspTagException(e);
         }

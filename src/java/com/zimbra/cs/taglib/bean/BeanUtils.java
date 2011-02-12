@@ -20,7 +20,6 @@ import com.zimbra.common.util.HttpUtil;
 import com.zimbra.common.util.StringUtil;
 import com.zimbra.common.soap.VoiceConstants;
 import com.zimbra.common.mailbox.ContactConstants;
-import com.zimbra.common.mime.shim.JavaMailInternetAddress;
 import com.zimbra.cs.taglib.ZJspSession;
 import com.zimbra.cs.zclient.ZFilterAction.ZDiscardAction;
 import com.zimbra.cs.zclient.ZFilterAction.ZFileIntoAction;
@@ -47,13 +46,10 @@ import com.zimbra.cs.zclient.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.ServletException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 import com.zimbra.cs.taglib.tag.i18n.I18nUtil;
-import com.zimbra.cs.account.Account;
-import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.mailbox.Contact;
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 import com.yahoo.platform.yui.compressor.CssCompressor;
@@ -207,11 +203,6 @@ public class BeanUtils {
         return s;
     }
 
-    public static String htmlNewlineEncode(String text) {
-        if (text == null || text.length() == 0) return "";
-        return text.replaceAll("\n","<br>");
-    }
-
     public static String htmlDecode(String text) {
         if (text == null || text.length() == 0) return "";
         String s = replaceAll(text, "<br>", "\n");
@@ -220,7 +211,6 @@ public class BeanUtils {
         s = replaceAll(s, "&nbsp;", " ");
         s = replaceAll(s,"&lt;","<");
         s = replaceAll(s,"&gt;",">");
-        s = replaceAll(s,"&quot;","\"");
         return s;
     }
 
@@ -231,21 +221,6 @@ public class BeanUtils {
         s = replaceAll(s, sGT, "&gt;");
         s = replaceAll(s, sDBLQT, "&quot;");
         return s;
-    }
-
-    public static String htmlRubyEncode(String base, String text) {
-        if (base != null && base.length() > 0 && text != null && text.length() > 0) {
-            StringBuilder str = new StringBuilder();
-            str.append("<ruby><rb>");
-            str.append(htmlEncode(base));
-            str.append("</rb><rp>(</rp><rt>");
-            str.append(htmlEncode(text));
-            str.append("</rt><rp>)</rp></ruby>");
-            return str.toString();
-        }
-        String s = base != null && base.length() > 0 ? base :
-                  (text != null && text.length() > 0 ? text : "");
-        return htmlEncode(s);
     }
 
     private static String internalTextToHtml(String text) {
@@ -317,7 +292,7 @@ public class BeanUtils {
         }                                                          
         else {
             String filler = (ellipses ? "..." : "");
-            return text.subSequence(0,length/2)+filler+text.subSequence((text.length() - length/2 + filler.length()),text.length()) ;
+            return text.subSequence(0,length/2)+filler+text.subSequence((text.length() - length/2 - filler.length()),text.length()) ;
         }
     }
 
@@ -500,15 +475,6 @@ public class BeanUtils {
         List<String> val = mbox.getAccountInfo(false).getAttrs().get(attr);
         return (val.size() > 0) ? val.get(0) : null;
     }
-
-   /**
-    * Checks for a provisioned attribute or a user account/COS attribute. If either is true this
-    * method will return true
-    */
-   public static boolean isProvOrAttr(PageContext pc, String attr) throws JspException, ServiceException {
-       Provisioning prov = Provisioning.getInstance();
-       return prov.getConfig().getBooleanAttr(attr, false) || Provisioning.TRUE.equals(getAttr(pc, attr));
-   }
 
     public static String repeatString(String string, int count) {
         if (count==0) return "";
@@ -826,12 +792,6 @@ public class BeanUtils {
         return cal;
     }
 
-    public static Calendar getCurrentTime(TimeZone tz) {
-        Calendar cal = tz == null ? Calendar.getInstance() : Calendar.getInstance(tz);
-        cal.setTimeInMillis(System.currentTimeMillis());
-        return cal;
-    }
-
     public static Calendar getFirstDayOfMonthView(java.util.Calendar date, long prefFirstDayOfWeek) {
          prefFirstDayOfWeek++; // pref goes 0-6, Calendar goes 1-7
          Calendar cal = Calendar.getInstance(date.getTimeZone());
@@ -979,10 +939,6 @@ public class BeanUtils {
 
     public static String getFolderStyleColor(String color, String view) throws ServiceException {
         return ZFolderBean.getStyleColor(Color.fromString(color), View.fromString(view));
-    }
-
-    public static String getFolderRgbColor(String color, String view) throws ServiceException {
-        return ZFolderBean.getRgbColor(Color.fromString(color), View.fromString(view));
     }
 
     public static boolean actionSet(Map param, String action) {
@@ -1172,14 +1128,6 @@ public class BeanUtils {
 
     public static void clearApptSummaryCache(ZMailboxBean mailbox) {
         mailbox.getMailbox().clearApptSummaryCache();
-    }
-
-    public static void refreshPrefs(ZMailboxBean mailbox) throws JspTagException {
-        try {
-            mailbox.getMailbox().getPrefs(true);
-        } catch (ServiceException e) {
-            throw new JspTagException(e);
-        }
     }
 
     public static boolean hasShareMountPoint(ZMailboxBean mailbox, ZMessageBean message) {
@@ -1387,7 +1335,7 @@ public class BeanUtils {
         boolean validEmail = true;
         try {
             emailline = emailline.replace(";", ",");
-            InternetAddress[] inetAddrs = JavaMailInternetAddress.parseHeader(emailline, false);
+            InternetAddress[] inetAddrs = InternetAddress.parseHeader(emailline, false);
             for (InternetAddress ia : inetAddrs) {
                 Matcher m = sEMAIL_ADDRESS.matcher(ia.getAddress());                          
                 boolean matchFound = m.matches();
@@ -1402,46 +1350,6 @@ public class BeanUtils {
         }
     }
 
-    /**
-     * Checks if the user's UA matches the allowed user agents for honoring
-     * zimbraWebClientLogoutURL.
-     * Returns true if the regex matches or if the
-     * zimbraWebClientLogoutURLAllowedUA is not set(implies all UAs are allowed),
-     * false otherwise.
-     */
-    public static boolean isAllowedUA(com.zimbra.cs.taglib.bean.ZUserAgentBean ua, String[] allowedUA) {
-        if (allowedUA.length == 0) return true;
-        Pattern pattern;
-        Matcher m;
-        for (String str : allowedUA) {
-            pattern = Pattern.compile(str);
-            m = pattern.matcher(ua.getUserAgent());
-            if (m.find())
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * Lightens the hex color string by a fraction of 0.3
-     */
-    public static String lightenColor(String color) {
-        java.awt.Color col = java.awt.Color.decode(color);
-        String retColor = "#";
-        int []rgb = new int[3];
-
-        rgb[0] = col.getRed();
-        rgb[1] = col.getGreen();
-        rgb[2] = col.getBlue();
-
-        for(int index = 0; index < 3 ;index ++)
-        {
-            rgb[index] = (int)Math.max(0, Math.min(255, rgb[index] + (255 - rgb[index])*0.3));
-            retColor += Integer.toHexString(rgb[index]);
-        }
-        return retColor;
-    }
-    
     public static boolean getIsMyCard(PageContext pc, String ids) throws ServiceException, JspException {
 		ZMailbox mbox = ZJspSession.getZMailbox(pc);
 		return mbox.getIsMyCard(ids);
@@ -1592,11 +1500,6 @@ public class BeanUtils {
            ex.printStackTrace(System.err);
         }
         return s;
-    }
-
-    public static String capitalize(String s) {
-        if (s == null || s.length() == 0) return "";
-        return s.length() > 1 ? s.substring(0,1).toUpperCase()+s.substring(1) : s.toUpperCase();
     }
 }
 

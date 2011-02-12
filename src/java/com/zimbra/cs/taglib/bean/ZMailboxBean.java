@@ -26,7 +26,6 @@ import com.zimbra.cs.zclient.ZPrefs;
 import com.zimbra.cs.zclient.ZSignature;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -91,9 +90,9 @@ public class ZMailboxBean {
 
     public List<ZIdentity> getIdentities()  throws ServiceException { return mMbox.getIdentities(); }
 
-    public List<ZFilterRule> getFilterRules() throws ServiceException { return mMbox.getIncomingFilterRules().getRules(); }
+    public List<ZFilterRule> getFilterRules() throws ServiceException { return mMbox.getFilterRules().getRules(); }
 
-    public List<ZFilterRule> getFilterRulesReload() throws ServiceException { return mMbox.getIncomingFilterRules(true).getRules(); }
+    public List<ZFilterRule> getFilterRulesReload() throws ServiceException { return mMbox.getFilterRules(true).getRules(); }
 
     public URI getRestURI(String relativePath) throws ServiceException { return mMbox.getRestURI(relativePath); } 
 

@@ -37,42 +37,42 @@ public class ZTagBean {
     public String getImage() {
         switch(mTag.getColor()) {
         case blue:
-            return "zimbra/ImgTagBlue.png";
+            return "startup/ImgTagBlue.gif";
         case cyan:
-            return "zimbra/ImgTagCyan.png";
+            return "startup/ImgTagCyan.gif";
         case green:
-            return "zimbra/ImgTagGreen.png";
+            return "startup/ImgTagGreen.gif";
         case purple: 
-            return "zimbra/ImgTagPurple.png";
+            return "startup/ImgTagPurple.gif";
         case red:
-            return "zimbra/ImgTagRed.png";
+            return "startup/ImgTagRed.gif";
         case yellow: 
-            return "zimbra/ImgTagYellow.png";
+            return "startup/ImgTagYellow.gif";
         case orange:
         case defaultColor:
         default:
-            return "zimbra/ImgTagOrange.png";
+            return "startup/ImgTagOrange.gif";
         }
     }
     
     public String getMiniImage() {
         switch(mTag.getColor()) {
         case blue:
-            return "zimbra/ImgTagBlue.png";
+            return "startup/ImgTagBlue.gif";
         case cyan:
-            return "zimbra/ImgTagCyan.png";
+            return "startup/ImgTagCyan.gif";
         case green:
-            return "zimbra/ImgTagGreen.png";
+            return "startup/ImgTagGreen.gif";
         case purple: 
-            return "zimbra/ImgTagPurple.png";
+            return "startup/ImgTagPurple.gif";
         case red:
-            return "zimbra/ImgTagRed.png";
+            return "startup/ImgTagRed.gif";
         case yellow: 
-            return "zimbra/ImgTagYellow.png";
+            return "startup/ImgTagYellow.gif";
         case orange:
         case defaultColor:
         default:
-            return "zimbra/ImgTagOrange.png";
+            return "startup/ImgTagOrange.gif";
         }
     }
 

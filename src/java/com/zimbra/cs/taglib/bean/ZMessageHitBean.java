@@ -100,19 +100,19 @@ public class ZMessageHitBean extends ZSearchHitBean {
 
     public String getStatusImage() {
         if (getIsInvite())
-            return "startup/ImgAppointment.png";
+            return "startup/ImgAppointment.gif";
         else if (getIsUnread())
-            return "startup/ImgMsgStatusUnread.png";
+            return "startup/ImgMsgStatusUnread.gif";
         else if (getIsDraft())
-            return "startup/ImgMsgStatusDraft.png";
+            return "startup/ImgMsgStatusDraft.gif";
         else if (getIsRepliedTo())
-            return "startup/ImgMsgStatusReply.png";
+            return "startup/ImgMsgStatusReply.gif";
         else if (getIsForwarded())
-            return "startup/ImgMsgStatusForward.png";
+            return "startup/ImgMsgStatusForward.gif";
         else if (getIsSentByMe())
-            return "startup/ImgMsgStatusSent.png";
+            return "startup/ImgMsgStatusSent.gif";
         else
-            return "startup/ImgMsgStatusRead.png";
+            return "startup/ImgMsgStatusRead.gif";
     }
 
     public String getStatusImageAltKey() {

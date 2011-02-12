@@ -16,7 +16,6 @@ package com.zimbra.cs.taglib.bean;
 
 import com.zimbra.common.soap.VoiceConstants;
 import com.zimbra.common.util.StringUtil;
-import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.zclient.ZFolder;
 import com.zimbra.cs.zclient.ZFolder.Color;
 import com.zimbra.cs.zclient.ZFolder.View;
@@ -126,9 +125,6 @@ public class  ZFolderBean {
         return color.name();
     }
 
-    public String getRgb() {
-        return mFolder.getRgb();
-    }
     /**
      * remote URL (RSS, iCal, etc) this folder syncs to
      * 
@@ -186,8 +182,7 @@ public class  ZFolderBean {
         return view == null || view == ZFolder.View.message || view == ZFolder.View.conversation;
     }
     
-    public boolean getIsNullView() { return mFolder.getDefaultView() == null; }
-    public boolean getIsUnknownView() { return mFolder.getDefaultView() == ZFolder.View.unknown; }
+    public boolean getIsNullView() { return mFolder.getDefaultView() == null; }    
     public boolean getIsMessageView() { return mFolder.getDefaultView() == ZFolder.View.message; }
     public boolean getIsContactView() { return mFolder.getDefaultView() == ZFolder.View.contact; }    
     public boolean getIsConversationView() { return mFolder.getDefaultView() == ZFolder.View.conversation; }        
@@ -282,14 +277,9 @@ public class  ZFolderBean {
     }
 
     public boolean getIsConversationMoveTarget() {
-        boolean isSpamEnabled = true;
-        try {
-            isSpamEnabled = folderObject().getMailbox().getFeatures().getSpam();
-        } catch (ServiceException e) {}
         return (getIsMessageView() || getIsConversationView() || getIsNullView()) &&
                 !(getIsDrafts() || getIsMountPoint() || getIsSearchFolder() || !StringUtil.isNullOrEmpty(getRemoteURL())) &&
-                !getId().equals(ZFolder.ID_CHATS) &&
-				((!getId().equals(ZFolder.ID_SPAM)) || isSpamEnabled);
+                !getId().equals(ZFolder.ID_CHATS);
     }
 
     public boolean getIsMessageFolderMarkReadTarget() {
@@ -371,77 +361,62 @@ public class  ZFolderBean {
         }
     }
 
-    public String getRgbColor() {
-        return getRgbColor(mFolder.getColor(), mFolder.getDefaultView());
-    }
-
-    public static String getRgbColor(Color color, View view) {
-        int colorIndex = color.getValue();
-        if (color == Color.defaultColor) {
-            if (view == View.contact || view == View.task)
-                colorIndex = Color.gray.getValue();
-            else
-                colorIndex = Color.orange.getValue();
-        }
-        return ZFolder.RGB_COLORS[colorIndex];
-    }
-    
     public String getImage() {
         if (getIsSearchFolder()) {
-            return "startup/ImgSearchFolder.png";
+            return "startup/ImgSearchFolder.gif";
         } else if (getIsAppointmentView()) {
             if (getIsMountPoint()) {
-                return "calendar/ImgSharedCalendarFolder.png";
+                return "calendar/ImgSharedCalendarFolder.gif";
             } else {
-                return "calendar/ImgCalendarFolder.png";
+                return "calendar/ImgCalendarFolder.gif";
             }
         } else if (getIsContactView()) {
             if (getIsMountPoint()) {
-                return "contacts/ImgSharedContactsFolder.png";
+                return "contacts/ImgSharedContactsFolder.gif";
             } else if (getIsAutoContacts()) {
-                return "contacts/ImgEmailedContacts.png";
+                return "contacts/ImgEmailedContacts.gif";
             } else {
-                return "contacts/ImgContactsFolder.png";
+                return "contacts/ImgContactsFolder.gif";
             }
         } else if (getIsTaskView()) {
             if (getIsMountPoint()) {
-                return "tasks/ImgSharedTaskList.png";
+                return "tasks/ImgSharedTaskList.gif";
             } else {
-                return "startup/ImgTaskList.png";
+                return "startup/ImgTaskList.gif";
             }
         } else if (getIsSystemFolder()) {
             if (getIsInbox())
-                return "startup/ImgInbox.png";
+                return "startup/ImgInbox.gif";
             else if (getIsTrash())
-                return "startup/ImgTrash.png";
+                return "startup/ImgTrash.gif";
             else if (getIsSpam())
-                return "startup/ImgSpamFolder.png";
+                return "startup/ImgSpamFolder.gif";
             else if (getIsSent())
-                return "startup/ImgSentFolder.png";
+                return "startup/ImgSentFolder.gif";
             else if (getIsDrafts())
-                return "startup/ImgDraftFolder.png";
+                return "startup/ImgDraftFolder.gif";
             else
-                return "startup/ImgFolder.png";
+                return "startup/ImgFolder.gif";
         } else if (getIsMailView() && getIsFeed()) {
-            return "startup/ImgRSS.png";
+            return "startup/ImgRSS.gif";
         } else if (getIsMountPoint()) {
-            return "startup/ImgSharedMailFolder.png";
+            return "startup/ImgSharedMailFolder.gif";
         } else if (getIsVoiceView()) {
             String name = getName();
             if (VoiceConstants.FNAME_PLACEDCALLS.equals(name)) {
-                return "voicemail/ImgPlacedCalls.png";
+                return "voicemail/ImgPlacedCalls.gif";
             } else if (VoiceConstants.FNAME_ANSWEREDCALLS.equals(name)) {
-                return "voicemail/ImgAnsweredCalls.png";
+                return "voicemail/ImgAnsweredCalls.gif";
             } else if (VoiceConstants.FNAME_MISSEDCALLS.equals(name)) {
-                return "voicemail/ImgMissedCalls.png";
+                return "voicemail/ImgMissedCalls.gif";
             } else if (VoiceConstants.FNAME_VOICEMAILINBOX.equals(name)) {
-                return "voicemail/ImgVoicemail.png";
+                return "voicemail/ImgVoicemail.gif";
             } else if (VoiceConstants.FNAME_TRASH.equals(name)) {
-                return "startup/ImgTrash.png";
+                return "startup/ImgTrash.gif";
             }
             return null;
         } else {
-            return "startup/ImgFolder.png";
+            return "startup/ImgFolder.gif";
         }
     }
     

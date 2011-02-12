@@ -52,7 +52,6 @@ public class ComputeSearchContextTag extends ZimbraSimpleTag {
     private static final String QP_SEARCH_USE_CACHE = "su";    
     private static final String QP_SEARCH_TYPES = "st";
     private static final String QP_SEARCH_INDEX = "si";
-    private static final String QP_ACCT_NAME = "acct";    
 
     private String mVar;
     private String mTypes;
@@ -69,7 +68,7 @@ public class ComputeSearchContextTag extends ZimbraSimpleTag {
 
     public void setTypes(String types) { this.mTypes = types; }
 
-    public void setLimit(int limit) { this.mLimit = limit; }
+    public void setLimit(int limit) { this.mLimit = limit; } 
 
     private int getInt(ServletRequest req, String name, int def) {
         try {
@@ -169,7 +168,6 @@ public class ComputeSearchContextTag extends ZimbraSimpleTag {
         String sti = req.getParameter(QP_SEARCH_TAG_ID);
         String st = req.getParameter(QP_SEARCH_TYPES);
         String ss = req.getParameter(QP_SEARCH_SORT);
-        String acct = req.getParameter(QP_ACCT_NAME);
 
         result.setSq(sq);
         result.setSfi(sfi);
@@ -190,7 +188,7 @@ public class ComputeSearchContextTag extends ZimbraSimpleTag {
         }
 
         if (mSortBy == null)
-            mSortBy = (ZSearchParams.TYPE_CONTACT.equals(mTypes) || ZSearchParams.TYPE_GAL.equals(mTypes)) ? ZMailbox.SearchSortBy.nameAsc :
+            mSortBy = ZSearchParams.TYPE_CONTACT.equals(mTypes) ? ZMailbox.SearchSortBy.nameAsc :
                     ZSearchParams.TYPE_TASK.equals(mTypes) ? ZMailbox.SearchSortBy.taskDueDesc :
                     ZMailbox.SearchSortBy.dateDesc;
 
@@ -253,14 +251,8 @@ public class ComputeSearchContextTag extends ZimbraSimpleTag {
                 result.setFolder(new ZFolderBean(folder));
                 result.setTitle(folder.getName());
                 result.setSelectedId(folder.getId());
-            } else if (acct != null) {
-                /**
-                 * Zimbra Desktop passes account name as a param to the print module as lite client doesn't understand
-                 * family mailbox. Use the folder name passed from ZD as is to set the query for the SearchRequest. 
-                 */
-                result.setQuery("inid:\"" + sfi + "\"");
+                return;
             }
-            return;
         } else if (sti != null) {
             ZTag tag = mailbox.getTagById(sti);
             if (tag != null) {

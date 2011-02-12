@@ -2693,15 +2693,13 @@
             <required>true</required>
         </attribute>
 
-        <attribute>
-            <description>
-                auth token to use.
-            </description>
-            <name>authtoken</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
+         <attribute>
+             <description>ZMailboxBean object to use</description>
+             <name>box</name>
+             <required>false</required>
+             <rtexprvalue>true</rtexprvalue>
+             <type>com.zimbra.cs.taglib.bean.ZMailboxBean</type>
+         </attribute>
 
          <attribute>
              <description>
@@ -3453,13 +3451,6 @@
         <attribute>
             <description>new folder color </description>
             <name>color</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <description>new folder rgb value of color </description>
-            <name>rgb</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
@@ -5077,65 +5068,6 @@
              <type>java.lang.String</type>
          </attribute>
     </tag>
-
-    <tag>
-        <description>get briefcase info</description>
-        <name>getBriefcase</name>
-        <tag-class>com.zimbra.cs.taglib.tag.briefcase.GetBriefcaseTag</tag-class>
-        <body-content>empty</body-content>
-        <variable>
-            <name-from-attribute>varSearch</name-from-attribute>
-            <variable-class>com.zimbra.cs.taglib.bean.ZSearchResultBean</variable-class>
-            <scope>AT_END</scope>
-        </variable>
-        <variable>
-            <name-from-attribute>varFolder</name-from-attribute>
-            <variable-class>com.zimbra.cs.taglib.bean.ZFolderBean</variable-class>
-            <scope>AT_END</scope>
-        </variable>
-        <attribute>
-            <description>ZMailboxBean object to use</description>
-            <name>box</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>com.zimbra.cs.taglib.bean.ZMailboxBean</type>
-        </attribute>
-        <attribute>
-            <description>
-                target account id for use with REST HTML rendering.
-            </description>
-            <name>resttargetaccountid</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-        <attribute>
-            <description>timezone to compute correct start/end time for all day appts</description>
-            <name>timezone</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.util.TimeZone</type>
-        </attribute>
-        <attribute>
-        <description>
-                Name of the exported scoped variable for the search result.
-            </description>
-            <name>varSearch</name>
-            <required>true</required>
-        </attribute>
-        <attribute>
-        <description>
-                Name of the exported scoped variable for the briefcase folder details.
-            </description>
-            <name>varFolder</name>
-            <required>true</required>
-        </attribute>
-        <attribute>
-            <description>briefcase folder id</description>
-            <name>id</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-      </tag>
 
     <tag>
         <description>get document info</description>
@@ -6862,11 +6794,6 @@
         <function-signature>boolean isAddressBook(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
-	<function>
-		<name>isProvOrAttr</name>
-		<function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isProvOrAttr(javax.servlet.jsp.PageContext, java.lang.String)</function-signature>
-	</function>
     <function>
         <name>getAddressBook</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
@@ -7072,12 +6999,6 @@
     </function>
 
     <function>
-        <name>getCurrentTime</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.util.Calendar getCurrentTime(java.util.TimeZone)</function-signature>
-    </function>
-
-    <function>
         <name>isSameDate</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>boolean isSameDate(java.util.Calendar,java.util.Calendar)</function-signature>
@@ -7162,12 +7083,6 @@
     </function>
 
     <function>
-        <name>getFolderRgbColor</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String getFolderRgbColor(java.lang.String,java.lang.String)</function-signature>
-    </function>
-
-    <function>
         <name>getPartHtmlContent</name>
         <function-class>com.zimbra.cs.taglib.bean.ZMessageBean</function-class>
         <function-signature>java.lang.String getHtmlContent(com.zimbra.cs.taglib.bean.ZMimePartBean,com.zimbra.cs.taglib.bean.ZMessageBean)</function-signature>
@@ -7249,12 +7164,6 @@
         <name>clearApptSummaryCache</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>void clearApptSummaryCache(com.zimbra.cs.taglib.bean.ZMailboxBean)</function-signature>
-    </function>
-
-    <function>
-        <name>refreshPrefs</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>void refreshPrefs(com.zimbra.cs.taglib.bean.ZMailboxBean)</function-signature>
     </function>
 
     <function>
@@ -7446,35 +7355,4 @@
 		<function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
 		<function-signature>java.lang.String replaceAll(java.lang.String, java.lang.String,java.lang.String)</function-signature>
 	</function>
-
-    <function>
-        <name>isAllowedUA</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isAllowedUA(com.zimbra.cs.taglib.bean.ZUserAgentBean, java.lang.String[])</function-signature>
-    </function>
-
-    <function>
-        <name>lightenColor</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String lightenColor(java.lang.String)</function-signature>
-    </function>
-
-    <function>
-        <name>capitalize</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String capitalize(java.lang.String)</function-signature>
-    </function>
-
-    <function>
-        <name>htmlRubyEncode</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String htmlRubyEncode(java.lang.String, java.lang.String)</function-signature>
-    </function>
-
-    <function>
-        <name>htmlNewlineEncode</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String htmlNewlineEncode(java.lang.String)</function-signature>
-    </function>
-
 </taglib>
