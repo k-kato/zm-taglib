@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 Zimbra, Inc.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -207,11 +207,6 @@ public class BeanUtils {
         return s;
     }
 
-    public static String htmlNewlineEncode(String text) {
-        if (text == null || text.length() == 0) return "";
-        return text.replaceAll("\n","<br>");
-    }
-
     public static String htmlDecode(String text) {
         if (text == null || text.length() == 0) return "";
         String s = replaceAll(text, "<br>", "\n");
@@ -231,21 +226,6 @@ public class BeanUtils {
         s = replaceAll(s, sGT, "&gt;");
         s = replaceAll(s, sDBLQT, "&quot;");
         return s;
-    }
-
-    public static String htmlRubyEncode(String base, String text) {
-        if (base != null && base.length() > 0 && text != null && text.length() > 0) {
-            StringBuilder str = new StringBuilder();
-            str.append("<ruby><rb>");
-            str.append(htmlEncode(base));
-            str.append("</rb><rp>(</rp><rt>");
-            str.append(htmlEncode(text));
-            str.append("</rt><rp>)</rp></ruby>");
-            return str.toString();
-        }
-        String s = base != null && base.length() > 0 ? base :
-                  (text != null && text.length() > 0 ? text : "");
-        return htmlEncode(s);
     }
 
     private static String internalTextToHtml(String text) {

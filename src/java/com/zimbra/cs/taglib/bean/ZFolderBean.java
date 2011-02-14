@@ -16,7 +16,6 @@ package com.zimbra.cs.taglib.bean;
 
 import com.zimbra.common.soap.VoiceConstants;
 import com.zimbra.common.util.StringUtil;
-import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.zclient.ZFolder;
 import com.zimbra.cs.zclient.ZFolder.Color;
 import com.zimbra.cs.zclient.ZFolder.View;
@@ -282,14 +281,9 @@ public class  ZFolderBean {
     }
 
     public boolean getIsConversationMoveTarget() {
-        boolean isSpamEnabled = true;
-        try {
-            isSpamEnabled = folderObject().getMailbox().getFeatures().getSpam();
-        } catch (ServiceException e) {}
         return (getIsMessageView() || getIsConversationView() || getIsNullView()) &&
                 !(getIsDrafts() || getIsMountPoint() || getIsSearchFolder() || !StringUtil.isNullOrEmpty(getRemoteURL())) &&
-                !getId().equals(ZFolder.ID_CHATS) &&
-				((!getId().equals(ZFolder.ID_SPAM)) || isSpamEnabled);
+                !getId().equals(ZFolder.ID_CHATS);
     }
 
     public boolean getIsMessageFolderMarkReadTarget() {
