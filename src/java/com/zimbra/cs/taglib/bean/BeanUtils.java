@@ -1586,18 +1586,6 @@ public class BeanUtils {
 		return String.valueOf(container).contains(String.valueOf(object));
 	}
 
-    public static String getAttrValue(java.util.Map attrMap, String field) {
-        if (attrMap == null || field == null) {
-            return "";
-        }
-
-        if (attrMap.containsKey(field)) {
-            return (String)attrMap.get(field);
-        }
-
-        return "";
-    }
-
 	public static String javaLocaleId(Locale locale) {
 		// NOTE: Java uses has the wrong code for Indonesian
 		// NOTE: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6457127
