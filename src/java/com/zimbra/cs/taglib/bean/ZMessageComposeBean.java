@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 Zimbra, Inc.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -39,10 +39,10 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartSource;
 
-import com.zimbra.common.calendar.ParsedDuration;
 import com.zimbra.common.calendar.TZIDMapper;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.account.Provisioning;
+import com.zimbra.cs.mailbox.calendar.ParsedDuration;
 import com.zimbra.cs.taglib.tag.i18n.I18nUtil;
 import com.zimbra.cs.zclient.ZAlarm;
 import com.zimbra.cs.zclient.ZDateTime;
@@ -1944,14 +1944,8 @@ da body
         if (mInReplyTo != null && mInReplyTo.length() > 0)
             m.setInReplyTo(mInReplyTo);
 
-        if (mMessageId != null && mMessageId.length() > 0 && mReplyType != null && mReplyType.length() > 0) {
+        if (mMessageId != null && mMessageId.length() > 0)
             m.setOriginalMessageId(mMessageId);
-        }
-
-        if (mDraftId != null && mDraftId.length() > 0) {
-            m.setMessageId(mDraftId);
-            m.setDraftMessageId(mDraftId);
-        }
 
         if (mReplyType != null && mReplyType.length() > 0)
             m.setReplyType(mReplyType);
