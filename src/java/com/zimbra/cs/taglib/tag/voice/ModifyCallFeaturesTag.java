@@ -53,11 +53,8 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 			boolean answeringLocaleChanged = (mAnsweringLocale != null && (voiceMailPrefs == null || voiceMailPrefs.getAnsweringLocale() == null || !voiceMailPrefs.getAnsweringLocale().equals(mAnsweringLocale)));
 			boolean userLocaleChanged = (mUserLocale != null && (voiceMailPrefs == null || voiceMailPrefs.getUserLocale() == null || !voiceMailPrefs.getUserLocale().equals(mUserLocale)));
 
-			boolean notifTransChanged = (mEmailNotifTrans != null && (voiceMailPrefs == null || voiceMailPrefs.getEmailNotifTrans() != mEmailNotifTrans.booleanValue()));
-			boolean notifAttachChanged = (mEmailNotifAttach != null && (voiceMailPrefs == null || voiceMailPrefs.getEmailNotifAttach() != mEmailNotifAttach.booleanValue()));
-
 			// If any vm setting has changed, set them all to the old values first
-			if (voiceMailPrefs != null && (autoPlayChanged || playDateAndTimeInMsgEnvChanged || skipPinEntryChanged || playCallerNameInMsgEnvChanged || promptLevelChanged || answeringLocaleChanged || userLocaleChanged || notifTransChanged || notifAttachChanged)) {
+			if (voiceMailPrefs != null && (autoPlayChanged || playDateAndTimeInMsgEnvChanged || skipPinEntryChanged || playCallerNameInMsgEnvChanged || promptLevelChanged || answeringLocaleChanged || userLocaleChanged)) {
 				newFeatures.getVoiceMailPrefs().setPlayDateAndTimeInMsgEnv(voiceMailPrefs.getPlayDateAndTimeInMsgEnv());
 				newFeatures.getVoiceMailPrefs().setAutoPlayNewMsgs(voiceMailPrefs.getAutoPlayNewMsgs());
 				newFeatures.getVoiceMailPrefs().setPromptLevel(voiceMailPrefs.getPromptLevel());
@@ -68,8 +65,6 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 				newFeatures.getVoiceMailPrefs().setGreetingType(voiceMailPrefs.getGreetingType());
 				newFeatures.getVoiceMailPrefs().setPlayTutorial(voiceMailPrefs.getPlayTutorial());
 				newFeatures.getVoiceMailPrefs().setVoiceItemsPerPage(voiceMailPrefs.getVoiceItemsPerPage());
-				newFeatures.getVoiceMailPrefs().setEmailNotifTrans(voiceMailPrefs.getEmailNotifTrans());
-				newFeatures.getVoiceMailPrefs().setEmailNotifAttach(voiceMailPrefs.getEmailNotifAttach());
 			}
 
 			if (mEmailNotificationActive!=null && mEmailNotificationAddress!=null && 
@@ -146,12 +141,6 @@ public class ModifyCallFeaturesTag extends CallFeaturesTagBase {
 			}
 			if (userLocaleChanged) {
 				newFeatures.getVoiceMailPrefs().setUserLocale(mUserLocale);
-			}
-			if (notifTransChanged) {
-				newFeatures.getVoiceMailPrefs().setEmailNotifTrans(mEmailNotifTrans);
-			}
-			if (notifAttachChanged) {
-				newFeatures.getVoiceMailPrefs().setEmailNotifAttach(mEmailNotifAttach);
 			}
 				
 			boolean update = false;

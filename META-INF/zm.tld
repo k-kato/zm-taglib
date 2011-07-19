@@ -2636,24 +2636,6 @@
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-
-        <attribute>
-            <description>
-                intial search folder path
-            </description>
-            <name>folderpath</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-
-        <attribute>
-            <description>
-                sortby
-            </description>
-            <name>sortby</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
     </tag>
 
     <tag>
@@ -6099,26 +6081,6 @@
                 Email notification address.
             </description>
             <name>emailnotificationaddress</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-
-        <attribute>
-            <description>
-                Notification on transfer
-            </description>
-            <name>emailNotifTrans</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-
-        <attribute>
-            <description>
-                Notification on attach
-            </description>
-            <name>emailNotifAttach</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.lang.String</type>
