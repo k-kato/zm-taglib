@@ -19,9 +19,9 @@ import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.taglib.bean.ZCallFeaturesBean;
 import com.zimbra.cs.taglib.bean.ZCallForwardingBean;
 import com.zimbra.cs.taglib.bean.ZSelectiveCallForwardingBean;
-import com.zimbra.client.ZCallFeatures;
-import com.zimbra.client.ZMailbox;
-import com.zimbra.client.ZPhoneAccount;
+import com.zimbra.cs.zclient.ZCallFeatures;
+import com.zimbra.cs.zclient.ZMailbox;
+import com.zimbra.cs.zclient.ZPhoneAccount;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
@@ -59,9 +59,6 @@ public class CreateCallFeaturesTag extends CallFeaturesTagBase {
 	    newFeatures.getVoiceMailPrefs().setPromptLevel(mPromptLevel);
 	    newFeatures.getVoiceMailPrefs().setAnsweringLocale(mAnsweringLocale);
 	    newFeatures.getVoiceMailPrefs().setUserLocale(mUserLocale);
-
-	    newFeatures.getVoiceMailPrefs().setEmailNotifTrans(mEmailNotifTrans);
-	    newFeatures.getVoiceMailPrefs().setEmailNotifAttach(mEmailNotifAttach);
 
             getJspContext().setAttribute(mVar, newFeatures, PageContext.PAGE_SCOPE);
         } catch (ServiceException e) {

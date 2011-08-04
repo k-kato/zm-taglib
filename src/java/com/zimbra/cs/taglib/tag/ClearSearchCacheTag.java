@@ -15,7 +15,7 @@
 
 package com.zimbra.cs.taglib.tag;
 
-import com.zimbra.client.ZMailbox;
+import com.zimbra.cs.zclient.ZMailbox;
 
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspException;

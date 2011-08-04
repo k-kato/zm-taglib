@@ -14,7 +14,7 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.client.ZCallFeature;
+import com.zimbra.cs.zclient.ZCallFeature;
 
 public class ZCallFeatureBean {
     private ZCallFeature mFeature;

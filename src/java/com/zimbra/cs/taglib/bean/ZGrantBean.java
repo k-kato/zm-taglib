@@ -14,7 +14,7 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.client.ZGrant;
+import com.zimbra.cs.zclient.ZGrant;
 
 /**
  * Created by IntelliJ IDEA.
