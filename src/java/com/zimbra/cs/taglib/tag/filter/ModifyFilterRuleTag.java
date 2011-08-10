@@ -2,12 +2,12 @@
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2007, 2009, 2010 Zimbra, Inc.
- * 
+ *
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
  * compliance with the License.  You may obtain a copy of the License at
  * http://www.zimbra.com/license.
- * 
+ *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
  * ***** END LICENSE BLOCK *****
@@ -26,8 +26,6 @@ import javax.servlet.jsp.JspTagException;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-import org.apache.commons.lang.StringEscapeUtils;
-
 
 public class ModifyFilterRuleTag extends ZimbraSimpleTag {
 
@@ -47,10 +45,8 @@ public class ModifyFilterRuleTag extends ZimbraSimpleTag {
             List<ZFilterRule> newRules = new ArrayList<ZFilterRule>();
             boolean origFound = false;
 
-            // unescape the input filter rule name
-            String origRuleName = StringEscapeUtils.unescapeXml(mOriginalName);
             for (ZFilterRule rule: rules.getRules()) {
-                if (rule.getName().equalsIgnoreCase(origRuleName)) {
+                if (rule.getName().equalsIgnoreCase(mOriginalName)) {
                     newRules.add(mRule);
                     origFound = true;
                 } else if (rule.getName().equalsIgnoreCase(mRule.getName())) {
@@ -60,7 +56,7 @@ public class ModifyFilterRuleTag extends ZimbraSimpleTag {
                 }
             }
             if (!origFound) {
-                throw ZTagLibException.NO_SUCH_FILTER_EXISTS("filter with name "+mRule.getName()+" doesn't exist", null);                
+                throw ZTagLibException.NO_SUCH_FILTER_EXISTS("filter with name "+mRule.getName()+" doesn't exist", null);
             }
             mbox.saveIncomingFilterRules(new ZFilterRules(newRules));
         } catch (ServiceException e) {
