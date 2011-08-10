@@ -15,14 +15,14 @@
 package com.zimbra.cs.taglib;
 
 import com.google.common.base.Charsets;
-import com.zimbra.common.account.Key;
 import com.zimbra.common.auth.ZAuthToken;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.RemoteIP;
+import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.taglib.bean.BeanUtils;
-import com.zimbra.client.ZAuthResult;
-import com.zimbra.client.ZFolder;
-import com.zimbra.client.ZMailbox;
+import com.zimbra.cs.zclient.ZAuthResult;
+import com.zimbra.cs.zclient.ZFolder;
+import com.zimbra.cs.zclient.ZMailbox;
 import com.zimbra.common.localconfig.LC;
 
 import javax.servlet.http.Cookie;
@@ -447,7 +447,7 @@ public class ZJspSession {
             options.setNoSession(true);
             options.setAuthAuthToken(false);
             options.setTargetAccount(targetAccountId);
-            options.setTargetAccountBy(Key.AccountBy.id);
+            options.setTargetAccountBy(Provisioning.AccountBy.id);
             options.setClientIp(getRemoteAddr(context));
             return ZMailbox.getMailbox(options);
         }
@@ -462,7 +462,7 @@ public class ZJspSession {
             options.setNoSession(true);
             options.setAuthAuthToken(false);
             options.setTargetAccount(targetAccountId);
-            options.setTargetAccountBy(Key.AccountBy.id);
+            options.setTargetAccountBy(Provisioning.AccountBy.id);
             options.setClientIp(getRemoteAddr(context));
             return ZMailbox.getMailbox(options);
         }

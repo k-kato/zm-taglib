@@ -22,17 +22,13 @@ public class ZApptMultiDayLayoutBean {
     private List<ZApptRowLayoutBean> mAllDayRows;
     private List<ZApptRowLayoutBean> mRows;
     private List<ZApptDayLayoutBean> mDays;
-    private List<List<ZApptRowLayoutBean>> mRowsSeperatedByDays;
-    private List<List<ZApptRowLayoutBean>> mAllDayRowsSeperatedByDays;
     private int mMaxColumns;
 
-    public ZApptMultiDayLayoutBean(List<ZApptDayLayoutBean> days, List<ZApptRowLayoutBean> allDayRows, List<ZApptRowLayoutBean> rows, List<List<ZApptRowLayoutBean>> rowsSeperatedByDays, List<List<ZApptRowLayoutBean>> allDayRowsSeperatedByDays) {
+    public ZApptMultiDayLayoutBean(List<ZApptDayLayoutBean> days, List<ZApptRowLayoutBean> allDayRows, List<ZApptRowLayoutBean> rows) {
         mAllDayRows = allDayRows;
         mRows = rows;
         mDays = days;
         mMaxColumns = 0;
-        mRowsSeperatedByDays = rowsSeperatedByDays;
-        mAllDayRowsSeperatedByDays = allDayRowsSeperatedByDays;
         for (ZApptDayLayoutBean day : days) {
             mMaxColumns += day.getColumns().size();
         }
@@ -44,14 +40,6 @@ public class ZApptMultiDayLayoutBean {
 
     public List<ZApptRowLayoutBean> getRows() {
         return mRows;
-    }
-
-    public List<List<ZApptRowLayoutBean>> getRowsSeperatedByDays() {
-        return mRowsSeperatedByDays;
-    }
-
-    public List<List<ZApptRowLayoutBean>> getAllDayRowsSeperatedByDays() {
-        return mAllDayRowsSeperatedByDays;
     }
 
     public List<ZApptDayLayoutBean> getDays() {

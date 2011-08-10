@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 Zimbra, Inc.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -39,38 +39,38 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.PartSource;
 
-import com.zimbra.common.calendar.ParsedDuration;
 import com.zimbra.common.calendar.TZIDMapper;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.account.Provisioning;
+import com.zimbra.cs.mailbox.calendar.ParsedDuration;
 import com.zimbra.cs.taglib.tag.i18n.I18nUtil;
-import com.zimbra.client.ZAlarm;
-import com.zimbra.client.ZDateTime;
-import com.zimbra.client.ZEmailAddress;
-import com.zimbra.client.ZFolder;
-import com.zimbra.client.ZIdentity;
-import com.zimbra.client.ZInvite;
-import com.zimbra.client.ZMailbox;
-import com.zimbra.client.ZPrefs;
-import com.zimbra.client.ZSignature;
-import com.zimbra.client.ZSimpleRecurrence;
-import com.zimbra.client.ZInvite.ZAttendee;
-import com.zimbra.client.ZInvite.ZByDayWeekDay;
-import com.zimbra.client.ZInvite.ZClass;
-import com.zimbra.client.ZInvite.ZComponent;
-import com.zimbra.client.ZInvite.ZFreeBusyStatus;
-import com.zimbra.client.ZInvite.ZOrganizer;
-import com.zimbra.client.ZInvite.ZParticipantStatus;
-import com.zimbra.client.ZInvite.ZRole;
-import com.zimbra.client.ZInvite.ZStatus;
-import com.zimbra.client.ZInvite.ZTransparency;
-import com.zimbra.client.ZInvite.ZWeekDay;
-import com.zimbra.client.ZMailbox.ReplyVerb;
-import com.zimbra.client.ZMailbox.ZOutgoingMessage;
-import com.zimbra.client.ZMailbox.ZOutgoingMessage.AttachedMessagePart;
-import com.zimbra.client.ZMailbox.ZOutgoingMessage.MessagePart;
-import com.zimbra.client.ZSimpleRecurrence.ZSimpleRecurrenceEnd;
-import com.zimbra.client.ZSimpleRecurrence.ZSimpleRecurrenceType;
+import com.zimbra.cs.zclient.ZAlarm;
+import com.zimbra.cs.zclient.ZDateTime;
+import com.zimbra.cs.zclient.ZEmailAddress;
+import com.zimbra.cs.zclient.ZFolder;
+import com.zimbra.cs.zclient.ZIdentity;
+import com.zimbra.cs.zclient.ZInvite;
+import com.zimbra.cs.zclient.ZMailbox;
+import com.zimbra.cs.zclient.ZPrefs;
+import com.zimbra.cs.zclient.ZSignature;
+import com.zimbra.cs.zclient.ZSimpleRecurrence;
+import com.zimbra.cs.zclient.ZInvite.ZAttendee;
+import com.zimbra.cs.zclient.ZInvite.ZByDayWeekDay;
+import com.zimbra.cs.zclient.ZInvite.ZClass;
+import com.zimbra.cs.zclient.ZInvite.ZComponent;
+import com.zimbra.cs.zclient.ZInvite.ZFreeBusyStatus;
+import com.zimbra.cs.zclient.ZInvite.ZOrganizer;
+import com.zimbra.cs.zclient.ZInvite.ZParticipantStatus;
+import com.zimbra.cs.zclient.ZInvite.ZRole;
+import com.zimbra.cs.zclient.ZInvite.ZStatus;
+import com.zimbra.cs.zclient.ZInvite.ZTransparency;
+import com.zimbra.cs.zclient.ZInvite.ZWeekDay;
+import com.zimbra.cs.zclient.ZMailbox.ReplyVerb;
+import com.zimbra.cs.zclient.ZMailbox.ZOutgoingMessage;
+import com.zimbra.cs.zclient.ZMailbox.ZOutgoingMessage.AttachedMessagePart;
+import com.zimbra.cs.zclient.ZMailbox.ZOutgoingMessage.MessagePart;
+import com.zimbra.cs.zclient.ZSimpleRecurrence.ZSimpleRecurrenceEnd;
+import com.zimbra.cs.zclient.ZSimpleRecurrence.ZSimpleRecurrenceType;
 
 public class ZMessageComposeBean {
 
@@ -1944,14 +1944,8 @@ da body
         if (mInReplyTo != null && mInReplyTo.length() > 0)
             m.setInReplyTo(mInReplyTo);
 
-        if (mMessageId != null && mMessageId.length() > 0 && mReplyType != null && mReplyType.length() > 0) {
+        if (mMessageId != null && mMessageId.length() > 0)
             m.setOriginalMessageId(mMessageId);
-        }
-
-        if (mDraftId != null && mDraftId.length() > 0) {
-            m.setMessageId(mDraftId);
-            m.setDraftMessageId(mDraftId);
-        }
 
         if (mReplyType != null && mReplyType.length() > 0)
             m.setReplyType(mReplyType);
