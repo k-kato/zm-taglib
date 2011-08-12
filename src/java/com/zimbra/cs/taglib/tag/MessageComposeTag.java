@@ -19,7 +19,7 @@ import com.zimbra.cs.taglib.bean.ZMessageBean;
 import com.zimbra.cs.taglib.bean.ZMessageComposeBean;
 import com.zimbra.cs.taglib.bean.ZMessageComposeBean.Action;
 import com.zimbra.cs.taglib.bean.ZMessageComposeBean.AppointmentOptions;
-import com.zimbra.client.ZMailbox;
+import com.zimbra.cs.zclient.ZMailbox;
 
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspException;
