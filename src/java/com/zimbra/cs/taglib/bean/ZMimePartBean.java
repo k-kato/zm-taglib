@@ -15,7 +15,7 @@
 
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.client.ZMessage.ZMimePart;
+import com.zimbra.cs.zclient.ZMessage.ZMimePart;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -78,7 +78,8 @@ public class ZMimePartBean {
                     CT_MULTI_ALT,
                     CT_MULTI_MIXED,
                     CT_MULTI_RELATED,
-                    CT_MULTI_APPLE_DBL
+                    CT_MULTI_APPLE_DBL,
+                    CT_TEXT_CAL
             ));
 
     public static boolean isIgnoredPArt(ZMimePart part) {

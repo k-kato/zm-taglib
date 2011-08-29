@@ -16,7 +16,7 @@ package com.zimbra.cs.taglib.tag.tag;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.taglib.tag.ZimbraSimpleTag;
-import com.zimbra.client.ZTag;
+import com.zimbra.cs.zclient.ZTag;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;

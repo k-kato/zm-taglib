@@ -14,7 +14,7 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.client.ZAppointmentHit;
+import com.zimbra.cs.zclient.ZAppointmentHit;
 
 public class ZApptCellLayoutBean {
     private boolean mIsFirst;
