@@ -14,7 +14,7 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.client.ZTaskHit;
+import com.zimbra.cs.zclient.ZTaskHit;
 
 import java.util.Date;
 

@@ -16,8 +16,8 @@ package com.zimbra.cs.taglib.bean;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.mailbox.Contact;
-import com.zimbra.client.ZContact;
-import com.zimbra.client.ZEmailAddress;
+import com.zimbra.cs.zclient.ZContact;
+import com.zimbra.cs.zclient.ZEmailAddress;
 
 import java.util.List;
 import java.util.Map;
@@ -182,7 +182,7 @@ public class ZContactBean implements Comparable {
 
     public boolean getIsGroup() { return mContact.getIsGroup(); }
 
-    public String getImagePart() { return (mContact.getAttachmentPartInfo("image") != null ? mContact.getAttachmentPartName("image") : null);}
+    public String getImagePart() { return mContact.getAttachmentPartName("image");}
 
     /* Comcast specific */
     public String getHomeAddress() { return mContact.getAttrs().get("homeAddress"); }

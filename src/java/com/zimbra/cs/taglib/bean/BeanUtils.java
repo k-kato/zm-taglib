@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 Zimbra, Inc.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -14,7 +14,6 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.common.account.ProvisioningConstants;
 import com.zimbra.common.calendar.TZIDMapper;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.HttpUtil;
@@ -24,27 +23,27 @@ import com.zimbra.common.mailbox.ContactConstants;
 import com.zimbra.common.mime.shim.JavaMailInternetAddress;
 import com.zimbra.cs.service.util.ItemId;
 import com.zimbra.cs.taglib.ZJspSession;
-import com.zimbra.client.ZFilterAction.ZDiscardAction;
-import com.zimbra.client.ZFilterAction.ZFileIntoAction;
-import com.zimbra.client.ZFilterAction.ZKeepAction;
-import com.zimbra.client.ZFilterAction.ZMarkAction;
-import com.zimbra.client.ZFilterAction.ZRedirectAction;
-import com.zimbra.client.ZFilterAction.ZStopAction;
-import com.zimbra.client.ZFilterAction.ZTagAction;
-import com.zimbra.client.ZFilterCondition.ZAddressBookCondition;
-import com.zimbra.client.ZFilterCondition.ZAttachmentExistsCondition;
-import com.zimbra.client.ZFilterCondition.ZBodyCondition;
-import com.zimbra.client.ZFilterCondition.ZDateCondition;
-import com.zimbra.client.ZFilterCondition.ZHeaderCondition;
-import com.zimbra.client.ZFilterCondition.ZHeaderExistsCondition;
-import com.zimbra.client.ZFilterCondition.ZSizeCondition;
-import com.zimbra.client.ZFolder.Color;
-import com.zimbra.client.ZFolder.View;
-import com.zimbra.client.ZInvite.ZAttendee;
-import com.zimbra.client.ZInvite.ZComponent;
-import com.zimbra.client.ZInvite.ZWeekDay;
-import com.zimbra.client.ZSimpleRecurrence.ZSimpleRecurrenceType;
-import com.zimbra.client.*;
+import com.zimbra.cs.zclient.ZFilterAction.ZDiscardAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZFileIntoAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZKeepAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZMarkAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZRedirectAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZStopAction;
+import com.zimbra.cs.zclient.ZFilterAction.ZTagAction;
+import com.zimbra.cs.zclient.ZFilterCondition.ZAddressBookCondition;
+import com.zimbra.cs.zclient.ZFilterCondition.ZAttachmentExistsCondition;
+import com.zimbra.cs.zclient.ZFilterCondition.ZBodyCondition;
+import com.zimbra.cs.zclient.ZFilterCondition.ZDateCondition;
+import com.zimbra.cs.zclient.ZFilterCondition.ZHeaderCondition;
+import com.zimbra.cs.zclient.ZFilterCondition.ZHeaderExistsCondition;
+import com.zimbra.cs.zclient.ZFilterCondition.ZSizeCondition;
+import com.zimbra.cs.zclient.ZFolder.Color;
+import com.zimbra.cs.zclient.ZFolder.View;
+import com.zimbra.cs.zclient.ZInvite.ZAttendee;
+import com.zimbra.cs.zclient.ZInvite.ZComponent;
+import com.zimbra.cs.zclient.ZInvite.ZWeekDay;
+import com.zimbra.cs.zclient.ZSimpleRecurrence.ZSimpleRecurrenceType;
+import com.zimbra.cs.zclient.*;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -534,7 +533,7 @@ public class BeanUtils {
     */
    public static boolean isProvOrAttr(PageContext pc, String attr) throws JspException, ServiceException {
        Provisioning prov = Provisioning.getInstance();
-       return prov.getConfig().getBooleanAttr(attr, false) || ProvisioningConstants.TRUE.equals(getAttr(pc, attr));
+       return prov.getConfig().getBooleanAttr(attr, false) || Provisioning.TRUE.equals(getAttr(pc, attr));
    }
 
     public static String getMailURL(PageContext pc) {
@@ -675,10 +674,10 @@ public class BeanUtils {
                     }
                 }
             } catch (ServiceException se) {
-               //it's for some other acct, not a child we have permission for
-               f = null;
+                //it's for some other acct, not a child we have permission for
+                f = null;
             }
-        }
+        }        
         return f == null ? null : new ZFolderBean(f);
     }
 
@@ -848,23 +847,6 @@ public class BeanUtils {
         return isRedirect(action) ? (ZRedirectAction) action : null;
     }
 
-    /**
-     * Given the filter rule, check whether all the actions of the filter
-     * are set to "Discard".
-     * @param Filter rule
-     * @return true if all the actions of the filter are set to "Discard",
-     * false otherwise
-     */
-    public static boolean isDiscardFilter(ZFilterRule rule) {
-        List<com.zimbra.client.ZFilterAction> actions = rule.getActions();
-        for (ZFilterAction action: actions) {
-            if (!isDiscard(action) && !isStop(action)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static Calendar getCalendarMidnight(long time, TimeZone tz) {
         Calendar cal = tz == null ? Calendar.getInstance() : Calendar.getInstance(tz);
         cal.setTimeInMillis(time);
@@ -918,7 +900,7 @@ public class BeanUtils {
          cal.set(Calendar.DAY_OF_MONTH, 1);
          int dow = cal.get(Calendar.DAY_OF_WEEK);
          if (dow == prefFirstDayOfWeek) {
-//             cal.add(Calendar.DAY_OF_MONTH, -7);
+             cal.add(Calendar.DAY_OF_MONTH, -7);
          } else {
              cal.add(Calendar.DAY_OF_MONTH, - ((dow+(7-((int)prefFirstDayOfWeek)))%7));
          }
@@ -944,26 +926,6 @@ public class BeanUtils {
         } else if ("week".equalsIgnoreCase(view)) {
                 if (dow != prefFirstDayOfWeek)
                     cal.add(Calendar.DAY_OF_MONTH, - (((dow-1) + (7- (int)prefFirstDayOfWeek)) % 7));
-        }
-        return cal;
-    }
-
-    public static Calendar getStartOfMultiDayView(java.util.Calendar date, long prefFirstDayOfWeek, String view) {
-
-         Calendar cal = Calendar.getInstance(date.getTimeZone());
-         cal.setTimeInMillis(date.getTimeInMillis());
-         cal.set(Calendar.HOUR_OF_DAY, 0);
-         cal.set(Calendar.MINUTE, 0);
-         cal.set(Calendar.SECOND, 0);
-         cal.set(Calendar.MILLISECOND, 0);
-         int dow = cal.get(Calendar.DAY_OF_WEEK);
-
-        // pref goes 0-6, Calendar goes 1-7
-        if ("week".equalsIgnoreCase(view)) {
-                if (dow != prefFirstDayOfWeek)
-                    cal.add(Calendar.DAY_OF_MONTH, - (((dow-1) + (7- (int)prefFirstDayOfWeek)) % 7));
-        } else if ("workWeek".equalsIgnoreCase(view)) {
-                cal.add(Calendar.DAY_OF_MONTH, - (dow -1));
         }
         return cal;
     }
@@ -1031,30 +993,10 @@ public class BeanUtils {
 
     }
 
-    public static int getNumDays(Calendar day1, Calendar day2) {
-        long startTime = day1.getTimeInMillis();
-        long endTime = day2.getTimeInMillis();
-        int numDays = (int) ((endTime - startTime)/MSECS_PER_DAY);
-
-        return numDays;
-    }
-
     public static int getYear(Calendar cal) { return cal.get(Calendar.YEAR); }
     public static int getMonth(Calendar cal) { return cal.get(Calendar.MONTH); }
     public static int getDay(Calendar cal) { return cal.get(Calendar.DAY_OF_MONTH); }
     public static int getDayOfWeek(Calendar cal) { return cal.get(Calendar.DAY_OF_WEEK); }
-    
-    public static List<Boolean> getWorkDays(String wdays) {
-        List<Boolean> workDays = new ArrayList<Boolean>();
-        String inpWdays [] = wdays.split(",");
-        for(int index = 0; index < 7; index++)
-            workDays.add(index, false);
-        for(String day:inpWdays) {
-            workDays.remove(Integer.parseInt(day));
-            workDays.add(Integer.parseInt(day),true);
-        }
-        return workDays;
-    }
 
     /** Given the checkedCalendars folder id, returns the canonical folder id for mountpoints
      * @return canonical folder ids in case of mountpoints, local folder ids otherwise
@@ -1097,11 +1039,9 @@ public class BeanUtils {
 
     private static final long MSECS_PER_MINUTE = 1000*60;
     private static final long MSECS_PER_HOUR = MSECS_PER_MINUTE * 60;
-    private static final long MSECS_PER_DAY = MSECS_PER_HOUR * 24;
 
     public static long MSECS_PER_MINUTE() { return MSECS_PER_MINUTE; }
     public static long MSECS_PER_HOUR() { return MSECS_PER_HOUR; }
-    public static long MSECS_PER_DAY() { return MSECS_PER_DAY; }
 
 	public static String getCanonicalId(TimeZone tz) {
 		return TZIDMapper.canonicalize(tz.getID());
