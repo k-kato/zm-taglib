@@ -44,6 +44,7 @@ public class LoginTag extends ZimbraSimpleTag {
     private String mPath = null;
     private String mVarRedirectUrl = null;
     private String mVarAuthResult = null;
+    private String mVarNeedRefer = null;
     private String mAttrs;
     private String mPrefs;
 	private String mRequestedSkin;
@@ -51,6 +52,8 @@ public class LoginTag extends ZimbraSimpleTag {
 	public void setVarRedirectUrl(String varRedirectUrl) { this.mVarRedirectUrl = varRedirectUrl; }
 
     public void setVarAuthResult(String varAuthResult) { this.mVarAuthResult = varAuthResult; }
+
+    public void setVarNeedRefer(String varNeedRefer) { this.mVarNeedRefer = varNeedRefer; }
 
     public void setUsername(String username) { this.mUsername = username; }
 
@@ -133,6 +136,9 @@ public class LoginTag extends ZimbraSimpleTag {
 
             //if (!needRefer)
             //    ZJspSession.setSession((PageContext)jctxt, mbox);
+            if (mVarNeedRefer != null && needRefer) {
+                jctxt.setAttribute(mVarNeedRefer, needRefer, PageContext.REQUEST_SCOPE);
+            }
 
             if (mVarRedirectUrl != null)
                 jctxt.setAttribute(mVarRedirectUrl,
