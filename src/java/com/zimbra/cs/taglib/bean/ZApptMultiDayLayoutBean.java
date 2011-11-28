@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -22,13 +22,17 @@ public class ZApptMultiDayLayoutBean {
     private List<ZApptRowLayoutBean> mAllDayRows;
     private List<ZApptRowLayoutBean> mRows;
     private List<ZApptDayLayoutBean> mDays;
+    private List<List<ZApptRowLayoutBean>> mRowsSeperatedByDays;
+    private List<List<ZApptRowLayoutBean>> mAllDayRowsSeperatedByDays;
     private int mMaxColumns;
 
-    public ZApptMultiDayLayoutBean(List<ZApptDayLayoutBean> days, List<ZApptRowLayoutBean> allDayRows, List<ZApptRowLayoutBean> rows) {
+    public ZApptMultiDayLayoutBean(List<ZApptDayLayoutBean> days, List<ZApptRowLayoutBean> allDayRows, List<ZApptRowLayoutBean> rows, List<List<ZApptRowLayoutBean>> rowsSeperatedByDays, List<List<ZApptRowLayoutBean>> allDayRowsSeperatedByDays) {
         mAllDayRows = allDayRows;
         mRows = rows;
         mDays = days;
         mMaxColumns = 0;
+        mRowsSeperatedByDays = rowsSeperatedByDays;
+        mAllDayRowsSeperatedByDays = allDayRowsSeperatedByDays;
         for (ZApptDayLayoutBean day : days) {
             mMaxColumns += day.getColumns().size();
         }
@@ -40,6 +44,14 @@ public class ZApptMultiDayLayoutBean {
 
     public List<ZApptRowLayoutBean> getRows() {
         return mRows;
+    }
+
+    public List<List<ZApptRowLayoutBean>> getRowsSeperatedByDays() {
+        return mRowsSeperatedByDays;
+    }
+
+    public List<List<ZApptRowLayoutBean>> getAllDayRowsSeperatedByDays() {
+        return mAllDayRowsSeperatedByDays;
     }
 
     public List<ZApptDayLayoutBean> getDays() {

@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2006, 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -15,7 +15,7 @@
 
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.cs.zclient.ZMessage.ZMimePart;
+import com.zimbra.client.ZMessage.ZMimePart;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -78,8 +78,7 @@ public class ZMimePartBean {
                     CT_MULTI_ALT,
                     CT_MULTI_MIXED,
                     CT_MULTI_RELATED,
-                    CT_MULTI_APPLE_DBL,
-                    CT_TEXT_CAL
+                    CT_MULTI_APPLE_DBL
             ));
 
     public static boolean isIgnoredPArt(ZMimePart part) {

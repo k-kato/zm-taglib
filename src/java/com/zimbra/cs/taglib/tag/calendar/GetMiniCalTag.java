@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2008, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2007, 2008, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -19,10 +19,10 @@ import com.zimbra.cs.taglib.bean.ZApptSummariesBean;
 import com.zimbra.cs.taglib.bean.ZMailboxBean;
 import com.zimbra.cs.taglib.bean.ZMiniCalBean;
 import com.zimbra.cs.taglib.tag.ZimbraSimpleTag;
-import com.zimbra.cs.zclient.ZAppointmentHit;
-import com.zimbra.cs.zclient.ZMailbox;
-import com.zimbra.cs.zclient.ZMailbox.ZApptSummaryResult;
-import com.zimbra.cs.zclient.ZSearchParams;
+import com.zimbra.client.ZAppointmentHit;
+import com.zimbra.client.ZMailbox;
+import com.zimbra.client.ZMailbox.ZApptSummaryResult;
+import com.zimbra.client.ZSearchParams;
 
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspException;

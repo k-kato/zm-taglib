@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -14,13 +14,14 @@
  */
 package com.zimbra.cs.taglib.tag;
 
+import com.zimbra.common.account.Key;
+import com.zimbra.common.account.Key.DomainBy;
 import com.zimbra.common.localconfig.LC;
 import com.zimbra.common.net.SocketFactories;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.soap.AdminConstants;
 import com.zimbra.common.util.DateUtil;
 import com.zimbra.cs.account.Domain;
-import com.zimbra.cs.account.Provisioning.DomainBy;
 import com.zimbra.cs.account.soap.SoapProvisioning;
 
 import javax.servlet.jsp.JspContext;
@@ -39,13 +40,13 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
     }
 
     private String mVar;
-    private DomainBy mBy;
+    private Key.DomainBy mBy;
     private String mValue;
 
     private static final Map<String, CachedDomain> mCache = new HashMap<String, CachedDomain>();
 
     public void setVar(String var) { this.mVar = var; }
-    public void setBy(String by) throws ServiceException { this.mBy = DomainBy.fromString(by); }
+    public void setBy(String by) throws ServiceException { this.mBy = Key.DomainBy.fromString(by); }
     public void setValue(String value) { this.mValue = value; }
 
     private static final String DEFAULT_TTL_STR = "60m";

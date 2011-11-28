@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -16,8 +16,8 @@ package com.zimbra.cs.taglib.tag.filter;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.taglib.tag.ZimbraSimpleTag;
-import com.zimbra.cs.zclient.ZFilterCondition.BodyOp;
-import com.zimbra.cs.zclient.ZFilterCondition.ZBodyCondition;
+import com.zimbra.client.ZFilterCondition.BodyOp;
+import com.zimbra.client.ZFilterCondition.ZBodyCondition;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
