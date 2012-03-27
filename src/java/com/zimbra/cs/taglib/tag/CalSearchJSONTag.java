@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2009, 2010 Zimbra, Inc.
+ * Copyright (C) 2009, 2010, 2011 VMware, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -34,8 +34,8 @@ import com.zimbra.common.soap.ZimbraNamespace;
 import com.zimbra.common.zclient.ZClientException;
 import com.zimbra.cs.taglib.ZJspSession;
 import com.zimbra.cs.taglib.tag.TagUtil.JsonDebugListener;
-import com.zimbra.client.ZFolder;
-import com.zimbra.client.ZMailbox;
+import com.zimbra.cs.zclient.ZFolder;
+import com.zimbra.cs.zclient.ZMailbox;
 
 public class CalSearchJSONTag extends ZimbraSimpleTag {
 

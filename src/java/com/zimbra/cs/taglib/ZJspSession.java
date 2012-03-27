@@ -1,13 +1,13 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 Zimbra, Inc.
- *
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 VMware, Inc.
+ * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
  * compliance with the License.  You may obtain a copy of the License at
  * http://www.zimbra.com/license.
- *
+ * 
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
  * ***** END LICENSE BLOCK *****
@@ -15,14 +15,14 @@
 package com.zimbra.cs.taglib;
 
 import com.google.common.base.Charsets;
-import com.zimbra.common.account.Key;
 import com.zimbra.common.auth.ZAuthToken;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.RemoteIP;
+import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.taglib.bean.BeanUtils;
-import com.zimbra.client.ZAuthResult;
-import com.zimbra.client.ZFolder;
-import com.zimbra.client.ZMailbox;
+import com.zimbra.cs.zclient.ZAuthResult;
+import com.zimbra.cs.zclient.ZFolder;
+import com.zimbra.cs.zclient.ZMailbox;
 import com.zimbra.common.localconfig.LC;
 
 import javax.servlet.http.Cookie;
@@ -84,9 +84,6 @@ public class ZJspSession {
     private static final boolean MODE_HTTP = sProtocolMode.equals(PROTO_HTTP);
     private static final boolean MODE_MIXED = sProtocolMode.equals(PROTO_MIXED);
     private static final boolean MODE_HTTPS = sProtocolMode.equals(PROTO_HTTPS);
-    
-    private static final String sHttpLocalBind = BeanUtils.getEnvString("httpLocalBind", "false");
-    private static final boolean HTTP_LOCALBIND = sHttpLocalBind.equalsIgnoreCase("true");
 
     private static final String sHttpsPort = BeanUtils.getEnvString("httpsPort", DEFAULT_HTTPS_PORT);
     private static final String sHttpPort = BeanUtils.getEnvString("httpPort", DEFAULT_HTTP_PORT);
@@ -366,7 +363,7 @@ public class ZJspSession {
         if (sSoapUrl == null) {
             sSoapUrl = (String) Config.find(context, CONFIG_ZIMBRA_SOAP_URL);
             if (sSoapUrl == null) {
-                if (sProtocolMode.equalsIgnoreCase(PROTO_HTTPS) && !HTTP_LOCALBIND) {
+                if (sProtocolMode.equalsIgnoreCase(PROTO_HTTPS)) {
                     String httpsPort = (sHttpsPort != null && sHttpsPort.equals(DEFAULT_HTTPS_PORT)) ? "" : ":" + sHttpsPort;
                     sSoapUrl = "https://" + sLocalHost + httpsPort +"/service/soap";
                 } else {
@@ -452,7 +449,7 @@ public class ZJspSession {
             options.setNoSession(true);
             options.setAuthAuthToken(false);
             options.setTargetAccount(targetAccountId);
-            options.setTargetAccountBy(Key.AccountBy.id);
+            options.setTargetAccountBy(Provisioning.AccountBy.id);
             options.setClientIp(getRemoteAddr(context));
             return ZMailbox.getMailbox(options);
         }
@@ -467,7 +464,7 @@ public class ZJspSession {
             options.setNoSession(true);
             options.setAuthAuthToken(false);
             options.setTargetAccount(targetAccountId);
-            options.setTargetAccountBy(Key.AccountBy.id);
+            options.setTargetAccountBy(Provisioning.AccountBy.id);
             options.setClientIp(getRemoteAddr(context));
             return ZMailbox.getMailbox(options);
         }

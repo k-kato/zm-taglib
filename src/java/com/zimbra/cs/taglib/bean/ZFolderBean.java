@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 Zimbra, Inc.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 VMware, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -17,13 +17,13 @@ package com.zimbra.cs.taglib.bean;
 import com.zimbra.common.soap.VoiceConstants;
 import com.zimbra.common.util.StringUtil;
 import com.zimbra.common.service.ServiceException;
-import com.zimbra.client.ZFolder;
-import com.zimbra.client.ZFolder.Color;
-import com.zimbra.client.ZFolder.View;
-import com.zimbra.client.ZGrant;
-import com.zimbra.client.ZMailbox;
-import com.zimbra.client.ZMountpoint;
-import com.zimbra.client.ZSearchFolder;
+import com.zimbra.cs.zclient.ZFolder;
+import com.zimbra.cs.zclient.ZFolder.Color;
+import com.zimbra.cs.zclient.ZFolder.View;
+import com.zimbra.cs.zclient.ZGrant;
+import com.zimbra.cs.zclient.ZMailbox;
+import com.zimbra.cs.zclient.ZMountpoint;
+import com.zimbra.cs.zclient.ZSearchFolder;
 
 import java.util.List;
 
@@ -389,13 +389,13 @@ public class  ZFolderBean {
     public String getImage() {
         if (getIsSearchFolder()) {
             return "startup/ImgSearchFolder.png";
-        } else if (getIsAppointmentView() || (getParentId().equals(ZFolder.ID_CALENDAR) && getIsUnknownView())) {
+        } else if (getIsAppointmentView()) {
             if (getIsMountPoint()) {
                 return "calendar/ImgSharedCalendarFolder.png";
             } else {
                 return "calendar/ImgCalendarFolder.png";
             }
-        } else if (getIsContactView() || (getParentId().equals(ZFolder.ID_CONTACTS) && getIsUnknownView())) {
+        } else if (getIsContactView()) {
             if (getIsMountPoint()) {
                 return "contacts/ImgSharedContactsFolder.png";
             } else if (getIsAutoContacts()) {
@@ -403,7 +403,7 @@ public class  ZFolderBean {
             } else {
                 return "contacts/ImgContactsFolder.png";
             }
-        } else if (getIsTaskView() || (getParentId().equals(ZFolder.ID_TASKS) && getIsUnknownView())) {
+        } else if (getIsTaskView()) {
             if (getIsMountPoint()) {
                 return "tasks/ImgSharedTaskList.png";
             } else {

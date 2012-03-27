@@ -17,7 +17,7 @@
         <body-content>empty</body-content>        
         <variable>
             <name-from-attribute>var</name-from-attribute>
-            <variable-class>com.zimbra.client.ZMailbox.ZSendMessageResponse</variable-class>
+            <variable-class>com.zimbra.cs.zclient.ZMailbox.ZSendMessageResponse</variable-class>
             <scope>AT_END</scope>
         </variable>
         <attribute>
@@ -158,7 +158,7 @@
         <body-content>empty</body-content>
         <variable>
             <name-from-attribute>var</name-from-attribute>
-            <variable-class>com.zimbra.client.ZMailbox.ZSendInviteReplyResult</variable-class>
+            <variable-class>com.zimbra.cs.zclient.ZMailbox.ZSendInviteReplyResult</variable-class>
             <scope>AT_END</scope>
         </variable>
         <attribute>
@@ -186,7 +186,7 @@
         <body-content>empty</body-content>
         <variable>
             <name-from-attribute>var</name-from-attribute>
-            <variable-class>com.zimbra.client.ZMessage</variable-class>
+            <variable-class>com.zimbra.cs.zclient.ZMessage</variable-class>
             <scope>AT_END</scope>
         </variable>
         <attribute>
@@ -581,7 +581,7 @@
         <body-content>scriptless</body-content>
         <variable>
             <name-from-attribute>var</name-from-attribute>
-            <variable-class>com.zimbra.client.ZSignature</variable-class>
+            <variable-class>com.zimbra.cs.zclient.ZSignature</variable-class>
             <scope>NESTED</scope>
         </variable>
         <attribute>
@@ -1064,7 +1064,12 @@
         </variable>
         <variable>
             <name-from-attribute>varAuthResult</name-from-attribute>
-            <variable-class>com.zimbra.client.ZAuthResult</variable-class>
+            <variable-class>com.zimbra.cs.zclient.ZAuthResult</variable-class>
+            <scope>AT_END</scope>
+        </variable>
+        <variable>
+            <name-from-attribute>varNeedRefer</name-from-attribute>
+            <variable-class>java.lang.Boolean</variable-class>
             <scope>AT_END</scope>
         </variable>
         <attribute>
@@ -1107,13 +1112,22 @@
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-        <attribute>
+                <attribute>
             <description>
                 variable to store ZAuthResult in.
             </description>
             <name>varAuthResult</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>
+                set to true if we need to redirect to a different server
+            </description>
+            <name>varNeedRefer</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
         </attribute>
         <attribute>
             <description>
@@ -2636,24 +2650,6 @@
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
-
-        <attribute>
-            <description>
-                intial search folder path
-            </description>
-            <name>folderpath</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-
-        <attribute>
-            <description>
-                sortby
-            </description>
-            <name>sortby</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
     </tag>
 
     <tag>
@@ -3945,7 +3941,7 @@
 
         <variable>
             <name-from-attribute>var</name-from-attribute>
-            <variable-class>com.zimbra.client.ZFilterRule</variable-class>
+            <variable-class>com.zimbra.cs.zclient.ZFilterRule</variable-class>
             <scope>AT_END</scope>
         </variable>
 
@@ -4171,55 +4167,6 @@
 
     <tag>
         <description>
-            Checks an address for a particular value.
-        </description>
-
-        <name>addressCondition</name>
-
-        <tag-class>com.zimbra.cs.taglib.tag.filter.AddressConditionTag</tag-class>
-
-        <body-content>empty</body-content>
-
-        <attribute>
-            <description>
-                Header name
-            </description>
-            <name>name</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <description>
-                Address Part
-            </description>
-            <name>part</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <description>
-                Header value to check for
-            </description>
-            <name>value</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-        <attribute>
-            <description>
-               operation (IS, NOT_IS, CONTAINS, NOT_CONTAINS, MATCHES, NOT_MATCHES)
-            </description>
-            <name>op</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-    </tag>
-
-    <tag>
-        <description>
             Size condition.
         </description>
 
@@ -4388,7 +4335,7 @@
             <name>rule</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>com.zimbra.client.ZFilterRule</type>
+            <type>com.zimbra.cs.zclient.ZFilterRule</type>
         </attribute>
     </tag>
 
@@ -4410,7 +4357,7 @@
             <name>rule</name>
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>com.zimbra.client.ZFilterRule</type>
+            <type>com.zimbra.cs.zclient.ZFilterRule</type>
         </attribute>
 
         <attribute>
@@ -4805,7 +4752,7 @@
         <body-content>scriptless</body-content>
         <variable>
             <name-from-attribute>var</name-from-attribute>
-            <variable-class>com.zimbra.client.ZAppointmentHit</variable-class>
+            <variable-class>com.zimbra.cs.zclient.ZAppointmentHit</variable-class>
             <scope>NESTED</scope>
         </variable>
         <attribute>
@@ -4890,20 +4837,6 @@
         </attribute>
 
         <attribute>
-            <description>number of work days</description>
-            <name>wdays</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-       </attribute>
-
-        <attribute>
-            <description>day from which the week starts</description>
-            <name>weekStart</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-
-        <attribute>
             <description>default starting hour, inclusive </description>
             <name>hourstart</name>
             <required>true</required>
@@ -4914,20 +4847,6 @@
             <description>default ending hour, exclusive</description>
             <name>hourend</name>
             <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-
-        <attribute>
-            <description>default starting minute, inclusive </description>
-            <name>minstart</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-        </attribute>
-
-        <attribute>
-            <description>default ending minute, exclusive</description>
-            <name>minend</name>
-            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
 
@@ -4947,13 +4866,6 @@
             <required>true</required>
             <rtexprvalue>true</rtexprvalue>
             <type>java.util.TimeZone</type>
-        </attribute>
-
-        <attribute>
-            <description>print request</description>
-            <name>isprint</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
         </attribute>
 
     </tag>
@@ -4977,7 +4889,7 @@
          <body-content>empty</body-content>
          <variable>
              <name-from-attribute>var</name-from-attribute>
-             <variable-class>com.zimbra.client.ZMailbox.ZAppointmentResult</variable-class>
+             <variable-class>com.zimbra.cs.zclient.ZMailbox.ZAppointmentResult</variable-class>
              <scope>AT_END</scope>
          </variable>
          <attribute>
@@ -5081,7 +4993,7 @@
          <body-content>empty</body-content>
          <variable>
              <name-from-attribute>var</name-from-attribute>
-             <variable-class>com.zimbra.client.ZMailbox.ZAppointmentResult</variable-class>
+             <variable-class>com.zimbra.cs.zclient.ZMailbox.ZAppointmentResult</variable-class>
              <scope>AT_END</scope>
          </variable>
          <attribute>
@@ -5436,7 +5348,7 @@
          <body-content>empty</body-content>
          <variable>
              <name-from-attribute>var</name-from-attribute>
-             <variable-class>com.zimbra.client.ZMailbox.ZImportContactsResult</variable-class>
+             <variable-class>com.zimbra.cs.zclient.ZMailbox.ZImportContactsResult</variable-class>
              <scope>AT_END</scope>
          </variable>
          <attribute>
@@ -5482,7 +5394,7 @@
          <body-content>empty</body-content>
          <variable>
              <name-from-attribute>var</name-from-attribute>
-             <variable-class>com.zimbra.client.ZMailbox.ZImportAppointmentsResult</variable-class>
+             <variable-class>com.zimbra.cs.zclient.ZMailbox.ZImportAppointmentsResult</variable-class>
              <scope>AT_END</scope>
          </variable>
          <attribute>
@@ -6190,26 +6102,6 @@
 
         <attribute>
             <description>
-                Notification on transfer
-            </description>
-            <name>emailNotifTrans</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-
-        <attribute>
-            <description>
-                Notification on attach
-            </description>
-            <name>emailNotifAttach</name>
-            <required>false</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-
-        <attribute>
-            <description>
                 Is call forwarding active.
             </description>
             <name>callforwardingactive</name>
@@ -6875,12 +6767,6 @@
     </function>
 
     <function>
-        <name>equalsIgnoreCase</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean equalsIgnoreCase(java.lang.String,java.lang.String)</function-signature>
-    </function>
-
-    <function>
         <name>truncate</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String truncate(java.lang.String,int,boolean)</function-signature>
@@ -6989,13 +6875,6 @@
     </function>
 
     <function>
-        <name>getTruncatedFolderName</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String
-            getTruncatedFolderName(javax.servlet.jsp.PageContext,java.lang.String,int,boolean)</function-signature>
-    </function>
-
-    <function>
         <name>getFolderName</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String
@@ -7003,24 +6882,10 @@
     </function>
 
     <function>
-        <name>getUncookedFolderName</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String
-            getUncookedFolderName(javax.servlet.jsp.PageContext,java.lang.String)</function-signature>
-    </function>
-
-    <function>
         <name>getFolderPath</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String
             getFolderPath(javax.servlet.jsp.PageContext,java.lang.String)</function-signature>
-    </function>
-
-    <function>
-        <name>getTruncatedFolderPath</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String
-            getTruncatedFolderPath(javax.servlet.jsp.PageContext,java.lang.String,int,boolean)</function-signature>
     </function>
 
     <function>
@@ -7070,7 +6935,7 @@
     <function>
         <name>isAddressBookCondition</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isAddressBook(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>boolean isAddressBook(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
 	<function>
@@ -7082,91 +6947,79 @@
     <function>
         <name>getAddressBook</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterCondition.ZAddressBookCondition getAddressBook(com.zimbra.client.ZFilterCondition)</function-signature>
-    </function>
-
-    <function>
-        <name>isAddressCondition</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isAddress(com.zimbra.client.ZFilterCondition)</function-signature>
-    </function>
-
-    <function>
-        <name>getAddress</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterCondition.ZAddressCondition getAddress(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterCondition.ZAddressBookCondition getAddressBook(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>isBodyCondition</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isBody(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>boolean isBody(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>getBody</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterCondition.ZBodyCondition getBody(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterCondition.ZBodyCondition getBody(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>isSizeCondition</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isSize(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>boolean isSize(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>getSize</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterCondition.ZSizeCondition getSize(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterCondition.ZSizeCondition getSize(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>isDateCondition</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isDate(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>boolean isDate(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>getDate</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterCondition.ZDateCondition getDate(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterCondition.ZDateCondition getDate(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>isHeaderCondition</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isHeader(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>boolean isHeader(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>getHeader</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterCondition.ZHeaderCondition getHeader(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterCondition.ZHeaderCondition getHeader(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>isHeaderExistsCondition</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isHeaderExists(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>boolean isHeaderExists(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>getHeaderExists</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterCondition.ZHeaderExistsCondition getHeaderExists(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterCondition.ZHeaderExistsCondition getHeaderExists(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>isAttachmentExistsCondition</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isAttachmentExists(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>boolean isAttachmentExists(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
         <name>getAttachmentExists</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterCondition.ZAttachmentExistsCondition getAttachmentExists(com.zimbra.client.ZFilterCondition)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterCondition.ZAttachmentExistsCondition getAttachmentExists(com.zimbra.cs.zclient.ZFilterCondition)</function-signature>
     </function>
 
     <function>
@@ -7178,73 +7031,67 @@
     <function>
         <name>isKeepAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isKeep(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>boolean isKeep(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>isStopAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isStop(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>boolean isStop(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>isDiscardAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isDiscard(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>boolean isDiscard(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>isFileIntoAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isFileInto(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>boolean isFileInto(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>isTagAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isTag(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>boolean isTag(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>isFlagAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isFlag(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>boolean isFlag(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>isRedirectAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isRedirect(com.zimbra.client.ZFilterAction)</function-signature>
-    </function>
-
-    <function>
-        <name>isDiscardActionFilter</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>boolean isDiscardFilter(com.zimbra.client.ZFilterRule)</function-signature>
+        <function-signature>boolean isRedirect(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>getTagAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterAction.ZTagAction getTag(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterAction.ZTagAction getTag(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>getFlagAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterAction.ZMarkAction getFlag(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterAction.ZMarkAction getFlag(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>getRedirectAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterAction.ZRedirectAction getRedirect(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterAction.ZRedirectAction getRedirect(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
         <name>getFileIntoAction</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZFilterAction.ZFileIntoAction getFileInto(com.zimbra.client.ZFilterAction)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZFilterAction.ZFileIntoAction getFileInto(com.zimbra.cs.zclient.ZFilterAction)</function-signature>
     </function>
 
     <function>
@@ -7257,12 +7104,6 @@
         <name>getFirstDayOfMultiDayView</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.util.Calendar getFirstDayOfMultiDayView(java.util.Calendar,long,java.lang.String)</function-signature>
-    </function>
-
-    <function>
-        <name>getStartOfMultiDayView</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.util.Calendar getStartOfMultiDayView(java.util.Calendar,long,java.lang.String)</function-signature>
     </function>
 
     <function>
@@ -7338,12 +7179,6 @@
     </function>
 
     <function>
-        <name>getNumDays</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>int getNumDays(java.util.Calendar,java.util.Calendar)</function-signature>
-    </function>
-
-    <function>
         <name>getYear</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>int getYear(java.util.Calendar)</function-signature>
@@ -7383,24 +7218,6 @@
         <name>getCanonicalFolderIds</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String getCanonicalFolderIds(com.zimbra.cs.taglib.bean.ZMailboxBean, java.lang.String)</function-signature>
-    </function>
-
-    <function>
-        <name>getWorkDays</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.util.List&lt;java.lang.Boolean&gt; getWorkDays(java.lang.String)</function-signature>
-    </function>
-
-    <function>
-        <name>generateWorkWeek</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String generateWorkWeek(java.lang.String, java.lang.String)</function-signature>
-    </function>
-
-    <function>
-        <name>convertCalWorkHours</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String convertCalWorkHours(java.lang.String)</function-signature>
     </function>
 
     <function>
@@ -7496,7 +7313,7 @@
     <function>
         <name>getRepeatBlurb</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String getRepeatBlurb(com.zimbra.client.ZSimpleRecurrence,javax.servlet.jsp.PageContext,java.util.TimeZone,java.util.Date)</function-signature>
+        <function-signature>java.lang.String getRepeatBlurb(com.zimbra.cs.zclient.ZSimpleRecurrence,javax.servlet.jsp.PageContext,java.util.TimeZone,java.util.Date)</function-signature>
     </function>
 
     <function>
@@ -7508,7 +7325,7 @@
     <function>
         <name>getMyAttendee</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>com.zimbra.client.ZInvite.ZAttendee getMyAttendee(com.zimbra.client.ZInvite,com.zimbra.cs.taglib.bean.ZMailboxBean)</function-signature>
+        <function-signature>com.zimbra.cs.zclient.ZInvite.ZAttendee getMyAttendee(com.zimbra.cs.zclient.ZInvite,com.zimbra.cs.taglib.bean.ZMailboxBean)</function-signature>
     </function>
 
     <function>
@@ -7614,7 +7431,7 @@
     <function>
         <name>getDisplayCaller</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String getDisplayCaller(javax.servlet.jsp.PageContext, com.zimbra.client.ZPhone)</function-signature>
+        <function-signature>java.lang.String getDisplayCaller(javax.servlet.jsp.PageContext, com.zimbra.cs.zclient.ZPhone)</function-signature>
     </function>
 
     <function>
@@ -7669,12 +7486,6 @@
         <name>cook</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String cook(java.lang.String)</function-signature>
-    </function>
-
-    <function>
-        <name>unCook</name>
-        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
-        <function-signature>java.lang.String unCook(java.lang.String)</function-signature>
     </function>
 
 	<function>

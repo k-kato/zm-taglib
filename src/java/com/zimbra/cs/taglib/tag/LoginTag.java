@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010 Zimbra, Inc.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 VMware, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -19,7 +19,7 @@ import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.HttpUtil;
 import com.zimbra.common.util.ZimbraCookie;
 import com.zimbra.cs.taglib.ZJspSession;
-import com.zimbra.client.ZMailbox;
+import com.zimbra.cs.zclient.ZMailbox;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +46,7 @@ public class LoginTag extends ZimbraSimpleTag {
     private String mPath = null;
     private String mVarRedirectUrl = null;
     private String mVarAuthResult = null;
+    private String mVarNeedRefer = null;
     private String mAttrs;
     private String mPrefs;
 	private String mRequestedSkin;
@@ -53,6 +54,8 @@ public class LoginTag extends ZimbraSimpleTag {
 	public void setVarRedirectUrl(String varRedirectUrl) { this.mVarRedirectUrl = varRedirectUrl; }
 
     public void setVarAuthResult(String varAuthResult) { this.mVarAuthResult = varAuthResult; }
+
+    public void setVarNeedRefer(String varNeedRefer) { this.mVarNeedRefer = varNeedRefer; }
 
     public void setUsername(String username) { this.mUsername = username; }
 
@@ -147,6 +150,9 @@ public class LoginTag extends ZimbraSimpleTag {
 
             //if (!needRefer)
             //    ZJspSession.setSession((PageContext)jctxt, mbox);
+            if (mVarNeedRefer != null && needRefer) {
+                jctxt.setAttribute(mVarNeedRefer, needRefer, PageContext.REQUEST_SCOPE);
+            }
 
             if (mVarRedirectUrl != null) {
                 jctxt.setAttribute(mVarRedirectUrl,
