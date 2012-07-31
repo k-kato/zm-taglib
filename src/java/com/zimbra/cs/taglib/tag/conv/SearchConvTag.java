@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2006, 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -18,10 +18,11 @@ import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.taglib.bean.ZSearchResultBean;
 import com.zimbra.cs.taglib.tag.SearchContext;
 import com.zimbra.cs.taglib.tag.ZimbraSimpleTag;
-import com.zimbra.cs.zclient.ZMailbox;
-import com.zimbra.cs.zclient.ZMailbox.Fetch;
-import com.zimbra.cs.zclient.ZSearchPagerResult;
-import com.zimbra.cs.zclient.ZSearchParams;
+import com.zimbra.client.ZMailbox;
+import com.zimbra.client.ZMailbox.Fetch;
+import com.zimbra.client.ZSearchPagerResult;
+import com.zimbra.client.ZSearchParams;
+import com.zimbra.soap.type.SearchSortBy;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
@@ -41,7 +42,7 @@ public class SearchConvTag extends ZimbraSimpleTag {
     private boolean mWantHtmlSet;
     private boolean mMarkread;
     private Fetch mFetch;
-    private ZMailbox.SearchSortBy mSortBy = ZMailbox.SearchSortBy.dateDesc;
+    private SearchSortBy mSortBy = SearchSortBy.dateDesc;
 
     public void setVar(String var) { this.mVar = var; }
 
@@ -55,7 +56,7 @@ public class SearchConvTag extends ZimbraSimpleTag {
 
     public void setSort(String sortBy) throws ServiceException {
         if (sortBy != null && sortBy.length() > 0)
-            this.mSortBy = ZMailbox.SearchSortBy.fromString(sortBy);
+            this.mSortBy = SearchSortBy.fromString(sortBy);
     }
     
     public void setLimit(int limit) { this.mLimit = limit; }
@@ -77,6 +78,7 @@ public class SearchConvTag extends ZimbraSimpleTag {
         return def;
     }
 
+    @Override
     public void doTag() throws JspException, IOException {
         ZMailbox mailbox = getMailbox();
 

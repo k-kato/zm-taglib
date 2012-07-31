@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -14,6 +14,7 @@
  */
 package com.zimbra.cs.taglib.bean;
 
+import com.zimbra.common.account.ProvisioningConstants;
 import com.zimbra.common.calendar.TZIDMapper;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.HttpUtil;
@@ -23,27 +24,28 @@ import com.zimbra.common.mailbox.ContactConstants;
 import com.zimbra.common.mime.shim.JavaMailInternetAddress;
 import com.zimbra.cs.service.util.ItemId;
 import com.zimbra.cs.taglib.ZJspSession;
-import com.zimbra.cs.zclient.ZFilterAction.ZDiscardAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZFileIntoAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZKeepAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZMarkAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZRedirectAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZStopAction;
-import com.zimbra.cs.zclient.ZFilterAction.ZTagAction;
-import com.zimbra.cs.zclient.ZFilterCondition.ZAddressBookCondition;
-import com.zimbra.cs.zclient.ZFilterCondition.ZAttachmentExistsCondition;
-import com.zimbra.cs.zclient.ZFilterCondition.ZBodyCondition;
-import com.zimbra.cs.zclient.ZFilterCondition.ZDateCondition;
-import com.zimbra.cs.zclient.ZFilterCondition.ZHeaderCondition;
-import com.zimbra.cs.zclient.ZFilterCondition.ZHeaderExistsCondition;
-import com.zimbra.cs.zclient.ZFilterCondition.ZSizeCondition;
-import com.zimbra.cs.zclient.ZFolder.Color;
-import com.zimbra.cs.zclient.ZFolder.View;
-import com.zimbra.cs.zclient.ZInvite.ZAttendee;
-import com.zimbra.cs.zclient.ZInvite.ZComponent;
-import com.zimbra.cs.zclient.ZInvite.ZWeekDay;
-import com.zimbra.cs.zclient.ZSimpleRecurrence.ZSimpleRecurrenceType;
-import com.zimbra.cs.zclient.*;
+import com.zimbra.client.ZFilterAction.ZDiscardAction;
+import com.zimbra.client.ZFilterAction.ZFileIntoAction;
+import com.zimbra.client.ZFilterAction.ZKeepAction;
+import com.zimbra.client.ZFilterAction.ZMarkAction;
+import com.zimbra.client.ZFilterAction.ZRedirectAction;
+import com.zimbra.client.ZFilterAction.ZStopAction;
+import com.zimbra.client.ZFilterAction.ZTagAction;
+import com.zimbra.client.ZFilterCondition.ZAddressBookCondition;
+import com.zimbra.client.ZFilterCondition.ZAttachmentExistsCondition;
+import com.zimbra.client.ZFilterCondition.ZBodyCondition;
+import com.zimbra.client.ZFilterCondition.ZDateCondition;
+import com.zimbra.client.ZFilterCondition.ZHeaderCondition;
+import com.zimbra.client.ZFilterCondition.ZHeaderExistsCondition;
+import com.zimbra.client.ZFilterCondition.ZSizeCondition;
+import com.zimbra.client.ZFilterCondition.ZAddressCondition;
+import com.zimbra.client.ZFolder.Color;
+import com.zimbra.client.ZFolder.View;
+import com.zimbra.client.ZInvite.ZAttendee;
+import com.zimbra.client.ZInvite.ZComponent;
+import com.zimbra.client.ZInvite.ZWeekDay;
+import com.zimbra.client.ZSimpleRecurrence.ZSimpleRecurrenceType;
+import com.zimbra.client.*;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -256,7 +258,7 @@ public class BeanUtils {
         s = replaceAll(s, sLEADING_SPACE, "&nbsp;");
         s = replaceAll(s, sLT, "&lt;");
         s = replaceAll(s, sGT, "&gt;");
-        s = replaceAll(s, sTAB, "<pre style='display:inline;'>\t</pre>");
+        s = replaceAll(s, sTAB, "<pre class='MsgBody-plain-tab'>\t</pre>");
         s = replaceAll(s, sNL, "<br />");
         return s;
     }
@@ -313,6 +315,16 @@ public class BeanUtils {
         }
         m.appendTail(sb);
         return sb.toString();
+    }
+
+    /**
+     * Performs a case-insensitive string comparison
+     */
+    public static boolean equalsIgnoreCase(String str1, String str2) {
+        if (str1 != null && str2 != null)
+            return str1.equalsIgnoreCase(str2);
+        else
+            return false;
     }
 
     /**
@@ -533,7 +545,7 @@ public class BeanUtils {
     */
    public static boolean isProvOrAttr(PageContext pc, String attr) throws JspException, ServiceException {
        Provisioning prov = Provisioning.getInstance();
-       return prov.getConfig().getBooleanAttr(attr, false) || Provisioning.TRUE.equals(getAttr(pc, attr));
+       return prov.getConfig().getBooleanAttr(attr, false) || ProvisioningConstants.TRUE.equals(getAttr(pc, attr));
    }
 
     public static String getMailURL(PageContext pc) {
@@ -674,14 +686,30 @@ public class BeanUtils {
                     }
                 }
             } catch (ServiceException se) {
-                //it's for some other acct, not a child we have permission for
-                f = null;
+               //it's for some other acct, not a child we have permission for
+               f = null;
             }
-        }        
+        }
         return f == null ? null : new ZFolderBean(f);
     }
 
+    /**
+     * Folder name can contain some special characters which can be used for XSS attack.
+     * "Cook" (HTML encode) the folder name before returning.
+     */
     public static String getFolderName(PageContext pc, String id) throws JspException, ServiceException {
+        ZMailbox mbox = ZJspSession.getZMailbox(pc);
+        if (id == null) return null;
+        ZFolder f = mbox.getFolderById(id);
+        if (f == null) return null;
+        String lname = I18nUtil.getLocalizedMessage(pc, "FOLDER_LABEL_"+f.getId());
+        return (lname == null || lname.startsWith("???")) ? BeanUtils.cook(f.getName()) : lname;
+    }
+
+    /**
+     * Method to return the folder name as is, i.e; without cooking.
+     */
+    public static String getUncookedFolderName(PageContext pc, String id) throws JspException, ServiceException {
         ZMailbox mbox = ZJspSession.getZMailbox(pc);
         if (id == null) return null;
         ZFolder f = mbox.getFolderById(id);
@@ -690,15 +718,35 @@ public class BeanUtils {
         return (lname == null || lname.startsWith("???")) ? f.getName() : lname;
     }
 
+    /**
+     * Truncates the folder name to the max length provided, cooks it before returning
+     * @return Truncated folder name
+     */
+    public static String getTruncatedFolderName(PageContext pc, String id, int length, boolean ellipses) throws JspException, ServiceException {
+        ZMailbox mbox = ZJspSession.getZMailbox(pc);
+        if (id == null) return null;
+        ZFolder f = mbox.getFolderById(id);
+        if (f == null) return null;
+        String lname = I18nUtil.getLocalizedMessage(pc, "FOLDER_LABEL_"+f.getId());
+        String folderName = (lname == null || lname.startsWith("???")) ? f.getName() : lname;
+        String truncatedFolderName = BeanUtils.truncate(folderName, length, ellipses);
+        return BeanUtils.cook(truncatedFolderName);
+    }
+
 	private static void getFolderPath(PageContext pc, ZFolder folder, StringBuilder builder) throws JspException, ServiceException {
 		ZFolder parent = folder.getParent();
 		if (parent != null && !ZFolder.ID_USER_ROOT.equals(parent.getId())) {
 			getFolderPath(pc, parent, builder);
 			builder.append(ZMailbox.PATH_SEPARATOR);
 		}
-		builder.append(getFolderName(pc, folder.getId()));
+		builder.append(getUncookedFolderName(pc, folder.getId()));
 	}
-	
+
+    /**
+     * Returns the absolute folder path, cooks it before returning since it can contain some special characters which
+     * can cause XSS attack.
+     * @return Absolute folder path
+     */
 	public static String getFolderPath(PageContext pc, String id) throws JspException, ServiceException {
         ZMailbox mbox = ZJspSession.getZMailbox(pc);
         if (id == null) return null;
@@ -707,6 +755,21 @@ public class BeanUtils {
 		StringBuilder builder = new StringBuilder(256);
 		getFolderPath(pc, f, builder);
 		return BeanUtils.cook(builder.toString());
+    }
+
+    /**
+     * Truncated the folder path as per the length provided, cooks it before returning
+     * @return Truncated folder path
+     */
+  	public static String getTruncatedFolderPath(PageContext pc, String id, int length, boolean ellipses) throws JspException, ServiceException {
+        ZMailbox mbox = ZJspSession.getZMailbox(pc);
+        if (id == null) return null;
+        ZFolder f = mbox.getFolderById(id);
+        if (f == null) return null;
+		StringBuilder builder = new StringBuilder(256);
+		getFolderPath(pc, f, builder);
+        String folderPath = BeanUtils.truncate(builder.toString(), length, ellipses);
+		return BeanUtils.cook(folderPath);
     }
 
     private static long sUrlRandSalt = 0;
@@ -746,6 +809,14 @@ public class BeanUtils {
 
     public static ZAddressBookCondition getAddressBook(ZFilterCondition condition) {
         return isAddressBook(condition) ? (ZAddressBookCondition) condition : null;
+    }
+
+    public static boolean isAddress(ZFilterCondition condition) {
+        return condition instanceof ZAddressCondition;
+    }
+
+    public static ZAddressCondition getAddress(ZFilterCondition condition) {
+        return isAddress(condition) ? (ZAddressCondition) condition : null;
     }
 
     public static boolean isBody(ZFilterCondition condition) {
@@ -847,6 +918,23 @@ public class BeanUtils {
         return isRedirect(action) ? (ZRedirectAction) action : null;
     }
 
+    /**
+     * Given the filter rule, check whether all the actions of the filter
+     * are set to "Discard".
+     * @param Filter rule
+     * @return true if all the actions of the filter are set to "Discard",
+     * false otherwise
+     */
+    public static boolean isDiscardFilter(ZFilterRule rule) {
+        List<com.zimbra.client.ZFilterAction> actions = rule.getActions();
+        for (ZFilterAction action: actions) {
+            if (!isDiscard(action) && !isStop(action)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static Calendar getCalendarMidnight(long time, TimeZone tz) {
         Calendar cal = tz == null ? Calendar.getInstance() : Calendar.getInstance(tz);
         cal.setTimeInMillis(time);
@@ -900,7 +988,7 @@ public class BeanUtils {
          cal.set(Calendar.DAY_OF_MONTH, 1);
          int dow = cal.get(Calendar.DAY_OF_WEEK);
          if (dow == prefFirstDayOfWeek) {
-             cal.add(Calendar.DAY_OF_MONTH, -7);
+//             cal.add(Calendar.DAY_OF_MONTH, -7);
          } else {
              cal.add(Calendar.DAY_OF_MONTH, - ((dow+(7-((int)prefFirstDayOfWeek)))%7));
          }
@@ -927,6 +1015,22 @@ public class BeanUtils {
                 if (dow != prefFirstDayOfWeek)
                     cal.add(Calendar.DAY_OF_MONTH, - (((dow-1) + (7- (int)prefFirstDayOfWeek)) % 7));
         }
+        return cal;
+    }
+
+    public static Calendar getStartOfMultiDayView(java.util.Calendar date, long prefFirstDayOfWeek, String view) {
+
+         Calendar cal = Calendar.getInstance(date.getTimeZone());
+         cal.setTimeInMillis(date.getTimeInMillis());
+         cal.set(Calendar.HOUR_OF_DAY, 0);
+         cal.set(Calendar.MINUTE, 0);
+         cal.set(Calendar.SECOND, 0);
+         cal.set(Calendar.MILLISECOND, 0);
+         int dow = cal.get(Calendar.DAY_OF_WEEK);
+
+        // pref goes 0-6, Calendar goes 1-7
+         if (dow != prefFirstDayOfWeek)
+             cal.add(Calendar.DAY_OF_MONTH, - (((dow-1) + (7- (int)prefFirstDayOfWeek)) % 7));
         return cal;
     }
 
@@ -993,10 +1097,73 @@ public class BeanUtils {
 
     }
 
+    public static int getNumDays(Calendar day1, Calendar day2) {
+        long startTime = day1.getTimeInMillis();
+        long endTime = day2.getTimeInMillis();
+        int numDays = (int) ((endTime - startTime)/MSECS_PER_DAY);
+
+        return numDays;
+    }
+
     public static int getYear(Calendar cal) { return cal.get(Calendar.YEAR); }
     public static int getMonth(Calendar cal) { return cal.get(Calendar.MONTH); }
     public static int getDay(Calendar cal) { return cal.get(Calendar.DAY_OF_MONTH); }
     public static int getDayOfWeek(Calendar cal) { return cal.get(Calendar.DAY_OF_WEEK); }
+    
+    public static List<Boolean> getWorkDays(String wdays) {
+        List<Boolean> workDays = new ArrayList<Boolean>();
+        String inpWdays [] = wdays.split(",");
+        for(int index = 0; index < 7; index++)
+            workDays.add(index, false);
+        for(String day:inpWdays) {
+            workDays.remove(Integer.parseInt(day));
+            workDays.add(Integer.parseInt(day),true);
+        }
+        return workDays;
+    }
+
+    /**
+     * Change the zimbraPrefCalendarWorkingHours preference as per the work days selected.
+     *
+     * @param  workWeekPref - zimbraPrefCalendarWorkingHours preference (1:Y/N:start hour:end hour)
+     * @param  days - work days selected in terms of Y/N (0-6 starting Sunday, e.g N,Y,Y,N,Y,Y,N)
+     * @return modified zimbraPrefCalendarWorkingHours as per the work days selected, do not change
+     * the start and end hours.
+     */
+    public static java.lang.String generateWorkWeek(java.lang.String workWeekPref, java.lang.String days) {
+        StringBuilder wDays = new StringBuilder();
+        String daysArr[] = days.split(",");
+        String workDays[] = workWeekPref.split(",");
+        for (int i=0; i <7; i++ ) {
+            String day[] = workDays[i].split(":");
+            day[1] = daysArr[i];
+            String modDay = StringUtil.join(":", day);
+            if (wDays.length() > 0) wDays.append(',');
+            wDays.append(modDay);
+        }
+
+        return wDays.toString();
+    }
+
+    /**
+     * Given the working hours pref, extract only the working days info from the preference since
+     * HTML client only lets the user change the working days. Work hours remain intact.
+     *
+     * @param workWeekPref - zimbraPrefCalendarWorkingHours preference
+     * @return working days string in terms of Y/N (0-6 starting Sunday, e.g N,Y,Y,N,Y,Y,N)
+     */
+    public static java.lang.String convertCalWorkHours(java.lang.String workWeekPref) {
+       StringBuilder wDays = new StringBuilder();
+       String workDays[] = workWeekPref.split(",");
+        for (int i=0; i <7; i++ ) {
+            String day[] = workDays[i].split(":");
+            if(day[1].equals("Y")) {
+                if (wDays.length() > 0) wDays.append(',');
+                wDays.append(Integer.toString(i));
+            }
+        }
+        return wDays.toString();
+    }
 
     /** Given the checkedCalendars folder id, returns the canonical folder id for mountpoints
      * @return canonical folder ids in case of mountpoints, local folder ids otherwise
@@ -1039,9 +1206,11 @@ public class BeanUtils {
 
     private static final long MSECS_PER_MINUTE = 1000*60;
     private static final long MSECS_PER_HOUR = MSECS_PER_MINUTE * 60;
+    private static final long MSECS_PER_DAY = MSECS_PER_HOUR * 24;
 
     public static long MSECS_PER_MINUTE() { return MSECS_PER_MINUTE; }
     public static long MSECS_PER_HOUR() { return MSECS_PER_HOUR; }
+    public static long MSECS_PER_DAY() { return MSECS_PER_DAY; }
 
 	public static String getCanonicalId(TimeZone tz) {
 		return TZIDMapper.canonicalize(tz.getID());
@@ -1203,8 +1372,8 @@ public class BeanUtils {
         Calendar startCal = getCalendar(startTime, timeZone);
         Calendar endCal = getCalendar(endTime, timeZone);
 
-        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, pc.getRequest().getLocale());
-        DateFormat tf = DateFormat.getTimeInstance(DateFormat.SHORT, pc.getRequest().getLocale());
+        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, I18nUtil.findLocale(pc));
+        DateFormat tf = DateFormat.getTimeInstance(DateFormat.SHORT, I18nUtil.findLocale(pc));
         
         if (timeZone != null) {
             df.setTimeZone(timeZone);
@@ -1478,6 +1647,15 @@ public class BeanUtils {
     }
 
     /**
+     * Determines if the fileAs param of a contact is set to FA_EXPLICIT
+     * @param fileAs value of fileAs param
+     * @return true if fileAs is set to FA_EXPLICIT(8)
+     */
+    public static boolean isFileAsExplicit(String fileAs) {
+        return fileAs.equals(Integer.toString(ContactConstants.FA_EXPLICIT));
+    }
+
+    /**
      * Checks if the user's UA matches the allowed user agents for honoring
      * zimbraWebClientLogoutURL.
      * Returns true if the regex matches or if the
@@ -1589,6 +1767,13 @@ public class BeanUtils {
 	public static String cook(String in) {
 		return StringUtil.escapeHtml(in);
 	}
+
+    /**
+     * Uncooks the input string (Replaces the special characters with their equivalent HTML entities.)
+       */
+    public static String unCook(String in) {
+        return StringUtil.unEscapeHtml(in);
+    }
 
 	/**
 	 * "Cooks" an input string where an integer is expected.

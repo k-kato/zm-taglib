@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2006, 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -17,8 +17,8 @@ package com.zimbra.cs.taglib.tag.folder;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.taglib.tag.ZimbraSimpleTag;
 import com.zimbra.cs.taglib.bean.ZFolderBean;
-import com.zimbra.cs.zclient.ZFolder;
-import com.zimbra.cs.zclient.ZMailbox;
+import com.zimbra.client.ZFolder;
+import com.zimbra.soap.type.SearchSortBy;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -31,7 +31,7 @@ public class CreateSearchFolderTag extends ZimbraSimpleTag {
     private String mName;
     private String mVar;
     private ZFolder.Color mColor;
-    private ZMailbox.SearchSortBy mSortBy;
+    private SearchSortBy mSortBy;
     private String mTypes;
     private String mQuery;
 
@@ -41,8 +41,9 @@ public class CreateSearchFolderTag extends ZimbraSimpleTag {
     public void setQuery(String query) { mQuery = query; }
     public void setVar(String var) { mVar = var; }
     public void setColor(String color) throws ServiceException { mColor = ZFolder.Color.fromString(color); }
-    public void setSort(String sort) throws ServiceException { mSortBy = ZMailbox.SearchSortBy.fromString(sort); }
+    public void setSort(String sort) throws ServiceException { mSortBy = SearchSortBy.fromString(sort); }
 
+    @Override
     public void doTag() throws JspException, IOException {
         try {
             ZFolderBean result = new ZFolderBean(getMailbox().createSearchFolder(mParentId, mName, mQuery, mTypes, mSortBy, mColor));

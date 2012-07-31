@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2008, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2007, 2008, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -14,7 +14,7 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.cs.zclient.ZAppointmentHit;
+import com.zimbra.client.ZAppointmentHit;
 
 import java.util.List;
 import java.util.Date;
@@ -27,6 +27,8 @@ public class ZApptAllDayLayoutBean {
     long mStartTime;
     long mEndTime;
     int mNumDays;
+
+    public static final String PSTATUS_DECLINED = "DE";
 
     List<ZAppointmentHit> mAllday; // all all-day appts in this range
     List<List<ZAppointmentHit>> mRows;
@@ -42,14 +44,15 @@ public class ZApptAllDayLayoutBean {
         return mRows.size();
     }
 
-    public ZApptAllDayLayoutBean(List<ZAppointmentHit> appts, long startTime, long endTime, int numDays, boolean scheduleMode) {
+    public ZApptAllDayLayoutBean(List<ZAppointmentHit> appts, long startTime, long endTime, int numDays, boolean scheduleMode, boolean isShowDeclined) {
         mAllday = new ArrayList<ZAppointmentHit>();
         mStartTime = startTime;
         mEndTime = endTime;
         mNumDays = numDays;
 
         for (ZAppointmentHit appt : appts) {
-            if (appt.isAllDay() && appt.isInRange(mStartTime, mEndTime)) {
+            if (appt.isAllDay() && appt.isInRange(mStartTime, mEndTime) 
+                    && (!appt.getParticipantStatus().equals(PSTATUS_DECLINED) || (appt.getParticipantStatus().equals(PSTATUS_DECLINED) && isShowDeclined))) {
                 mAllday.add(appt);
             }
         }

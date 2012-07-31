@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2006, 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -15,12 +15,12 @@
 package com.zimbra.cs.taglib.tag;
 
 import com.zimbra.common.service.ServiceException;
-import com.zimbra.cs.zclient.ZEmailAddress;
-import com.zimbra.cs.zclient.ZMailbox;
-import com.zimbra.cs.zclient.ZMailbox.ZOutgoingMessage;
-import com.zimbra.cs.zclient.ZMailbox.ZSendMessageResponse;
-import com.zimbra.cs.zclient.ZMailbox.ZOutgoingMessage.AttachedMessagePart;
-import com.zimbra.cs.zclient.ZMailbox.ZOutgoingMessage.MessagePart;
+import com.zimbra.client.ZEmailAddress;
+import com.zimbra.client.ZMailbox;
+import com.zimbra.client.ZMailbox.ZOutgoingMessage;
+import com.zimbra.client.ZMailbox.ZSendMessageResponse;
+import com.zimbra.client.ZMailbox.ZOutgoingMessage.AttachedMessagePart;
+import com.zimbra.client.ZMailbox.ZOutgoingMessage.MessagePart;
 import com.zimbra.cs.taglib.bean.ZMessageComposeBean;
 
 import javax.servlet.jsp.JspContext;
@@ -154,7 +154,7 @@ public class SendMessageTag extends ZimbraSimpleTag {
 
         m.setMessagePartsToAttach(attachments);
 
-        if (mMessageId != null && mMessageId.length() > 0)
+        if (mMessageId != null && mMessageId.length() > 0 && mReplyType != null && mReplyType.length() > 0)
             m.setOriginalMessageId(mMessageId);
 
         if (mReplyType != null && mReplyType.length() > 0)

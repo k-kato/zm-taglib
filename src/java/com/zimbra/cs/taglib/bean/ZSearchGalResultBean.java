@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2006, 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -14,9 +14,9 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.cs.zclient.ZContact;
-import com.zimbra.cs.zclient.ZMailbox.ZSearchGalResult;
-import com.zimbra.cs.zclient.ZMailbox.GalEntryType;
+import com.zimbra.client.ZContact;
+import com.zimbra.client.ZMailbox.ZSearchGalResult;
+import com.zimbra.client.ZMailbox.GalEntryType;
 
 import java.util.ArrayList;
 import java.util.List;

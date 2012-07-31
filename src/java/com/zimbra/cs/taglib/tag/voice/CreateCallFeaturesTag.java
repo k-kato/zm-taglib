@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2008, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2007, 2008, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -19,9 +19,9 @@ import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.taglib.bean.ZCallFeaturesBean;
 import com.zimbra.cs.taglib.bean.ZCallForwardingBean;
 import com.zimbra.cs.taglib.bean.ZSelectiveCallForwardingBean;
-import com.zimbra.cs.zclient.ZCallFeatures;
-import com.zimbra.cs.zclient.ZMailbox;
-import com.zimbra.cs.zclient.ZPhoneAccount;
+import com.zimbra.client.ZCallFeatures;
+import com.zimbra.client.ZMailbox;
+import com.zimbra.client.ZPhoneAccount;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
@@ -59,6 +59,9 @@ public class CreateCallFeaturesTag extends CallFeaturesTagBase {
 	    newFeatures.getVoiceMailPrefs().setPromptLevel(mPromptLevel);
 	    newFeatures.getVoiceMailPrefs().setAnsweringLocale(mAnsweringLocale);
 	    newFeatures.getVoiceMailPrefs().setUserLocale(mUserLocale);
+
+	    newFeatures.getVoiceMailPrefs().setEmailNotifTrans(mEmailNotifTrans);
+	    newFeatures.getVoiceMailPrefs().setEmailNotifAttach(mEmailNotifAttach);
 
             getJspContext().setAttribute(mVar, newFeatures, PageContext.PAGE_SCOPE);
         } catch (ServiceException e) {

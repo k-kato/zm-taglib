@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2008, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2007, 2008, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -14,31 +14,36 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.cs.zclient.ZPhoneAccount;
-import com.zimbra.cs.zclient.ZPhone;
+import com.zimbra.client.ZPhoneAccount;
+import com.zimbra.client.ZPhone;
 import com.zimbra.common.service.ServiceException;
 
 public class ZPhoneAccountBean {
 
-    private ZPhoneAccount mAccount;
+    private ZPhoneAccount account;
 
     public ZPhoneAccountBean(ZPhoneAccount account) {
-        mAccount = account;
+        this.account = account;
     }
 
     public ZFolderBean getRootFolder() {
-        return new ZFolderBean(mAccount.getRootFolder());
+        return new ZFolderBean(account.getRootFolder());
     }
 
     public ZPhone getPhone() {
-        return mAccount.getPhone();
+        return account.getPhone();
     }
 
     public ZCallFeaturesBean getCallFeatures() throws ServiceException {
-        return new ZCallFeaturesBean(mAccount.getCallFeatures(), false);
+        return new ZCallFeaturesBean(account.getCallFeatures(), false);
     }
 
 	public boolean getHasVoiceMail() {
-		return mAccount.getHasVoiceMail();
+		return account.getHasVoiceMail();
 	}
+
+    public String getPhoneType() {
+        return account.getPhoneType();
+    }
+
 }

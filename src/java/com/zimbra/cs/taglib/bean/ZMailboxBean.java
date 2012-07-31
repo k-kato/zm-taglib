@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -14,19 +14,19 @@
  */
 package com.zimbra.cs.taglib.bean;
 
+import com.zimbra.client.ZContact;
+import com.zimbra.client.ZFeatures;
+import com.zimbra.client.ZFilterRule;
+import com.zimbra.client.ZFolder;
+import com.zimbra.client.ZGetInfoResult;
+import com.zimbra.client.ZIdentity;
+import com.zimbra.client.ZLicenses;
+import com.zimbra.client.ZMailbox;
+import com.zimbra.client.ZPrefs;
+import com.zimbra.client.ZSignature;
 import com.zimbra.common.service.ServiceException;
-import com.zimbra.cs.zclient.ZContact;
-import com.zimbra.cs.zclient.ZFeatures;
-import com.zimbra.cs.zclient.ZFilterRule;
-import com.zimbra.cs.zclient.ZFolder;
-import com.zimbra.cs.zclient.ZGetInfoResult;
-import com.zimbra.cs.zclient.ZIdentity;
-import com.zimbra.cs.zclient.ZMailbox;
-import com.zimbra.cs.zclient.ZPrefs;
-import com.zimbra.cs.zclient.ZSignature;
 
 import java.net.URI;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -84,6 +84,8 @@ public class ZMailboxBean {
     public ZPrefs getPrefs() throws ServiceException { return mMbox.getPrefs(); }
     
     public ZFeatures getFeatures() throws ServiceException { return mMbox.getFeatures(); }
+
+    public ZLicenses getLicenses() throws ServiceException { return mMbox.getLicenses(); }
 
     public Boolean getAdminDelegated() throws ServiceException { return mMbox.getAccountInfo(false).getAdminDelegated(); }
 

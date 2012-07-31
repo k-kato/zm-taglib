@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -20,18 +20,19 @@ import com.zimbra.cs.taglib.ZJspSession;
 import com.zimbra.cs.taglib.bean.ZFolderBean;
 import com.zimbra.cs.taglib.bean.ZTagBean;
 import com.zimbra.cs.taglib.bean.ZPhoneAccountBean;
-import com.zimbra.cs.zclient.ZFolder;
-import com.zimbra.cs.zclient.ZMailbox;
-import com.zimbra.cs.zclient.ZSearchFolder;
-import com.zimbra.cs.zclient.ZSearchParams;
-import com.zimbra.cs.zclient.ZTag;
-import com.zimbra.cs.zclient.ZPhoneAccount;
+import com.zimbra.client.ZFolder;
+import com.zimbra.client.ZMailbox;
+import com.zimbra.client.ZSearchFolder;
+import com.zimbra.client.ZSearchParams;
+import com.zimbra.client.ZTag;
+import com.zimbra.client.ZPhoneAccount;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 import com.zimbra.cs.taglib.tag.i18n.I18nUtil;
+import com.zimbra.soap.type.SearchSortBy;
 import java.io.IOException;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class ComputeSearchContextTag extends ZimbraSimpleTag {
     private String mVar;
     private String mTypes;
     private String mQuery;
-    private ZMailbox.SearchSortBy mSortBy;
+    private SearchSortBy mSortBy;
     private boolean mUseCache;
     private int mLimit = -1;
 
@@ -186,13 +187,13 @@ public class ComputeSearchContextTag extends ZimbraSimpleTag {
         result.setSt(mTypes);
 
         if (ss != null) {
-            mSortBy = ZMailbox.SearchSortBy.fromString(ss);
+            mSortBy = SearchSortBy.fromString(ss);
         }
 
         if (mSortBy == null)
-            mSortBy = (ZSearchParams.TYPE_CONTACT.equals(mTypes) || ZSearchParams.TYPE_GAL.equals(mTypes)) ? ZMailbox.SearchSortBy.nameAsc :
-                    ZSearchParams.TYPE_TASK.equals(mTypes) ? ZMailbox.SearchSortBy.taskDueDesc :
-                    ZMailbox.SearchSortBy.dateDesc;
+            mSortBy = (ZSearchParams.TYPE_CONTACT.equals(mTypes) || ZSearchParams.TYPE_GAL.equals(mTypes)) ? SearchSortBy.nameAsc :
+                    ZSearchParams.TYPE_TASK.equals(mTypes) ? SearchSortBy.taskDueDesc :
+                    SearchSortBy.dateDesc;
 
         // default to inbox/contacts
         if (sq == null && sti == null && sfi == null) {
@@ -323,7 +324,12 @@ public class ComputeSearchContextTag extends ZimbraSimpleTag {
             }
         }
         List<ZPhoneAccount> accounts = mailbox.getAllPhoneAccounts();
-        return (accounts.size() > 0) ? accounts.get(0) : null;
+        for(ZPhoneAccount account: accounts){
+            if(account.getHasVoiceMail()){
+                return account;
+            }
+        }
+        return null;
     }
 
 }

@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -14,7 +14,7 @@
  */
 package com.zimbra.cs.taglib.bean;
 
-import com.zimbra.cs.zclient.ZAppointmentHit;
+import com.zimbra.client.ZAppointmentHit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,8 @@ public class ZApptDayLayoutBean {
     private static final long MSECS_PER_MINUTE = 1000*60;
     private static final long MSECS_PER_HOUR = MSECS_PER_MINUTE * 60;
     private static final long MSECS_PER_DAY = MSECS_PER_HOUR * 24;
+
+    public static final String PSTATUS_DECLINED = "DE";
 
     List<ZAppointmentHit> mAllday; // all all-day appts in this range
     List<ZAppointmentHit> mAppts;  // all non-day appts in this range
@@ -54,7 +56,7 @@ public class ZApptDayLayoutBean {
         return (int)(100.0/mNumDays);
     }
 
-    public ZApptDayLayoutBean(List<ZAppointmentHit> appts, long dayStartTime, int day, int numDays, String folderId, long msecsIncr) {
+    public ZApptDayLayoutBean(List<ZAppointmentHit> appts, long dayStartTime, int day, int numDays, String folderId, long msecsIncr, boolean isShowDeclined) {
         mAllday = new ArrayList<ZAppointmentHit>();
         mAppts = new ArrayList<ZAppointmentHit>();
         //mStartTime = startCal.getTimeInMillis();
@@ -66,7 +68,11 @@ public class ZApptDayLayoutBean {
         mFolderId = folderId;
 
         for (ZAppointmentHit appt : appts) {
-            if (appt.isInRange(mStartTime, mEndTime) && (mFolderId == null || mFolderId.equals(appt.getFolderId()))) {
+            if (appt.isInRange(mStartTime, mEndTime)
+                    && (mFolderId == null || mFolderId.equals(appt.getFolderId()))
+                    && (appt.getParticipantStatus() == null || (appt.getParticipantStatus() != null
+                                                                && ((!appt.getParticipantStatus().equals(PSTATUS_DECLINED))
+                                                                    || (appt.getParticipantStatus().equals(PSTATUS_DECLINED) && isShowDeclined))))) {
                 if (appt.isAllDay())
                     mAllday.add(appt);
                 else {

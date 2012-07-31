@@ -1,7 +1,7 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2009, 2010, 2011 VMware, Inc.
+ * Copyright (C) 2007, 2009, 2010 Zimbra, Inc.
  * 
  * The contents of this file are subject to the Zimbra Public License
  * Version 1.3 ("License"); you may not use this file except in
@@ -17,9 +17,9 @@ package com.zimbra.cs.taglib.tag.folder;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.cs.taglib.bean.ZFolderBean;
 import com.zimbra.cs.taglib.tag.ZimbraSimpleTag;
-import com.zimbra.cs.zclient.ZFolder;
-import com.zimbra.cs.zclient.ZMailbox.OwnerBy;
-import com.zimbra.cs.zclient.ZMailbox.SharedItemBy;
+import com.zimbra.client.ZFolder;
+import com.zimbra.client.ZMailbox.OwnerBy;
+import com.zimbra.client.ZMailbox.SharedItemBy;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
@@ -52,7 +52,8 @@ public class CreateMountpointTag extends ZimbraSimpleTag {
 
     public void doTag() throws JspException, IOException {
         try {
-            ZFolderBean result = new ZFolderBean(getMailbox().createMountpoint(mParentId, mName, mView, mColor, mFlags, mOwnerBy, mOwner, mSharedItemBy, mSharedItem));
+            ZFolderBean result = new ZFolderBean(getMailbox().createMountpoint(
+                    mParentId, mName, mView, mColor, mFlags, mOwnerBy, mOwner, mSharedItemBy, mSharedItem, false));
             getJspContext().setAttribute(mVar, result, PageContext.PAGE_SCOPE);
         } catch (ServiceException e) {
             throw new JspTagException(e);

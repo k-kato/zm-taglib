@@ -19,19 +19,19 @@ import com.zimbra.cs.taglib.tag.ZimbraSimpleTag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 
-public class FieldTag extends ZimbraSimpleTag {
+public class MemberTag extends ZimbraSimpleTag {
 
-    private String mName;
-    private String mValue;
+    private String mType;
+    private String mId;
 
-    public void setValue(String value) { mValue = value; }
-    public void setName(String name) { mName = name; }
+    public void setValue(String value) { mId = value; }
+    public void setName(String name) { mType = name; }
 
     public void doTag() throws JspException {
         ContactOpTag op = (ContactOpTag) findAncestorWithClass(this, ContactOpTag.class);
         if (op == null)
-                throw new JspTagException("The field tag must be used within a create/modify contact tag");
-        op.addAttr(mName, mValue);
+            throw new JspTagException("The field tag must be used within a create/modify contact tag");
+        op.addMembers(mId, mType) ;
     }
 
 }
