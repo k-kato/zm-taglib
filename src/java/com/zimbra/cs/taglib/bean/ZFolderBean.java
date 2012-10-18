@@ -124,10 +124,10 @@ public class  ZFolderBean {
      */
     public String getColor() {
         Color color = mFolder.getColor();
-        if (color == Color.DEFAULTCOLOR) {
-            color = (getIsContactView() || getIsTaskView()) ? Color.GRAY :  Color.ORANGE;
+        if (color == Color.defaultColor) {
+            color = (getIsContactView() || getIsTaskView()) ? Color.gray :  Color.orange;
         }
-        return color.getName();
+        return color.name();
     }
 
     public String getRgb() {
@@ -348,15 +348,31 @@ public class  ZFolderBean {
     }
 
     public static String getStyleColor(Color color, View view) {
-        String colorName = color.getName();
-        if (!StringUtil.equal(colorName, Color.RGBCOLOR) && !StringUtil.equal(colorName, Color.DEFAULTCOLOR.getName())) {
-            return colorName.substring(0,1).toUpperCase() + colorName.substring(1);
-        } else if (view == View.contact || view == View.task) {
-            colorName = Color.GRAY.getName();
-        } else {
-            colorName = Color.ORANGE.getName();
+        switch(color) {
+            case blue:
+                return "Blue";
+            case cyan:
+                return "Cyan";
+            case green:
+                return "Green";
+            case purple:
+                return "Purple";
+            case red:
+                return "Red";
+            case yellow:
+                return "Yellow";
+            case pink:
+                return "Pink";
+            case gray:
+                return "Gray";
+            case orange:
+                return "Orange";
+            default:
+                if (view == View.contact || view == View.task)
+                    return "Gray";
+                else
+                    return "Orange";
         }
-        return colorName.substring(0,1).toUpperCase() + colorName.substring(1);
     }
 
     public String getRgbColor() {
@@ -365,11 +381,11 @@ public class  ZFolderBean {
 
     public static String getRgbColor(Color color, View view) {
         int colorIndex = (int) color.getValue();
-        if (color == Color.DEFAULTCOLOR) {
+        if (color == Color.defaultColor) {
             if (view == View.contact || view == View.task)
-                colorIndex = (int) Color.GRAY.getValue();
+                colorIndex = (int) Color.gray.getValue();
             else
-                colorIndex = (int) Color.ORANGE.getValue();
+                colorIndex = (int) Color.orange.getValue();
         }
         return ZFolder.RGB_COLORS[colorIndex];
     }
