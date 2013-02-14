@@ -29,6 +29,7 @@ public class ZUserAgentBean {
     boolean isOsWindows = false;
     boolean isOsLinux = false;
     boolean isOsAndroid = false;
+    boolean isAndroidTablet = false;
     boolean isNav  = false;
     boolean isIE = false;
     boolean trueNs = false;
@@ -89,8 +90,10 @@ public class ZUserAgentBean {
                 } else if ((token.indexOf("webtv")) != -1) {
                     isWebTv = true;
                     isNav = false;
-                } else if ((token.indexOf("iphone") != -1) || ((token.indexOf("ipad")) != -1)) {
+                } else if ((token.indexOf("iphone")) != -1) {
                     isIPhone = true;
+                } else if ((token.indexOf("ipad")) != -1) {
+                    isIPad = true;
                 } else if ((token.indexOf("ipod")) != -1) {
                     isIPod = true;
                 } else if ((token.indexOf("hotjava")) != -1) {
@@ -130,9 +133,12 @@ public class ZUserAgentBean {
                     isOsLinux = true;
                 }else if (token.indexOf("android") != -1){
                     isOsAndroid = true;
+                    isAndroidTablet = true;
                 }else if ((index = token.indexOf("version/")) != -1){
                     //In case of safari, get the browser version here
                     browserVersion = new Version(token.substring(index + 8));
+                } else if (token.indexOf("mobile") != -1 && isOsAndroid) {
+                    isAndroidTablet = false;
                 }
 
                 token = agtArr.hasMoreTokens() ? agtArr.nextToken() : null;
@@ -161,6 +167,8 @@ public class ZUserAgentBean {
     public boolean getIsOsLinux() { return isOsLinux; }
 
     public boolean getIsOsAndroid() { return isOsAndroid; }
+
+    public boolean getIsAndroidTablet() { return isAndroidTablet; }
     
     public boolean getIsOpera() { return isOpera; }
     
