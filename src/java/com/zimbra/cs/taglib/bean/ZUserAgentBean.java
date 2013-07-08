@@ -97,15 +97,7 @@ public class ZUserAgentBean {
                 } else if ((token.indexOf("iphone")) != -1) {
                     isIPhone = true;
                 } else if ((token.indexOf("ipad")) != -1) {
-                    /**
-                     * Flag used to redirect an iPad user to the touch client(if installed)
-                     */
                     isTouchiPad = true;
-                    /**
-                     * Faking iPad user agent as iPhone, this is a hack. On 8.0, we need to
-                     * redirect an iPad user to the mobile client.
-                     */
-                    isIPhone = true;
                 } else if ((token.indexOf("ipod")) != -1) {
                     isIPod = true;
                 } else if ((token.indexOf("hotjava")) != -1) {
