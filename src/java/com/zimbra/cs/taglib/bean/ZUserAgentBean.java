@@ -25,6 +25,7 @@ public class ZUserAgentBean {
     // state
     Version browserVersion = new Version("-1");
     Version mozVersion = new Version("-1");
+    Version tridentVersion = new Version("-1");
     boolean isOsMac = false;
     boolean isOsWindows = false;
     boolean isOsLinux = false;
@@ -101,6 +102,8 @@ public class ZUserAgentBean {
                     if (agtArr.hasMoreTokens()) {
                         browserVersion = new Version(agtArr.nextToken());
                     }
+                } else if ((index = token.indexOf("trident/")) != -1){
+					tridentVersion = new Version(token.substring(index + 8));
                 } else if ((index = token.indexOf("gecko/")) != -1){
                     isGeckoBased = true;
                     //bug:70005#c4 suggest to stop build date based version parsing
@@ -145,6 +148,13 @@ public class ZUserAgentBean {
                     !isSafari && !isChrome);
 
             isIE = (isIE && !isOpera);
+
+            // Note: unlike JP and later, we don't treat IE11+ as
+            // significantly different from IE10 and earlier
+            if (tridentVersion.getMajor() >= 7 && mozVersion.getMajor() >= 11) {
+                isIE = true;
+                browserVersion = mozVersion;
+            }
 
             isMozilla = ((isNav && mozVersion.getMajor() > -1 && isGeckoBased));
 
@@ -219,7 +229,11 @@ public class ZUserAgentBean {
     public boolean getIsIE10() { return (isIE && (browserVersion.equals(10,0))); }
 
     public boolean getIsIE10up() { return (isIE && (browserVersion.getMajor() >= 10)); }
+
+    public boolean getIsIE11() { return (isIE && (browserVersion.equals(11,0))); }
     
+    public boolean getIsIE11up() { return (isIE && (browserVersion.getMajor() >= 11)); }
+
     public boolean getIsMozilla() { return isMozilla; }
 
     public boolean getIsMozilla1_4up() { return (isMozilla && (mozVersion.greaterOrEqual(1,4))); }
