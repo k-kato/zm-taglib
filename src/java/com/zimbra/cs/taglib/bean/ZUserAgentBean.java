@@ -44,6 +44,7 @@ public class ZUserAgentBean {
     boolean isIPhone = false;
     boolean isIPod = false;
     boolean isIPad = false;
+    boolean isMobile = false;
 
     public ZUserAgentBean(String userAgent) {
         mUserAgent = userAgent;
@@ -136,6 +137,8 @@ public class ZUserAgentBean {
                 }else if ((index = token.indexOf("version/")) != -1){
                     //In case of safari, get the browser version here
                     browserVersion = new Version(token.substring(index + 8));
+                } else if (token.indexOf("mobile") != -1) {
+                    isMobile = true;
                 }
 
                 token = agtArr.hasMoreTokens() ? agtArr.nextToken() : null;
@@ -259,6 +262,8 @@ public class ZUserAgentBean {
     public boolean getIsiPod() { return isIPod; }
 
     public boolean getIsiPad() { return isIPad; }
+
+    public boolean getIsMobile() { return isMobile; }
 
     public static class Version {
         
