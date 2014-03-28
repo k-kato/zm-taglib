@@ -7875,4 +7875,10 @@
         <function-signature>java.lang.Boolean valueOf(java.lang.String)</function-signature>
 	</function>
 
+    <function>
+		<name>nonNull</name>
+		<function-class>com.zimbra.common.util.StringUtil</function-class>
+        <function-signature>java.lang.String nonNull(java.lang.String)</function-signature>
+	</function>
+
 </taglib>
