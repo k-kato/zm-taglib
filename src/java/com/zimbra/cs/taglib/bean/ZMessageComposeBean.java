@@ -1324,7 +1324,7 @@ public class ZMessageComposeBean {
 
 
     private static String getReplySubject(String subject, PageContext pc) {
-        String REPLY_PREFIX = I18nUtil.getLocalizedMessage(pc, "ZM_replySubjectPrefix");
+        String REPLY_PREFIX = "Re:";
         if (subject == null) subject = "";
         if ((subject.length() > 3) && subject.substring(0, 3).equalsIgnoreCase(REPLY_PREFIX))
             return subject;
@@ -1333,7 +1333,7 @@ public class ZMessageComposeBean {
     }
 
     private static String getForwardSubject(String subject, PageContext pc) {
-        String FORWARD_PREFIX = I18nUtil.getLocalizedMessage(pc, "ZM_forwardSubjectPrefix");
+        String FORWARD_PREFIX = "Fwd:";
         if (subject == null) subject = "";
         if ((subject.length() > 3) && subject.substring(0, 3).equalsIgnoreCase(FORWARD_PREFIX))
             return subject;
