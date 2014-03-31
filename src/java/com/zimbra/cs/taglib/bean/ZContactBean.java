@@ -16,11 +16,13 @@ package com.zimbra.cs.taglib.bean;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.soap.MailConstants;
+import com.zimbra.common.util.StringUtil;
 import com.zimbra.cs.mailbox.Contact;
 import com.zimbra.client.ZContact;
 import com.zimbra.client.ZEmailAddress;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -264,7 +266,24 @@ public class ZContactBean implements Comparable {
         }
         return sb.toString();
     }
-        
+
+    /**
+     * @return comma-separated "full" email addresses of the group members,
+     *         suitable for inserting into a To/Cc/Bcc header
+     * @throws ServiceException
+     */
+    public String getMemberAddresses() throws ServiceException {
+        List<String> addresses = new LinkedList<>();
+        for (ZContact member : mContact.getMembers().values()) {
+            String address = member.isTypeI() ? member.getId() :
+                    new ZEmailAddress(member.getDisplayEmail(), null, Contact.getFileAsString(member.getAttrs()), ZEmailAddress.EMAIL_TYPE_TO).getFullAddress();
+            if (address != null) {
+                addresses.add(address);
+            }
+        }
+        return StringUtil.join(", ", addresses);
+    }
+
     public String getDisplayFileAs() {
         if (mFileAs == null) {
             try {
@@ -287,26 +306,13 @@ public class ZContactBean implements Comparable {
         }
         return false;
     }
-        /**
-     * @return first email from email/2/3 that is set, or an empty string
-     */
-    public String getDisplayEmail() {
-        if (getEmail() != null && getEmail().length() > 0)
-            return getEmail();
-        else if (getEmail2() != null && getEmail2().length() > 0)
-            return getEmail2();
-        else if (getEmail3() != null && getEmail3().length() > 0)
-            return getEmail3();
-        else
-            return "";
-    }
 
     /**
        *
        * @return the "full" email address suitable for inserting into a To/Cc/Bcc header
        */
     public String getFullAddress() {
-        return new ZEmailAddress(getDisplayEmail(), null, getDisplayFileAs(), ZEmailAddress.EMAIL_TYPE_TO).getFullAddress();
+        return new ZEmailAddress(mContact.getDisplayEmail(), null, getDisplayFileAs(), ZEmailAddress.EMAIL_TYPE_TO).getFullAddress();
     }
 
     /**
@@ -336,7 +342,7 @@ public class ZContactBean implements Comparable {
        * @return the "full" email address suitable for inserting into a To/Cc/Bcc header
        */
     public String getGalFullAddress() {
-        return new ZEmailAddress(getDisplayEmail(), null, getGalFileAsStr(), ZEmailAddress.EMAIL_TYPE_TO).getFullAddress();
+        return new ZEmailAddress(mContact.getDisplayEmail(), null, getGalFileAsStr(), ZEmailAddress.EMAIL_TYPE_TO).getFullAddress();
     }
 
     public String getImage() {
