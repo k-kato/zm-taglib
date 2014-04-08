@@ -137,6 +137,8 @@ public class LoginTag extends ZimbraSimpleTag {
                     String protocol = (ZJspSession.isProtocolModeHttps() ? "httpssl" : "http");
                     NginxAuthServer nginxLookUpServer = NginxRouteLookUpConnector.getClient().getRouteforAccount(mUsername, "username",
                             protocol, HttpUtil.getVirtualHost(request), request.getRemoteAddr(), request.getHeader("Virtual-Host"));
+                    // In case of https, protocol needs to be https for the URL and not httpssl as passed to getRouteforAccount
+                    protocol = (ZJspSession.isProtocolModeHttps() ? "https" : "http");
                     mUrl = protocol + "://" + nginxLookUpServer.getNginxAuthServer() + "/service/soap";
                 } else {
                     mUrl = ZJspSession.getSoapURL(pageContext);
