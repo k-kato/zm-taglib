@@ -377,14 +377,14 @@ public class ZJspSession {
     }
 
     public static synchronized String getSoapURL(PageContext context) throws ServiceException {
-    	ZimbraLog.misc.warn("Getting SOAP URL");
+    	ZimbraLog.misc.debug("Getting SOAP URL");
         if (WebSplitUtil.isZimbraWebClientSplitEnabled()) {
-        	ZimbraLog.misc.warn("Web split enabled");
+        	ZimbraLog.misc.debug("Web split enabled");
             RouteCache rtCache = RouteCache.getInstance();
             String accountID;
             try {
                 accountID = getAccountId(context);
-                ZimbraLog.misc.warn("got accountId");
+                ZimbraLog.misc.debug("got accountId");
             } catch (AuthTokenException e) {
                 throw ServiceException.AUTH_REQUIRED();
             }
@@ -403,7 +403,7 @@ public class ZJspSession {
                  // For Guest Account, no lookup is needed. connect to one of the available upstream servers
                  route = NginxRouteLookUpConnector.getClient().getUpstreamMailServer(authProtocol);
             }
-            ZimbraLog.misc.warn("got route %s",route);
+            ZimbraLog.misc.debug("got route %s",route);
             return ((MODE_HTTP ? PROTO_HTTP : PROTO_HTTPS) + "://" + route + "/service/soap");
         }
         if (sSoapUrl == null) {
