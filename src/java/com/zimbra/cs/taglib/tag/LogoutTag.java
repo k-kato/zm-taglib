@@ -51,9 +51,13 @@ public class LogoutTag extends ZimbraSimpleTag {
         			at.deRegister(); //this invalidates the session in webclient app
         		}
         	}
-        } catch (AuthTokenException | ServiceException e) {
-			throw new JspTagException(e.getMessage(), e);
-		} finally {
+        } catch (ServiceException e) {
+            if (!ServiceException.AUTH_EXPIRED.equals(e.getCode())) { //don't throw an exception if this token has already been invalidated
+                throw new JspTagException(e.getMessage(), e);
+            }
+		} catch (AuthTokenException e) {
+		    throw new JspTagException(e.getMessage(), e);
+        } finally {
 	        HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 	        ZAuthToken.clearCookies(response);
 	        ZJspSession.clearSession(pageContext);
