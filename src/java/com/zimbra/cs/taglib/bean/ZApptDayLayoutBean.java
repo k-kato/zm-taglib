@@ -56,13 +56,13 @@ public class ZApptDayLayoutBean {
         return (int)(100.0/mNumDays);
     }
 
-    public ZApptDayLayoutBean(List<ZAppointmentHit> appts, long dayStartTime, int day, int numDays, String folderId, long msecsIncr, boolean isShowDeclined) {
+    public ZApptDayLayoutBean(List<ZAppointmentHit> appts, Calendar startCal, int day, int numDays, String folderId, long msecsIncr, boolean isShowDeclined) {
         mAllday = new ArrayList<ZAppointmentHit>();
         mAppts = new ArrayList<ZAppointmentHit>();
-        //mStartTime = startCal.getTimeInMillis();
-        //mEndTime = BeanUtils.addDay(startCal, 1).getTimeInMillis();
-        mStartTime = dayStartTime;
-        mEndTime = mStartTime + MSECS_PER_DAY;
+        mStartTime = startCal.getTimeInMillis();
+        mEndTime = BeanUtils.addDay(startCal, 1).getTimeInMillis();
+//        mStartTime = dayStartTime;
+//        mEndTime = mStartTime + MSECS_PER_DAY;
         mDay = day;
         mNumDays = numDays;
         mFolderId = folderId;
