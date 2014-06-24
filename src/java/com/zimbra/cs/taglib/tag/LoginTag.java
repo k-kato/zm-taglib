@@ -54,6 +54,7 @@ public class LoginTag extends ZimbraSimpleTag {
     private String mAttrs;
     private String mPrefs;
 	private String mRequestedSkin;
+    private boolean mCsrfTokenSecured;
 
 	public void setVarRedirectUrl(String varRedirectUrl) { this.mVarRedirectUrl = varRedirectUrl; }
 
@@ -68,6 +69,8 @@ public class LoginTag extends ZimbraSimpleTag {
     public void setRememberme(boolean rememberMe) { this.mRememberMe = rememberMe; }
 
     public void setImportData(boolean importData) { this.mImportData = importData; }
+
+    public void setCsrfTokenSecured(boolean csrfTokenSecured) { this.mCsrfTokenSecured = csrfTokenSecured; }
 
     /**
      * Signifies whether it is an admin proxy login ("View mail" login).
@@ -149,6 +152,9 @@ public class LoginTag extends ZimbraSimpleTag {
             options.setUri(mUrl);
             options.setRequestedSkin(mRequestedSkin);
 
+            if (mCsrfTokenSecured) {
+                options.setCsrfSupported(mCsrfTokenSecured);
+            }
             ZMailbox mbox = ZMailbox.getMailbox(options);
             HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
