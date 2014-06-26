@@ -45,12 +45,14 @@ public class CalSearchJSONTag extends ZimbraSimpleTag {
 
     private String mVar;
     private ZAuthToken mAuthToken;
+    private String mCsrfToken;
     private String mItemsPerPage;
     private String mTypes;
     private TimeZone mTimeZone;
 
     public void setVar(String var) { this.mVar = var; }
     public void setAuthtoken(ZAuthToken authToken) { this.mAuthToken = authToken; }
+    public void setCsrftoken(String csrfToken) { this.mCsrfToken = csrfToken; }
     public void setItemsperpage(String itemsPerPage) { mItemsPerPage = itemsPerPage; }
     public void setTypes(String types) { mTypes = types; }
     public void setTimezone(TimeZone timezone) { mTimeZone = timezone; }
@@ -85,6 +87,21 @@ public class CalSearchJSONTag extends ZimbraSimpleTag {
      * @throws ServiceException on error
      */
     public static Element getBootstrapCalSearchJSON(String url, String remoteAddr, ZAuthToken authToken, String itemsPerPage, String searchTypes) throws ServiceException {
+        return getBootstrapCalSearchJSON(url, remoteAddr, authToken, null, itemsPerPage, searchTypes);
+    }
+
+    /**
+     * used when bootstrapping AJAX client.
+     *
+     * @param url url to connect to
+     * @param authToken auth token to use
+     * @param csrfToken csrf token
+     * @param itemsPerPage number of search items to return
+     * @param searchTypes what to search for
+     * @return top-level JSON respsonse
+     * @throws ServiceException on error
+     */
+    public static Element getBootstrapCalSearchJSON(String url, String remoteAddr, ZAuthToken authToken, String csrfToken, String itemsPerPage, String searchTypes) throws ServiceException {
         ZMailbox.Options options = new ZMailbox.Options(authToken, url);
         options.setNoSession(false);
         options.setAuthAuthToken(false);
@@ -158,7 +175,7 @@ public class CalSearchJSONTag extends ZimbraSimpleTag {
             queryEl.setText(searchQuery.toString());
 
             JsonDebugListener debug = new JsonDebugListener();
-            SoapTransport transport = TagUtil.newJsonTransport(url, remoteAddr, authToken, debug);
+            SoapTransport transport = TagUtil.newJsonTransport(url, remoteAddr, authToken, csrfToken, debug);
             transport.invoke(batch);
 
             Element e = debug.getEnvelope();

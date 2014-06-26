@@ -2675,6 +2675,15 @@
 
         <attribute>
             <description>
+                csrf token
+            </description>
+            <name>csrftoken</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <description>
                 whether or not to do a search.
             </description>
             <name>dosearch</name>
@@ -2758,6 +2767,15 @@
             </description>
             <name>authtoken</name>
             <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <description>
+                csrf token
+            </description>
+            <name>csrftoken</name>
+            <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
 
@@ -6753,6 +6771,14 @@
             </description>
             <name>var</name>
             <required>true</required>
+        </attribute>
+        <attribute>
+            <description>
+                csrf token
+            </description>
+            <name>csrftoken</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
     

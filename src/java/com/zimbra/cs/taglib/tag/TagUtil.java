@@ -34,9 +34,14 @@ public class TagUtil {
     }
     
     public static SoapTransport newJsonTransport(String url, String remoteAddr, ZAuthToken authToken, DebugListener debug) {
+        return newJsonTransport(url, remoteAddr, authToken, null, debug);
+    }
+
+    public static SoapTransport newJsonTransport(String url, String remoteAddr, ZAuthToken authToken, String csrfToken, DebugListener debug) {
         SoapTransport transport = new SoapHttpTransport(url);
         transport.setClientIp(remoteAddr);
         transport.setAuthToken(authToken);
+        transport.setCsrfToken(csrfToken);
         transport.setRequestProtocol(SoapProtocol.SoapJS);
         transport.setResponseProtocol(SoapProtocol.SoapJS);
         transport.setDebugListener(debug);
