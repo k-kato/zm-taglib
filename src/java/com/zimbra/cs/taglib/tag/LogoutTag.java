@@ -2,11 +2,11 @@
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2013, 2014 Zimbra, Inc.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * version 2 of the License.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
@@ -45,13 +45,13 @@ public class LogoutTag extends ZimbraSimpleTag {
         	if(authToken != null) {
         		AuthToken at = ZimbraAuthToken.getAuthToken(authToken.getValue());
         		Account acc = at.getAccount();
-        		if(at != null) {
-        		    if(acc != null) {
-                        //Force a authRequest with csrfSupported=1 to get the csrfToken. EndSessionRequest would need it.
-        		        ZMailbox mbox = ZMailbox.getByAuthToken(authToken, URLUtil.getSoapURL(acc.getServer(), false), true, true);
-        		        mbox.logout();//this invalidates the session in mailbox app
+        		if(at != null && acc != null) {
+                    //Force a authRequest with csrfSupported=1 to get the csrfToken. EndSessionRequest would need it.
+    		        ZMailbox mbox = ZMailbox.getByAuthToken(authToken, URLUtil.getSoapURL(acc.getServer(), false), true, true);
+    		        mbox.logout();//this invalidates the session in mailbox app
+        		    if(!at.isExpired()) {
+        		        at.deRegister(); //this invalidates the session in webclient app
         		    }
-        			at.deRegister(); //this invalidates the session in webclient app
         		}
         	}
         } catch (ServiceException e) {
