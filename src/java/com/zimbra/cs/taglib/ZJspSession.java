@@ -506,10 +506,9 @@ public class ZJspSession {
         if (authToken == null || authToken.isEmpty()) {
             return null;
         } else {
-            // see if we can get a mailbox from the auth token
-            ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context));
+            //Force a authRequest with csrfSupported=1 so that the generated mailbox object has csrfToken.
+            ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context), true, true);
             options.setClientIp(getRemoteAddr(context));
-            //options.setAuthAuthToken(true);
             ZMailbox mbox = ZMailbox.getMailbox(options);
             mbox.getAccountInfo(false);
             return setSession(context, mbox);
