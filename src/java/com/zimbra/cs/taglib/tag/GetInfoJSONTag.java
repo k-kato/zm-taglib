@@ -72,7 +72,9 @@ public class GetInfoJSONTag extends ZimbraSimpleTag {
                 options.setAuthToken(mAuthToken);
                 options.setAuthAuthToken(true);
                 options.setUri(url);
+                // We should already have a csrf token; no need to request again
                 ZMailbox mbox = ZMailbox.getMailbox(options);
+                mbox.initCsrfToken(mCsrfToken);
                 String folderId = this.getFolderFromPath(mbox, mFolderPath);
                 if (folderId !=null && !folderId.isEmpty()) {
                     mSortBy = this.getSortByAttr(folderId, mSortBy);
