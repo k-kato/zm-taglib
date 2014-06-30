@@ -507,7 +507,7 @@ public class ZJspSession {
             return null;
         } else {
             //Force a authRequest with csrfSupported=1 so that the generated mailbox object has csrfToken.
-            ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context), true, true);
+            ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context), true, false);
             options.setClientIp(getRemoteAddr(context));
             ZMailbox mbox = ZMailbox.getMailbox(options);
             mbox.getAccountInfo(false);
