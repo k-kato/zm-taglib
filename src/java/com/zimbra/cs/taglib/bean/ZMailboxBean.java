@@ -118,4 +118,6 @@ public class ZMailboxBean {
 		ZContact myCard = mMbox.getMyCard();
 		return myCard == null ? null : new ZContactBean(myCard);
 	}
+
+    public String getCsrfToken() throws ServiceException { return mMbox.getCsrfToken(); }
 }
