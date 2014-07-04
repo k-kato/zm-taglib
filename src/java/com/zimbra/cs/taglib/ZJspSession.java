@@ -522,7 +522,9 @@ public class ZJspSession {
             // see if we can get a mailbox from the auth token
             ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context));
             options.setNoSession(true);
-            options.setAuthAuthToken(false);
+            options.setAuthAuthToken(true);
+            // Get a csrf token too
+            options.setCsrfSupported(true);
             options.setTargetAccount(targetAccountId);
             options.setTargetAccountBy(Key.AccountBy.id);
             options.setClientIp(getRemoteAddr(context));
@@ -537,7 +539,9 @@ public class ZJspSession {
             // see if we can get a mailbox from the auth token
             ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context));
             options.setNoSession(true);
-            options.setAuthAuthToken(false);
+            options.setAuthAuthToken(true);
+            // Get a csrf token too
+            options.setCsrfSupported(true);
             options.setTargetAccount(targetAccountId);
             options.setTargetAccountBy(Key.AccountBy.id);
             options.setClientIp(getRemoteAddr(context));
