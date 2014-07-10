@@ -1999,11 +1999,11 @@ da body
             List<AttachedMessagePart> inlineAttachments = m.getInlineMessagePartsToAttach();
             if(inlineAttachments != null && inlineAttachments.size() > 0){
 
-                MessagePart html = new MessagePart(ZMimePartBean.CT_TEXT_HTML, mContent != null ? mContent : "", inlineAttachments);
+                MessagePart html = new MessagePart(ZMimePartBean.CT_TEXT_HTML, mHtmlContent != null ? mHtmlContent : "", inlineAttachments);
             	MessagePart related = new MessagePart(ZMimePartBean.CT_MULTI_RELATED, html);                                
 			 	m.setMessagePart(new MessagePart(ZMimePartBean.CT_MULTI_ALT,related));
             }else{
-            	m.setMessagePart(new MessagePart(ZMimePartBean.CT_TEXT_HTML, mContent != null ? mContent : ""));
+            	m.setMessagePart(new MessagePart(ZMimePartBean.CT_TEXT_HTML, mHtmlContent != null ? mHtmlContent : ""));
 			}
         } else {
             m.setMessagePart(new MessagePart(mContentType, mContent != null ? mContent : ""));

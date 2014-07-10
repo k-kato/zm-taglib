@@ -321,11 +321,11 @@ public class ZComposeUploaderBean {
         String replyType = getParam(F_replytype);
         if (replyType != null) compose.setReplyType(replyType);
 
-        if (getParam(F_body)==null || "".equals(getParam(F_body))) {
+        if (getParam(F_body) != null && !getParam(F_body).isEmpty()) {
             compose.setHtmlContent(getParam(F_body));
         }
 
-        if (getParam(F_bodyText)==null || "".equals(getParam(F_bodyText))) {
+        if (getParam(F_bodyText) != null && !getParam(F_bodyText).isEmpty()) {
             compose.setContent(getParam(F_bodyText));
         }
 
