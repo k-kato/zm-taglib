@@ -2624,6 +2624,14 @@
         </attribute>
         <attribute>
             <description>
+                whether auth token is csrf secured
+            </description>
+            <name>csrfenabled</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>
                 auth token (ZAuthToken) for use with REST HTML rendering.
             </description>
             <name>restauthtokenobject</name>
