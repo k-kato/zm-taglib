@@ -28,10 +28,13 @@ public class ZUserAgentBean {
     Version browserVersion = new Version("-1");
     Version mozVersion = new Version("-1");
     Version tridentVersion = new Version("-1");
+    Version androidVersion = new Version("-1");
+    Version iOsVersion = new Version("-1");
     boolean isOsMac = false;
     boolean isOsWindows = false;
     boolean isOsLinux = false;
     boolean isOsAndroid = false;
+    boolean isOsBlackBerry = false;
     boolean isNav  = false;
     boolean isIE = false;
     boolean isModernIE = false;
@@ -70,6 +73,8 @@ public class ZUserAgentBean {
         double geckoDate = 0;
         boolean beginsWithMozilla = false;
         boolean isCompatible = false;
+        boolean isTokenAndroid = false;
+        boolean isTokenOS = false;
         if (agtArr.hasMoreTokens()) {
             String token = agtArr.nextToken();
             Pattern pattern = Pattern.compile("\\s*mozilla");
@@ -143,11 +148,24 @@ public class ZUserAgentBean {
                     isOsLinux = true;
                 }else if (token.indexOf("android") != -1){
                     isOsAndroid = true;
+                    isTokenAndroid = true;
+                } else if (token.indexOf("blackberry") != -1 || token.startsWith("bb")) {
+                    isOsBlackBerry = true;
                 }else if ((index = token.indexOf("version/")) != -1){
                     //In case of safari, get the browser version here
                     browserVersion = new Version(token.substring(index + 8));
                 }else if (token.indexOf("mobile") != -1) {
                     isMobile = true;
+                } else if (token.equals("os") && (isIPhone || isIPod || isTouchiPad)) {
+                    isTokenOS = true;
+                } else if (isTokenAndroid && token.matches("^(\\d).*")) {
+                    androidVersion = new Version(token);
+                    isTokenAndroid = false;
+                } else if (isTokenOS && token.matches("^(\\d).*")) {
+                    //iOS version is separated using "_", replace it with "."
+                    token = token.replaceAll("_", ".");
+                    iOsVersion = new Version(token);
+                    isTokenOS = false;
                 }
 
                 token = agtArr.hasMoreTokens() ? agtArr.nextToken() : null;
@@ -266,6 +284,12 @@ public class ZUserAgentBean {
     public boolean getIsiPhone() { return isIPhone; }
 
     public boolean getIsiPod() { return isIPod; }
+
+    public boolean getIsOsBlackBerry() { return isOsBlackBerry; }
+
+    public boolean getIsAndroid4_0up() { return (isOsAndroid && androidVersion.greaterOrEqual(4, 0)); }
+
+    public boolean getIsIos6_0up() { return ((isIPhone || isIPod || isTouchiPad) && iOsVersion.greaterOrEqual(6, 0)); }
 
     @Deprecated
     public boolean getIsiPad() { return isIPad; }
