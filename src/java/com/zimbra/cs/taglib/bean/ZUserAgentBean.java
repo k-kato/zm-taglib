@@ -156,6 +156,8 @@ public class ZUserAgentBean {
                     browserVersion = new Version(token.substring(index + 8));
                 }else if (token.indexOf("mobile") != -1) {
                     isMobile = true;
+                } else if (token.indexOf("touch") != -1 || token.indexOf("tablet") != -1) {
+                    isMobile = true;
                 } else if (token.equals("os") && (isIPhone || isIPod || isTouchiPad)) {
                     isTokenOS = true;
                 } else if (isTokenAndroid && token.matches("^(\\d).*")) {
