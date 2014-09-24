@@ -2,11 +2,11 @@
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Zimbra, Inc.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * version 2 of the License.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
@@ -16,24 +16,14 @@
  */
 package com.zimbra.cs.taglib;
 
-import com.google.common.base.Charsets;
-import com.zimbra.common.account.Key;
-import com.zimbra.common.auth.ZAuthToken;
-import com.zimbra.common.service.ServiceException;
-import com.zimbra.common.util.BlobMetaData;
-import com.zimbra.common.util.BlobMetaDataEncodingException;
-import com.zimbra.common.util.HttpUtil;
-import com.zimbra.common.util.RemoteIP;
-import com.zimbra.common.util.WebSplitUtil;
-import com.zimbra.common.util.ngxlookup.NginxAuthServer;
-import com.zimbra.cs.account.AuthTokenException;
-import com.zimbra.cs.taglib.bean.BeanUtils;
-import com.zimbra.cs.taglib.memcached.RouteCache;
-import com.zimbra.cs.taglib.ngxlookup.NginxRouteLookUpConnector;
-import com.zimbra.client.ZAuthResult;
-import com.zimbra.client.ZFolder;
-import com.zimbra.client.ZMailbox;
-import com.zimbra.common.localconfig.LC;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -46,15 +36,25 @@ import javax.servlet.jsp.jstl.core.Config;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import com.google.common.base.Charsets;
+import com.zimbra.client.ZAuthResult;
+import com.zimbra.client.ZFolder;
+import com.zimbra.client.ZMailbox;
+import com.zimbra.common.account.Key;
+import com.zimbra.common.auth.ZAuthToken;
+import com.zimbra.common.localconfig.LC;
+import com.zimbra.common.service.ServiceException;
+import com.zimbra.common.util.BlobMetaData;
+import com.zimbra.common.util.BlobMetaDataEncodingException;
+import com.zimbra.common.util.HttpUtil;
+import com.zimbra.common.util.RemoteIP;
+import com.zimbra.common.util.WebSplitUtil;
 import com.zimbra.common.util.ZimbraLog;
+import com.zimbra.common.util.ngxlookup.NginxAuthServer;
+import com.zimbra.cs.account.AuthTokenException;
+import com.zimbra.cs.taglib.bean.BeanUtils;
+import com.zimbra.cs.taglib.memcached.RouteCache;
+import com.zimbra.cs.taglib.ngxlookup.NginxRouteLookUpConnector;
 
 public class ZJspSession {
 
@@ -100,7 +100,7 @@ public class ZJspSession {
     private static final boolean MODE_HTTP = sProtocolMode.equals(PROTO_HTTP);
     private static final boolean MODE_MIXED = sProtocolMode.equals(PROTO_MIXED);
     private static final boolean MODE_HTTPS = sProtocolMode.equals(PROTO_HTTPS);
-    
+
     private static final String sHttpLocalBind = BeanUtils.getEnvString("httpLocalBind", "false");
     private static final boolean HTTP_LOCALBIND = sHttpLocalBind.equalsIgnoreCase("true");
 
@@ -252,7 +252,7 @@ public class ZJspSession {
         if (needRefer) {
             host = authResult.getRefer();
 //            Do not append the authToken in the redirect URL. If needRefer is set, let the
-//            client send it as a separate param. 
+//            client send it as a separate param.
 //            toAdd.put(Q_ZAUTHTOKEN, authResult.getAuthToken().getValue());
             if (rememberMe) {
                 toAdd.put(Q_ZREMBERME, "1");
@@ -600,6 +600,9 @@ public class ZJspSession {
     public static String getRemoteAddr(PageContext context) {
         HttpServletRequest req = (HttpServletRequest)context.getRequest();
         RemoteIP remoteIp = new RemoteIP(req, TRUSTED_IPS);
+        if (ZimbraLog.misc.isDebugEnabled()) {
+            ZimbraLog.misc.debug("getting remoteAddr from remoteIp [%s] with trustedIps [%s]", remoteIp, TRUSTED_IPS);
+        }
         return remoteIp.getRequestIP();
     }
 
