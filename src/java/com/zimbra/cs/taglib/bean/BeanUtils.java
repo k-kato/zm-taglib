@@ -1663,9 +1663,9 @@ public class BeanUtils {
 
     /**
      * Checks if the user's UA matches the allowed user agents for honoring
-     * zimbraWebClientLogoutURL.
+     * zimbraWebClientLogin/outURL.
      * Returns true if the regex matches or if the
-     * zimbraWebClientLogoutURLAllowedUA is not set(implies all UAs are allowed),
+     * zimbraWebClientLogin/outURLAllowedUA is not set(implies all UAs are allowed),
      * false otherwise.
      */
     public static boolean isAllowedUA(com.zimbra.cs.taglib.bean.ZUserAgentBean ua, String[] allowedUA) {
@@ -1676,6 +1676,26 @@ public class BeanUtils {
             pattern = Pattern.compile(str);
             if (ua.getUserAgent() == null) return false;
             m = pattern.matcher(ua.getUserAgent());
+            if (m.find())
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the IP address of the client matches the allowed IP addresses for honoring
+     * zimbraWebClientLogin/outURL.
+     * Returns true if the regex matches or if the
+     * zimbraWebClientLogin/outURLAllowedIP is not set(implies all IPs are allowed),
+     * false otherwise.
+     */
+    public static boolean isAllowedIP(String remoteAddr, String[] allowedIP) {
+        if (allowedIP == null || allowedIP.length == 0) return true;
+        Pattern pattern;
+        Matcher m;
+        for (String str : allowedIP) {
+            pattern = Pattern.compile(str);
+            m = pattern.matcher(remoteAddr);
             if (m.find())
                 return true;
         }
