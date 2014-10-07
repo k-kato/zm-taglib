@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.SkipPageException;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.soap.Element;
@@ -64,15 +65,14 @@ public class ZExceptionBean {
         if ((!(e instanceof ServiceException)) && (e.getCause() instanceof ServiceException)) {
             e = e.getCause();
         }
-        if( e instanceof SoapFaultException)  {
+        if (e instanceof SoapFaultException)  {
             if(AccountServiceException.AUTH_FAILED.equals(((SoapFaultException)e).getCode())) {
                 ZimbraLog.webclient.debug(e.getMessage(), e);
             } else {
-                ZimbraLog.webclient.error(e.getMessage(), e);
+                ZimbraLog.webclient.warn(e.getMessage(), e);
             }
-        }
-        else{
-            ZimbraLog.webclient.error(e.getMessage(), e);
+        } else if (!(e instanceof SkipPageException)) {
+            ZimbraLog.webclient.warn(e.getMessage(), e);
         }
 
         if (e instanceof ServiceException) {
