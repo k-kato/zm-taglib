@@ -21,6 +21,7 @@ import com.zimbra.client.ZMailbox;
 import com.zimbra.client.ZEmailAddress;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.ZimbraLog;
+import com.zimbra.common.util.StringUtil;
 import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.service.FileUploadServlet;
 import org.apache.commons.fileupload.FileItem;
@@ -320,15 +321,13 @@ public class ZComposeUploaderBean {
 
         String replyType = getParam(F_replytype);
         if (replyType != null) compose.setReplyType(replyType);
-
-        if (getParam(F_body) != null && !getParam(F_body).isEmpty()) {
+        
+        if (StringUtil.isNullOrEmpty(getParam(F_bodyText))) {
+            compose.setContent(getParam(F_body));
+        } else {
             compose.setHtmlContent(getParam(F_body));
-        }
-
-        if (getParam(F_bodyText) != null && !getParam(F_bodyText).isEmpty()) {
             compose.setContent(getParam(F_bodyText));
         }
-
         compose.setFrom(getParam(F_from));
         compose.setReplyTo(getParam(F_replyto));
         compose.setInReplyTo(getParam(F_inreplyto));
