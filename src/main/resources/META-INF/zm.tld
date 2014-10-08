@@ -2091,6 +2091,53 @@
 
     <tag>
         <description>
+            Retreive all contacts.
+        </description>
+
+        <name>getAllContacts</name>
+
+        <tag-class>com.zimbra.cs.taglib.tag.contact.GetAllContactsTag</tag-class>
+
+        <body-content>empty</body-content>
+
+        <variable>
+            <name-from-attribute>var</name-from-attribute>
+            <variable-class>java.util.List&lt;com.zimbra.cs.taglib.bean.ZContactBean&gt;</variable-class>
+            <scope>AT_END</scope>
+        </variable>
+
+        <attribute>
+            <description>
+                Name of the exported scoped variable to store the ZContactBean in.
+            </description>
+            <name>var</name>
+            <required>true</required>
+        </attribute>
+
+        <attribute>
+            <description>folder id</description>
+            <name>folderId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        
+        <attribute>
+            <description>contact ids</description>
+            <name>contactIds</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <description>return modified date</description>
+            <name>sync</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    <tag>
+        <description>
             Retreive a contact.
         </description>
 
