@@ -50,7 +50,9 @@ public class ZContactBean implements Comparable {
     public boolean getIsGalContact() { return mIsGalContact; }
 
     public String getId() { return mContact.getId(); }
-    
+
+    public String getRefId() { return mContact.getRefId(); }
+
     public String getTagIds() { return mContact.getTagIds(); }
     
     public String getFlags() { return mContact.getFlags(); }
