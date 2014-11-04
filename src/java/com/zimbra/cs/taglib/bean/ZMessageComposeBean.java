@@ -1421,11 +1421,26 @@ public class ZMessageComposeBean {
     }
 
     public ZInvite toInvite(ZMailbox mailbox, ZMessageBean message) throws ServiceException {
+        ZInvite inv = toInviteObject(mailbox, message, null);
+        return inv;
+    }
+
+    public ZInvite toInviteObject(ZMailbox mailbox, ZMessageBean message, String apptFolderId) throws ServiceException {
         ZInvite existingInvite = message != null ? message.getInvite() : null;
         setOrigOrganizer(existingInvite != null ? existingInvite.getComponent().getOrganizer().getAddress() : null);
         ZInvite invite = new ZInvite();
         ZInvite.ZComponent comp = new ZComponent();
 
+        if (apptFolderId != null) {
+            ZFolder calFolder = mailbox.getFolderById(apptFolderId);
+            if (calFolder != null) {
+                ZFolderBean calFolderBean = new ZFolderBean(calFolder);
+                if (calFolderBean.getIsMountPointWritable()) {
+                    //set the organizer name in case of writable mountpoints
+                    setOrigOrganizer(calFolderBean.getOwnerDisplayName());
+                }
+            }
+        }
         comp.setStatus(ZStatus.CONF);
         comp.setClassProp(getClassProp() != null ? ZClass.fromString(getClassProp()) : ZClass.PUB);
 

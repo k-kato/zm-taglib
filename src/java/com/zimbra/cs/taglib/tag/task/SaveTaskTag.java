@@ -54,7 +54,9 @@ public class SaveTaskTag extends ZimbraSimpleTag {
         try {
             ZMailbox mbox = getMailbox();
 
-            ZInvite inv = mCompose.toInvite(mbox, mMessage);
+            String folderId = mCompose.getApptFolderId();
+
+            ZInvite inv = mCompose.toInviteObject(mbox, mMessage, folderId);
 
             ZInvite previousInv = mMessage != null ? mMessage.getInvite() : null;
             ZComponent prevComp = previousInv != null ? previousInv.getComponent() : null;
@@ -74,7 +76,6 @@ public class SaveTaskTag extends ZimbraSimpleTag {
 
             ZOutgoingMessage m = mCompose.toOutgoingMessage(mbox);
 
-            String folderId = mCompose.getApptFolderId();
             if (folderId == null || folderId.length() == 0)
                 folderId = ZFolder.ID_CALENDAR;
 
