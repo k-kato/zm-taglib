@@ -49,9 +49,6 @@ public class LogoutTag extends ZimbraSimpleTag {
                     //Force a authRequest with csrfSupported=1 to get the csrfToken. EndSessionRequest would need it.
     		        ZMailbox mbox = ZMailbox.getByAuthToken(authToken, URLUtil.getSoapURL(acc.getServer(), false), true, true);
     		        mbox.logout();//this invalidates the session in mailbox app
-        		    if(!at.isExpired()) {
-        		        at.deRegister(); //this invalidates the session in webclient app
-        		    }
         		}
         	}
         } catch (ServiceException e) {
