@@ -63,7 +63,7 @@ public class CalSearchJSONTag extends ZimbraSimpleTag {
             PageContext pageContext = (PageContext) ctxt;
             String url = ZJspSession.getSoapURL(pageContext);
             String remoteAddr = ZJspSession.getRemoteAddr(pageContext);
-            Element e = getBootstrapCalSearchJSON(url, remoteAddr, mAuthToken, mItemsPerPage, mTypes);
+            Element e = getBootstrapCalSearchJSON(url, remoteAddr, mAuthToken, mCsrfToken, mItemsPerPage, mTypes);
 
 			// Replace "</script>" with "</scr" + "ipt>" because html parsers recognize the close script tag.
 			String json = e.toString();
@@ -108,6 +108,9 @@ public class CalSearchJSONTag extends ZimbraSimpleTag {
         options.setClientIp(remoteAddr);
 
         ZMailbox mbox = ZMailbox.getMailbox(options);
+        if (csrfToken) {
+            mbox.initCsrfToken(csrfToken);
+        }
         try {
             TimeZone tz = mbox.getPrefs().getTimeZone();
 
