@@ -108,7 +108,7 @@ public class CalSearchJSONTag extends ZimbraSimpleTag {
         options.setClientIp(remoteAddr);
 
         ZMailbox mbox = ZMailbox.getMailbox(options);
-        if (csrfToken) {
+        if (csrfToken != null) {
             mbox.initCsrfToken(csrfToken);
         }
         try {
