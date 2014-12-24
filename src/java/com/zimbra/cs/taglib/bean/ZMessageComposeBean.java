@@ -1153,6 +1153,7 @@ public class ZMessageComposeBean {
     private void initReminders(List<ZAlarm> alarms){
         for (ZAlarm alarm : alarms){
             ZAlarm.ZAction action = alarm.getAction();
+            ParsedDuration trigger = alarm.getTriggerRelated();
             if (action.equals(ZAlarm.ZAction.EMAIL)){
                 this.mReminderEmail = alarm.getAttendees().get(0).getAddress();
                 this.mSendReminderEmail = true;
@@ -1162,13 +1163,15 @@ public class ZMessageComposeBean {
                 this.mReminderMobile = alarm.getAttendees().get(0).getAddress();
                 this.mSendReminderMobile = true;
             }
-            String duration = alarm.getTriggerRelated().toString();
-            if (this.mReminder1 == null ||
-                this.mReminder2 == null){
-                if (this.mReminder1 == null){
-                    this.mReminder1 = duration;
-                } else if (!this.mReminder1.equalsIgnoreCase(duration)){
-                    this.mReminder2 = duration;
+            if (trigger != null) {
+                String duration = trigger.toString();
+                if (this.mReminder1 == null ||
+                        this.mReminder2 == null) {
+                    if (this.mReminder1 == null) {
+                        this.mReminder1 = duration;
+                    } else if (!this.mReminder1.equalsIgnoreCase(duration)) {
+                        this.mReminder2 = duration;
+                    }
                 }
             }
         }
