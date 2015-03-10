@@ -7976,4 +7976,9 @@
         <function-signature>java.lang.String nonNull(java.lang.String)</function-signature>
 	</function>
 
+    <function>
+        <name>encodePath</name>
+        <function-class>com.zimbra.common.util.HttpUtil</function-class>
+        <function-signature>java.lang.String encodePath(java.lang.String)</function-signature>
+    </function>
 </taglib>
