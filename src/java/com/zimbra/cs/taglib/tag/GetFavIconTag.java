@@ -23,12 +23,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
 import com.zimbra.common.account.Key;
-import com.zimbra.common.localconfig.LC;
-import com.zimbra.common.soap.AdminConstants;
 import com.zimbra.common.util.HttpUtil;
 import com.zimbra.common.util.ZimbraLog;
 import com.zimbra.cs.account.Entry;
-import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.account.soap.SoapProvisioning;
 
 public class GetFavIconTag extends ZimbraSimpleTag {
@@ -60,16 +57,8 @@ public class GetFavIconTag extends ZimbraSimpleTag {
     public void doTag() throws JspException, IOException {
 		try {
 			// get provisioning
-			String soapUri =
-			    Provisioning.getInstance().getLocalServer().getAdminServiceScheme() +
-				LC.zimbra_zmprov_default_soap_server.value() +
-				':' +
-				LC.zimbra_admin_service_port.intValue() +
-				AdminConstants.ADMIN_SERVICE_URI
-			;
-
 			SoapProvisioning provisioning = new SoapProvisioning();
-			provisioning.soapSetURI(soapUri);
+			provisioning.soapSetURI(provisioning.lookupAdminServiceURI());
 
 			// get serverName
 			String serverName = this.request.getParameter("customerDomain");

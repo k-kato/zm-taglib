@@ -26,14 +26,11 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 
 import com.zimbra.common.account.Key;
-import com.zimbra.common.localconfig.LC;
 import com.zimbra.common.net.SocketFactories;
 import com.zimbra.common.service.ServiceException;
-import com.zimbra.common.soap.AdminConstants;
 import com.zimbra.common.util.DateUtil;
 import com.zimbra.common.util.ZimbraLog;
 import com.zimbra.cs.account.Domain;
-import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.account.soap.SoapProvisioning;
 
 public class GetDomainInfoTag extends ZimbraSimpleTag {
@@ -85,13 +82,11 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
 
     private Domain getInfo() {
         SoapProvisioning sp = new SoapProvisioning();
-        String mServer = LC.zimbra_zmprov_default_soap_server.value();
-        int mPort = LC.zimbra_admin_service_port.intValue();
         try {
-            sp.soapSetURI(Provisioning.getInstance().getLocalServer().getAdminServiceScheme()+mServer+":"+mPort+ AdminConstants.ADMIN_SERVICE_URI);
+            sp.soapSetURI(sp.lookupAdminServiceURI());
             return sp.getDomainInfo(mBy, mValue);
         } catch (ServiceException e) {
-            ZimbraLog.misc.error("Error while getting admin service scheme", e);
+            ZimbraLog.misc.error("Error while locating admin service", e);
             return null;
         }
     }
