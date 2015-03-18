@@ -27,6 +27,7 @@ import com.zimbra.common.util.HttpUtil;
 import com.zimbra.common.util.ZimbraLog;
 import com.zimbra.cs.account.Entry;
 import com.zimbra.cs.account.soap.SoapProvisioning;
+import com.zimbra.cs.httpclient.URLUtil;
 
 public class GetFavIconTag extends ZimbraSimpleTag {
 
@@ -58,7 +59,7 @@ public class GetFavIconTag extends ZimbraSimpleTag {
 		try {
 			// get provisioning
 			SoapProvisioning provisioning = new SoapProvisioning();
-			provisioning.soapSetURI(provisioning.lookupAdminServiceURI());
+			provisioning.soapSetURI(URLUtil.getAdminURL());
 
 			// get serverName
 			String serverName = this.request.getParameter("customerDomain");

@@ -32,6 +32,7 @@ import com.zimbra.common.util.DateUtil;
 import com.zimbra.common.util.ZimbraLog;
 import com.zimbra.cs.account.Domain;
 import com.zimbra.cs.account.soap.SoapProvisioning;
+import com.zimbra.cs.httpclient.URLUtil;
 
 public class GetDomainInfoTag extends ZimbraSimpleTag {
     private static final String CONFIG_ZIMBRA_DOMAININFO_TTL = "zimbra.domaininfo.ttl";
@@ -83,7 +84,7 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
     private Domain getInfo() {
         SoapProvisioning sp = new SoapProvisioning();
         try {
-            sp.soapSetURI(sp.lookupAdminServiceURI());
+            sp.soapSetURI(URLUtil.getAdminURL());
             return sp.getDomainInfo(mBy, mValue);
         } catch (ServiceException e) {
             ZimbraLog.misc.error("Error while locating admin service", e);
