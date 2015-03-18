@@ -75,6 +75,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
@@ -251,6 +252,13 @@ public class BeanUtils {
         String s = base != null && base.length() > 0 ? base :
                   (text != null && text.length() > 0 ? text : "");
         return htmlEncode(s);
+    }
+
+    public static String urlEncode(String value) throws UnsupportedEncodingException {
+        String encodedUrl = HttpUtil.encodePath(value);
+        //java URI class does not encode semi-colons in path, encode it manually
+        String s = replaceAll(encodedUrl, ";", "%3B");
+        return s;
     }
 
     private static String internalTextToHtml(String text) {
@@ -990,9 +998,9 @@ public class BeanUtils {
          cal.set(Calendar.DAY_OF_MONTH, 1);
          int dow = cal.get(Calendar.DAY_OF_WEEK);
          if (dow == prefFirstDayOfWeek) {
-//             cal.add(Calendar.DAY_OF_MONTH, -7);
+//          cal.add(Calendar.DAY_OF_MONTH, -7);
          } else {
-             cal.add(Calendar.DAY_OF_MONTH, - ((dow+(7-((int)prefFirstDayOfWeek)))%7));
+            cal.add(Calendar.DAY_OF_MONTH, - ((dow+(7-((int)prefFirstDayOfWeek)))%7));
          }
          return cal;
      }

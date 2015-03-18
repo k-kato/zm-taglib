@@ -7211,6 +7211,12 @@
     </function>
 
     <function>
+        <name>urlEncode</name>
+        <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
+        <function-signature>java.lang.String urlEncode(java.lang.String)</function-signature>
+    </function>
+
+    <function>
         <name>getEnvString</name>
         <function-class>com.zimbra.cs.taglib.bean.BeanUtils</function-class>
         <function-signature>java.lang.String getEnvString(java.lang.String, java.lang.String)</function-signature>
@@ -7976,9 +7982,4 @@
         <function-signature>java.lang.String nonNull(java.lang.String)</function-signature>
 	</function>
 
-    <function>
-        <name>encodePath</name>
-        <function-class>com.zimbra.common.util.HttpUtil</function-class>
-        <function-signature>java.lang.String encodePath(java.lang.String)</function-signature>
-    </function>
 </taglib>
