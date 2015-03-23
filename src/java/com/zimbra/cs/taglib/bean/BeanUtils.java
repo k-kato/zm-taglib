@@ -997,9 +997,7 @@ public class BeanUtils {
          cal.set(Calendar.MILLISECOND, 0);
          cal.set(Calendar.DAY_OF_MONTH, 1);
          int dow = cal.get(Calendar.DAY_OF_WEEK);
-         if (dow == prefFirstDayOfWeek) {
-//          cal.add(Calendar.DAY_OF_MONTH, -7);
-         } else {
+         if (dow != prefFirstDayOfWeek) {
             cal.add(Calendar.DAY_OF_MONTH, - ((dow+(7-((int)prefFirstDayOfWeek)))%7));
          }
          return cal;
