@@ -2,11 +2,11 @@
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2007, 2009, 2010, 2011, 2013, 2014 Zimbra, Inc.
- *
+ * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * version 2 of the License.
- *
+ * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
@@ -16,23 +16,23 @@
  */
 package com.zimbra.cs.taglib.tag;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import com.zimbra.common.account.Key;
+import com.zimbra.common.account.Key.DomainBy;
+import com.zimbra.common.localconfig.LC;
+import com.zimbra.common.net.SocketFactories;
+import com.zimbra.common.service.ServiceException;
+import com.zimbra.common.soap.AdminConstants;
+import com.zimbra.common.util.DateUtil;
+import com.zimbra.cs.account.Domain;
+import com.zimbra.cs.account.soap.SoapProvisioning;
 
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
-
-import com.zimbra.common.account.Key;
-import com.zimbra.common.net.SocketFactories;
-import com.zimbra.common.service.ServiceException;
-import com.zimbra.common.util.DateUtil;
-import com.zimbra.common.util.ZimbraLog;
-import com.zimbra.cs.account.Domain;
-import com.zimbra.cs.account.soap.SoapProvisioning;
-import com.zimbra.cs.httpclient.URLUtil;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GetDomainInfoTag extends ZimbraSimpleTag {
     private static final String CONFIG_ZIMBRA_DOMAININFO_TTL = "zimbra.domaininfo.ttl";
@@ -54,8 +54,7 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
     private static final String DEFAULT_TTL_STR = "60m";
     private static final long DEFAULT_TTL = 60*60*1000;
     private static long sCacheTtl = -1;
-
-    @Override
+    
     public void doTag() throws JspException, IOException {
         JspContext ctxt = getJspContext();
         if (sCacheTtl == -1) {
@@ -83,11 +82,13 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
 
     private Domain getInfo() {
         SoapProvisioning sp = new SoapProvisioning();
+        String mServer = LC.zimbra_zmprov_default_soap_server.value();
+        int mPort = LC.zimbra_admin_service_port.intValue();
+        sp.soapSetURI(LC.zimbra_admin_service_scheme.value()+mServer+":"+mPort+ AdminConstants.ADMIN_SERVICE_URI);
         try {
-            sp.soapSetURI(URLUtil.getAdminURL());
             return sp.getDomainInfo(mBy, mValue);
         } catch (ServiceException e) {
-            ZimbraLog.misc.error("Error while locating admin service", e);
+            e.printStackTrace();
             return null;
         }
     }
