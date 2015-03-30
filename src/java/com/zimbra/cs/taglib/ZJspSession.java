@@ -44,6 +44,7 @@ import com.zimbra.common.account.Key;
 import com.zimbra.common.auth.ZAuthToken;
 import com.zimbra.common.localconfig.LC;
 import com.zimbra.common.service.ServiceException;
+import com.zimbra.common.servicelocator.ServiceLocator;
 import com.zimbra.common.util.BlobMetaData;
 import com.zimbra.common.util.BlobMetaDataEncodingException;
 import com.zimbra.common.util.HttpUtil;
@@ -403,7 +404,8 @@ public class ZJspSession {
                 }
             } else {
                  // For Guest Account, no lookup is needed. connect to one of the available upstream servers
-                 route = NginxRouteLookUpConnector.getClient().getUpstreamMailServer(authProtocol);
+                 ServiceLocator.Entry serviceEntry = NginxRouteLookUpConnector.getClient().getUpstreamMailServer(authProtocol);
+                 route = serviceEntry == null ? null : serviceEntry.hostName + ":" + serviceEntry.servicePort;
             }
             ZimbraLog.misc.debug("got route %s",route);
             return ((MODE_HTTP ? PROTO_HTTP : PROTO_HTTPS) + "://" + route + "/service/soap");

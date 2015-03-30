@@ -2,11 +2,11 @@
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2013, 2014 Zimbra, Inc.
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * version 2 of the License.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
@@ -15,12 +15,6 @@
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.ngxlookup;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import net.spy.memcached.HashAlgorithm;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.ngxlookup.ZimbraNginxLookUpClient;
@@ -43,34 +37,6 @@ public class NginxRouteLookUpConnector {
      * @throws ServiceException
      */
     public static void startup() throws ServiceException {
-        reloadConfig();
-    }
-
-    /**
-     * Reload the Nginx LookUp client configuration.
-     * @throws ServiceException
-     */
-    public static void reloadConfig() throws ServiceException {
-        String[] lookUpServers = null;
-        String[] upstreamMailServers = null;
-        int connectTimeout = 15000;
-        int retryTimeout = 60000;
-        try {
-            Context initCtx = new InitialContext();
-            Context envCtx = (Context) initCtx.lookup("java:comp/env");
-
-            lookUpServers = ((String) envCtx.lookup("nginxLookUpHandlers")).split("\\s+");
-            upstreamMailServers = ((String) envCtx.lookup("upstreamMailServers")).split("\\s+");
-            connectTimeout = (Integer) envCtx.lookup("reverseProxyRouteLookupTimeout");
-            retryTimeout = (Integer) envCtx.lookup("memcachedClientTimeout");
-        } catch (NamingException ne) {
-            //REDO to throw the error or print stack trace??
-            ne.printStackTrace();
-        } catch (Exception e) {
-            //REDO to throw the error or print stack trace??
-            e.printStackTrace();
-        }
-        sTheClient.setAttributes(lookUpServers, upstreamMailServers, connectTimeout, retryTimeout);
     }
 
     /**
