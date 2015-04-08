@@ -253,6 +253,18 @@ public class ZContactBean implements Comparable {
         return null;
     }
 
+    public List<ZContactBean> getGroupMemberList() throws ServiceException {
+        Map<String, ZContact> members = mContact.getMembers();
+        if (members != null) {
+            List<ZContactBean> memberList = new ArrayList<ZContactBean>();
+            for (ZContact value : members.values()) {
+                memberList.add(new ZContactBean(value));
+            }
+            return memberList;
+        }
+        return null;
+    }
+
     public static ZContactBean getGroupMemberById(ZContactBean contact, String id) throws ServiceException {
         Map<String, ZContact> members = contact.mContact.getMembers();
         if (members != null) {
