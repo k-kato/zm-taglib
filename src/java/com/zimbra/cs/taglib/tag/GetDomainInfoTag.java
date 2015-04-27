@@ -85,9 +85,15 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
         SoapProvisioning sp = new SoapProvisioning();
         try {
             sp.soapSetURI(URLUtil.getAdminURL());
-            return sp.getDomainInfo(mBy, mValue);
+            ZimbraLog.misc.debug("Using admin service URL %s", sp.soapGetURI());
         } catch (ServiceException e) {
             ZimbraLog.misc.error("Error while locating admin service", e);
+            return null;
+        }
+        try {
+            return sp.getDomainInfo(mBy, mValue);
+        } catch (ServiceException e) {
+            ZimbraLog.misc.error("Error requesting domain info from " + sp.soapGetURI(), e);
             return null;
         }
     }
