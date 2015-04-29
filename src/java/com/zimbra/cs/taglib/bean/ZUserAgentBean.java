@@ -210,6 +210,8 @@ public class ZUserAgentBean {
 
     public boolean getIsOsAndroid() { return isOsAndroid; }
 
+    public boolean getIsIos() { return (isIPhone || isIPod || isTouchiPad); }
+
     public boolean getIsOpera() { return isOpera; }
     
     public boolean getIsSafari() { return isSafari; }
