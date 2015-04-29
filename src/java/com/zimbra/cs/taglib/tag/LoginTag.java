@@ -2,11 +2,11 @@
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014 Zimbra, Inc.
- *
+ * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * version 2 of the License.
- *
+ * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
@@ -16,19 +16,6 @@
  */
 package com.zimbra.cs.taglib.tag;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspContext;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.PageContext;
-
-import com.zimbra.client.ZAuthResult;
-import com.zimbra.client.ZMailbox;
 import com.zimbra.common.auth.ZAuthToken;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.HttpUtil;
@@ -37,9 +24,21 @@ import com.zimbra.common.util.ZimbraCookie;
 import com.zimbra.common.util.ngxlookup.NginxAuthServer;
 import com.zimbra.cs.taglib.ZJspSession;
 import com.zimbra.cs.taglib.ngxlookup.NginxRouteLookUpConnector;
+import com.zimbra.client.ZMailbox;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspContext;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.PageContext;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
 
 public class LoginTag extends ZimbraSimpleTag {
-
+    
     private String mUsername;
     private String mPassword;
     private String mNewPassword;
@@ -56,10 +55,6 @@ public class LoginTag extends ZimbraSimpleTag {
     private String mPrefs;
 	private String mRequestedSkin;
     private boolean mCsrfTokenSecured;
-    private boolean mTrustedDevice;
-    private String mTrustedDeviceToken;
-    private String mDeviceId;
-    private boolean mGenerateDeviceId;
 
 	public void setVarRedirectUrl(String varRedirectUrl) { this.mVarRedirectUrl = varRedirectUrl; }
 
@@ -70,7 +65,7 @@ public class LoginTag extends ZimbraSimpleTag {
     public void setPassword(String password) { this.mPassword = password; }
 
     public void setNewpassword(String password) { this.mNewPassword = password; }
-
+    
     public void setRememberme(boolean rememberMe) { this.mRememberMe = rememberMe; }
 
     public void setImportData(boolean importData) { this.mImportData = importData; }
@@ -88,7 +83,7 @@ public class LoginTag extends ZimbraSimpleTag {
     public void setAuthtoken(String authToken) { this.mAuthToken = authToken; }
 
     public void setAuthtokenInUrl(boolean authTokenInUrl) { this.mAuthTokenInUrl = authTokenInUrl; }
-
+    
     public void setUrl(String url) { this.mUrl = url; }
 
     public void setPrefs(String prefs) { this.mPrefs = prefs; }
@@ -96,14 +91,6 @@ public class LoginTag extends ZimbraSimpleTag {
     public void setAttrs(String attrs) { this.mAttrs = attrs; }
 
     public void setRequestedSkin(String skin) { this.mRequestedSkin = skin; }
-
-    public void setTrustedDevice(Boolean trusted) { this.mTrustedDevice = trusted; }
-
-    public void setTrustedDeviceToken(String token) { this.mTrustedDeviceToken = token; }
-
-    public void setGenerateDeviceId(Boolean generateId) { this.mGenerateDeviceId = generateId; }
-
-    public void setDeviceId(String deviceId) { this.mDeviceId = deviceId; }
 
     private String getVirtualHost(HttpServletRequest request) {
         return HttpUtil.getVirtualHost(request);
@@ -117,7 +104,6 @@ public class LoginTag extends ZimbraSimpleTag {
         */
     }
 
-    @Override
     public void doTag() throws JspException, IOException {
         JspContext jctxt = getJspContext();
         try {
@@ -169,18 +155,6 @@ public class LoginTag extends ZimbraSimpleTag {
             if (mCsrfTokenSecured) {
                 options.setCsrfSupported(mCsrfTokenSecured);
             }
-            if (mTrustedDevice) {
-                options.setTrustedDevice(true);
-            }
-            if (mTrustedDeviceToken != null) {
-                options.setTrustedDeviceToken(mTrustedDeviceToken);
-            }
-            if (mGenerateDeviceId) {
-                options.setGenerateDeviceId(true);
-            }
-            if (mDeviceId != null) {
-                options.setDeviceId(mDeviceId);
-            }
             ZMailbox mbox = ZMailbox.getMailbox(options);
             HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
@@ -195,22 +169,15 @@ public class LoginTag extends ZimbraSimpleTag {
                         mbox.getAuthResult().getExpires());
             }
 
-            ZAuthResult authResult = mbox.getAuthResult();
-            if (authResult.getTrustedToken() != null) {
-                setTrustedCookie(response,
-                        authResult.getTrustedToken(),
-                        authResult.getTrustLifetime(),
-                        ZJspSession.secureAuthTokenCookie(request));
-            }
             //if (!needRefer)
             //    ZJspSession.setSession((PageContext)jctxt, mbox);
 
             if (mVarRedirectUrl != null) {
                 jctxt.setAttribute(mVarRedirectUrl,
-                        ZJspSession.getPostLoginRedirectUrl(pageContext, mPath, mbox.getAuthResult(), mRememberMe, needRefer),
+                        ZJspSession.getPostLoginRedirectUrl(pageContext, mPath, mbox.getAuthResult(), mRememberMe, needRefer), 
                         PageContext.REQUEST_SCOPE);
             }
-
+            
             if (mVarAuthResult != null) {
                 jctxt.setAttribute(mVarAuthResult, mbox.getAuthResult(), PageContext.REQUEST_SCOPE);
             }
@@ -226,7 +193,7 @@ public class LoginTag extends ZimbraSimpleTag {
         }
     }
 
-    public static void setCookie(HttpServletResponse response, ZAuthToken zat,
+    public static void setCookie(HttpServletResponse response, ZAuthToken zat, 
             boolean secure, boolean rememberMe, long expires) {
         Map<String, String> cookieMap = zat.cookieMap(false);
         Integer maxAge = null;
@@ -238,22 +205,10 @@ public class LoginTag extends ZimbraSimpleTag {
         } else {
             maxAge = new Integer(-1);
         }
-
+        
         for (Map.Entry<String, String> ck : cookieMap.entrySet()) {
             ZimbraCookie.addHttpOnlyCookie(response, ck.getKey(), ck.getValue(),
                     ZimbraCookie.PATH_ROOT, maxAge, secure);
-        }
-    }
-
-    public static void setTrustedCookie(HttpServletResponse response, String trustedToken, long expires, boolean secure) {
-        Long timeLeft = expires - System.currentTimeMillis();
-        String name = ZimbraCookie.COOKIE_ZM_TRUST_TOKEN;
-        String path = ZimbraCookie.PATH_ROOT;
-        Integer age = null;
-        if (timeLeft > 0) {
-            ZimbraCookie.addHttpOnlyCookie(response, name, trustedToken, path, age, secure);
-        } else {
-            ZimbraCookie.clearCookie(response, name);
         }
     }
 }
