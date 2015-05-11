@@ -21,17 +21,21 @@ import com.zimbra.common.consul.ConsulServiceLocator;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.servicelocator.ServiceLocator;
 import com.zimbra.common.util.ngxlookup.ZimbraNginxLookUpClient;
+import com.zimbra.cs.account.Provisioning;
 
 public class NginxRouteLookUpConnector {
-    private static ServiceLocator sServiceLocator = new ConsulServiceLocator(new ConsulClient());
-    private static ZimbraNginxLookUpClient sTheClient = new ZimbraNginxLookUpClient(sServiceLocator);
+    private static ZimbraNginxLookUpClient sTheClient;
 
     /**
      * Returns the one and only Nginx Lookup client object.
      * Nginx LookUp Handler Client makes a new connection to a random upstream handler.
      * Handler Client doesn't maintain persistent connections unlike Memcached Client
      */
-    public static ZimbraNginxLookUpClient getClient() {
+    public static synchronized ZimbraNginxLookUpClient getClient() throws ServiceException {
+        if (sTheClient == null) {
+            ServiceLocator serviceLocator = new ConsulServiceLocator(new ConsulClient(Provisioning.getInstance().getLocalServer().getConsulURL()));
+            sTheClient = new ZimbraNginxLookUpClient(serviceLocator);
+        }
         return sTheClient;
     }
 
