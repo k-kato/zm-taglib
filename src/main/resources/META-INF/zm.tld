@@ -1085,6 +1085,14 @@
         </attribute>
         <attribute>
             <description>
+                TOTP code or one time scratch code
+            </description>
+            <name>twoFactorCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <description>
                 pre-existing auth token
             </description>
             <name>authtoken</name>
