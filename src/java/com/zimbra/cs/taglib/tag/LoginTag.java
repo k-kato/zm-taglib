@@ -42,7 +42,6 @@ public class LoginTag extends ZimbraSimpleTag {
     private String mUsername;
     private String mPassword;
     private String mNewPassword;
-    private String mTwoFactorCode;
     private String mAuthToken;
     private boolean mAuthTokenInUrl;
     private boolean mRememberMe;
@@ -64,8 +63,6 @@ public class LoginTag extends ZimbraSimpleTag {
     public void setUsername(String username) { this.mUsername = username; }
 
     public void setPassword(String password) { this.mPassword = password; }
-
-    public void setTwoFactorCode(String code) { this.mTwoFactorCode = code; }
 
     public void setNewpassword(String password) { this.mNewPassword = password; }
     
@@ -135,9 +132,6 @@ public class LoginTag extends ZimbraSimpleTag {
             } else {
                 options.setAccount(mUsername);
                 options.setPassword(mPassword);
-                if (mTwoFactorCode != null && mTwoFactorCode.length() > 0) {
-                    options.setTwoFactorCode(mTwoFactorCode);
-                }
                 options.setVirtualHost(getVirtualHost(request));
                 if (mNewPassword != null && mNewPassword.length() > 0)
                     options.setNewPassword(mNewPassword);
