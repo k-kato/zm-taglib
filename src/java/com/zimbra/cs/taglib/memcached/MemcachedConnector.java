@@ -2,11 +2,11 @@
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
  * Copyright (C) 2013, 2014 Zimbra, Inc.
- *
+ * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * version 2 of the License.
- *
+ * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
@@ -21,7 +21,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import net.spy.memcached.DefaultHashAlgorithm;
+import net.spy.memcached.HashAlgorithm;
 
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.memcached.ZimbraMemcachedClient;
@@ -62,7 +62,7 @@ public class MemcachedConnector {
     public static void reloadConfig() throws ServiceException {
         String[] serverList = null;
         boolean useBinaryProtocol = false;
-        String hashAlgorithm =  DefaultHashAlgorithm.KETAMA_HASH.toString();
+        String hashAlgorithm =  HashAlgorithm.KETAMA_HASH.toString();
         int expirySeconds = 86400;
         long timeoutMillis = 10000;
         try {
