@@ -143,15 +143,16 @@ public class LoginTag extends ZimbraSimpleTag {
                 options.setAttrs(Arrays.asList(mAttrs.split(",")));
             }
 
+            if (mTwoFactorCode != null && mTwoFactorCode.length() > 0) {
+                options.setTwoFactorCode(mTwoFactorCode);
+            }
+
             if (mAuthToken != null) {
                 options.setAuthToken(mAuthToken);
                 options.setAuthAuthToken(true);
             } else {
                 options.setAccount(mUsername);
                 options.setPassword(mPassword);
-                if (mTwoFactorCode != null && mTwoFactorCode.length() > 0) {
-                    options.setTwoFactorCode(mTwoFactorCode);
-                }
                 options.setVirtualHost(getVirtualHost(request));
                 if (mNewPassword != null && mNewPassword.length() > 0)
                     options.setNewPassword(mNewPassword);
@@ -193,7 +194,8 @@ public class LoginTag extends ZimbraSimpleTag {
             String refer = mbox.getAuthResult().getRefer();
             boolean needRefer = (refer != null && !refer.equalsIgnoreCase(serverName));
 
-            if ((mAuthToken == null || mAuthTokenInUrl) && !needRefer) {
+            if ((mAuthToken == null || mAuthTokenInUrl || mTwoFactorCode != null) && !needRefer) {
+                //Rewrite the ZM_AUTH_TOKEN cookie in case of successful two factor authentication
                 setCookie(response,
                         mbox.getAuthToken(),
                         ZJspSession.secureAuthTokenCookie(request),
@@ -221,10 +223,12 @@ public class LoginTag extends ZimbraSimpleTag {
                 jctxt.setAttribute(mVarAuthResult, mbox.getAuthResult(), PageContext.REQUEST_SCOPE);
             }
 
-            //bug: 75754 invoking import data request only when zimbraDataSourceImportOnLogin is set
-            boolean importDataOnLoginAttr = mbox.getFeatures().getDataSourceImportOnLogin();
-            if (mImportData && !mAdminPreAuth && importDataOnLoginAttr) {
-                mbox.importData(mbox.getAllDataSources());
+            if (!authResult.getTwoFactorAuthRequired()) {
+                //bug: 75754 invoking import data request only when zimbraDataSourceImportOnLogin is set
+                boolean importDataOnLoginAttr = mbox.getFeatures().getDataSourceImportOnLogin();
+                if (mImportData && !mAdminPreAuth && importDataOnLoginAttr) {
+                    mbox.importData(mbox.getAllDataSources());
+                }
             }
 
         } catch (ServiceException e) {
