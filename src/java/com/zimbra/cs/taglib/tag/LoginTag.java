@@ -259,9 +259,9 @@ public class LoginTag extends ZimbraSimpleTag {
         Long timeLeft = expires - System.currentTimeMillis();
         String name = ZimbraCookie.COOKIE_ZM_TRUST_TOKEN;
         String path = ZimbraCookie.PATH_ROOT;
-        Integer age = null;
+        Integer secondsLeft = Integer.valueOf((int)(timeLeft / 1000));
         if (timeLeft > 0) {
-            ZimbraCookie.addHttpOnlyCookie(response, name, trustedToken, path, age, secure);
+            ZimbraCookie.addHttpOnlyCookie(response, name, trustedToken, path, secondsLeft, secure);
         } else {
             ZimbraCookie.clearCookie(response, name);
         }
