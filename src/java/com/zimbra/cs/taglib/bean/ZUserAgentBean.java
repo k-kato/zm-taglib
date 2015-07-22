@@ -53,6 +53,7 @@ public class ZUserAgentBean {
     boolean isMobile = false;
     boolean isWindowsNT = false;
     boolean isWindowsPhone = false;
+    boolean isEdge = false;
 
     // Refer bug 80330 for details.
     @Deprecated
@@ -175,6 +176,8 @@ public class ZUserAgentBean {
                 } else if (isOsWindows && token.equals("phone")) {
                     isWindowsPhone = true;
                     isMobile = true;
+                } else if (isOsWindows && token.indexOf("edge") != -1) {
+                    isEdge = true;
                 }
 
                 token = agtArr.hasMoreTokens() ? agtArr.nextToken() : null;
@@ -312,6 +315,8 @@ public class ZUserAgentBean {
     public boolean getIsWindowsNT() { return isWindowsNT; }
 
     public boolean getIsWindowsPhone() { return isWindowsPhone; }
+
+    public boolean getIsEdge() { return isEdge; }
 
     public static class Version {
         
