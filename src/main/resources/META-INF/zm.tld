@@ -7033,6 +7033,19 @@
 	</tag>
 	-->
 
+    <tag>
+        <description>catch tag, similar to JSTL c:catch</description>
+        <name>zcatch</name>
+        <tag-class>com.zimbra.cs.taglib.tag.ZCatchTag</tag-class>
+        <attribute>
+            <description>
+                Name of the exported scoped variable for the result.
+            </description>
+            <name>var</name>
+            <required>false</required>
+        </attribute>
+    </tag>
+
     <tag-file>
         <name>currentResultUrl</name>
         <path>/META-INF/tags/currentResultUrl.tag</path>
