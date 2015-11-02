@@ -293,7 +293,8 @@ public class  ZFolderBean {
             isSpamEnabled = folderObject().getMailbox().getFeatures().getSpam();
         } catch (ServiceException e) {}
         return (getIsMessageView() || getIsConversationView() || getIsNullView() || getIsUnknownView()) &&
-                !(getIsDrafts() || getIsMountPoint() || getIsSearchFolder() || !StringUtil.isNullOrEmpty(getRemoteURL())) &&
+                (!getIsMountPoint() || getIsMountPointWritable()) &&
+                !(getIsDrafts() || getIsSearchFolder() || !StringUtil.isNullOrEmpty(getRemoteURL())) &&
                 !getId().equals(ZFolder.ID_CHATS) &&
 				((!getId().equals(ZFolder.ID_SPAM)) || isSpamEnabled);
     }
