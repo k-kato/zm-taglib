@@ -52,8 +52,6 @@ public class ContactAutoCompleteTag extends ZimbraSimpleTag {
             ZMailbox mbox = getMailbox();
 
             List<ZAutoCompleteMatch> matches = mbox.autoComplete(mQuery, mLimit);
-            Collections.sort(matches, new ZAutoCompleteMatch.MatchComparator());
-            //jctxt.setAttribute(mVar, hits,  PageContext.PAGE_SCOPE);
             if (mJSON)
             	toJSON(jctxt.getOut(), matches);
         } catch (JSONException e) {
