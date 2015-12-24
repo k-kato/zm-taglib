@@ -333,7 +333,6 @@ public class ZComposeUploaderBean {
         compose.setInReplyTo(getParam(F_inreplyto));
         compose.setMessageId(getParam(F_messageid));
         compose.setDraftId(getParam(F_draftid));
-        compose.setSendUID(getParam(F_sendUID));
 
         compose.setApptFolderId(getParam(F_apptFolderId));
         compose.setInviteReplyVerb(getParam(F_inviteReplyVerb));
