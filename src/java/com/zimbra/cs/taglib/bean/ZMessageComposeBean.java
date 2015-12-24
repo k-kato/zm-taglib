@@ -209,6 +209,8 @@ public class ZMessageComposeBean {
         mDocumentAttachments = new ArrayList<DocumentAttachment>();
         mOriginalAttachments = new ArrayList<ZMimePartBean>();
         mDateFormat = I18nUtil.getLocalizedMessage(pageContext, "CAL_APPT_EDIT_DATE_FORMAT");
+        //This should always be unique hence should be set in the constructor.
+        mSendUID = UUID.randomUUID().toString();
     }
 
     public void setInviteReplyVerb(String verb) { mInviteReplyVerb = verb; }
@@ -446,8 +448,8 @@ public class ZMessageComposeBean {
     public String getRepeatEndDate() { return mRepeatEndDate; }
     public void setRepeatEndDate(String repeatEndDate) { mRepeatEndDate = repeatEndDate; }
 
+    //We are removing the setter method for mSendUID as we want it to be set only in the constructor.
     public String getSendUID() { return mSendUID; }
-    public void setSendUID(String uid) { mSendUID = uid; }
 
     public String getDescription() { return mDescription; }
     public void setDescription(String desc) { mDescription = desc; }
