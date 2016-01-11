@@ -28,8 +28,10 @@ import java.io.IOException;
 public class ComposeUploaderTag extends ZimbraSimpleTag {
 
     private String mVar;
+    private boolean mIsMobile;
 
     public void setVar(String var) { this.mVar = var; }
+    public void setIsmobile(boolean isMobile) { mIsMobile = isMobile; }
 
     public void doTag() throws JspException, IOException {
         JspContext jctxt = getJspContext();
@@ -37,7 +39,7 @@ public class ComposeUploaderTag extends ZimbraSimpleTag {
         ZComposeUploaderBean compose = (ZComposeUploaderBean) jctxt.getAttribute(mVar, PageContext.REQUEST_SCOPE);
         if (compose == null) {
             try {
-                jctxt.setAttribute(mVar, new ZComposeUploaderBean(pc, getMailbox()), PageContext.REQUEST_SCOPE);
+                jctxt.setAttribute(mVar, new ZComposeUploaderBean(pc, getMailbox(), mIsMobile), PageContext.REQUEST_SCOPE);
             } catch (ServiceException e) {
                 throw new JspTagException("compose upload failed", e);
             }

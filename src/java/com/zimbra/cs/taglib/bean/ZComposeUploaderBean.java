@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Arrays;
 import java.util.Map.Entry;
 
@@ -190,9 +191,11 @@ public class ZComposeUploaderBean {
 
     private Map<String,List<String>> mParamValues;
     private HashMap<String, String> mOrigRepeatParams;
+    private boolean mIsMobile;
 
     @SuppressWarnings("unchecked")
-    public ZComposeUploaderBean(PageContext pageContext, ZMailbox mailbox) throws JspTagException, ServiceException {
+    public ZComposeUploaderBean(PageContext pageContext, ZMailbox mailbox, boolean isMobile) throws JspTagException, ServiceException {
+        mIsMobile = isMobile;
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();        
         //bug:32865
         boolean limitByFileUploadMaxSize = (req.getParameter(F_limitByFileUploadMaxSize) != null);
@@ -333,7 +336,15 @@ public class ZComposeUploaderBean {
         compose.setInReplyTo(getParam(F_inreplyto));
         compose.setMessageId(getParam(F_messageid));
         compose.setDraftId(getParam(F_draftid));
-        compose.setSendUID(getParam(F_sendUID));
+
+        if (mIsMobile) {
+            /* In mobile client, sendUID in the request might be used before because mobile client caches the previous responses.
+             * Hence in mobile client always generate a new sendUID.
+             */
+            compose.setSendUID(UUID.randomUUID().toString());
+        } else {
+            compose.setSendUID(getParam(F_sendUID));
+        }
 
         compose.setApptFolderId(getParam(F_apptFolderId));
         compose.setInviteReplyVerb(getParam(F_inviteReplyVerb));
