@@ -109,7 +109,7 @@ public class ZMailboxBean {
 
     public ZIdentity getDefaultIdentity() throws ServiceException {
         for (ZIdentity identity : mMbox.getAccountInfo(false).getIdentities()) {
-            if (identity.isDefault()) return identity;
+            if (identity.getIsDefault()) return identity;
         }
         return null;
     }
