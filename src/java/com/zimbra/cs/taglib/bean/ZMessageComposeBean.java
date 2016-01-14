@@ -44,7 +44,6 @@ import org.apache.commons.httpclient.methods.multipart.PartSource;
 import com.zimbra.common.calendar.ParsedDuration;
 import com.zimbra.common.calendar.TZIDMapper;
 import com.zimbra.common.service.ServiceException;
-import com.zimbra.cs.account.Provisioning;
 import com.zimbra.cs.taglib.tag.i18n.I18nUtil;
 import com.zimbra.client.ZAlarm;
 import com.zimbra.client.ZDateTime;
@@ -1321,7 +1320,7 @@ public class ZMessageComposeBean {
             return identities.get(0);
         
         for (ZIdentity identity: identities) {
-            if (identity.isDefault())
+            if (identity.getIsDefault())
                 return identity;
         }
         return identities.get(0);
@@ -1471,7 +1470,7 @@ public class ZMessageComposeBean {
         List<ZIdentity> identities = mailbox.getAccountInfo(false).getIdentities();
         String organizerEmail = null;
         for (ZIdentity i : identities) {
-        	if (i.isDefault()) 
+        	if (i.getIsDefault())
         		organizerEmail = i.getFromAddress();
         }
         
