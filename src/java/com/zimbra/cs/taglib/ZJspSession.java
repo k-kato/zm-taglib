@@ -44,6 +44,7 @@ import com.zimbra.common.account.Key;
 import com.zimbra.common.auth.ZAuthToken;
 import com.zimbra.common.localconfig.LC;
 import com.zimbra.common.service.ServiceException;
+import com.zimbra.common.servicelocator.ServiceLocator;
 import com.zimbra.common.util.BlobMetaData;
 import com.zimbra.common.util.BlobMetaDataEncodingException;
 import com.zimbra.common.util.HttpUtil;
@@ -53,6 +54,7 @@ import com.zimbra.common.util.ZimbraLog;
 import com.zimbra.common.util.ngxlookup.NginxAuthServer;
 import com.zimbra.cs.account.AuthTokenException;
 import com.zimbra.cs.taglib.bean.BeanUtils;
+import com.zimbra.cs.taglib.memcached.MemcachedRouteCache;
 import com.zimbra.cs.taglib.memcached.RouteCache;
 import com.zimbra.cs.taglib.ngxlookup.NginxRouteLookUpConnector;
 
@@ -382,7 +384,7 @@ public class ZJspSession {
     	ZimbraLog.misc.debug("Getting SOAP URL");
         if (WebSplitUtil.isZimbraWebClientSplitEnabled()) {
         	ZimbraLog.misc.debug("Web split enabled");
-            RouteCache rtCache = RouteCache.getInstance();
+            RouteCache rtCache = MemcachedRouteCache.getInstance();
             String accountID;
             try {
                 accountID = getAccountId(context);
@@ -391,19 +393,20 @@ public class ZJspSession {
                 throw ServiceException.AUTH_REQUIRED();
             }
             String route = null;
-            String authProtocol = (MODE_HTTP ? PROTO_HTTP : HTTP_SSL);
+            String authScheme = (MODE_HTTP ? PROTO_HTTP : HTTP_SSL);
             if (!accountID.equals("99999999-9999-9999-9999-999999999999")) {
-                route = rtCache.get(accountID);
+                route = rtCache.get(accountID, authScheme);
                 if (route == null) {
                     HttpServletRequest request = (HttpServletRequest) context.getRequest();
                     NginxAuthServer nginxLookUpServer = NginxRouteLookUpConnector.getClient().getRouteforAccount(accountID, "zimbraId",
-                            authProtocol, HttpUtil.getVirtualHost(request), request.getRemoteAddr(), request.getHeader("Host"));
-                    rtCache.put(nginxLookUpServer.getNginxAuthUser(), nginxLookUpServer.getNginxAuthServer());
+                            authScheme, HttpUtil.getVirtualHost(request), request.getRemoteAddr(), request.getHeader("Host"));
+                    rtCache.put(nginxLookUpServer.getNginxAuthUser(), authScheme, nginxLookUpServer.getNginxAuthServer());
                     route = nginxLookUpServer.getNginxAuthServer();
                 }
             } else {
                  // For Guest Account, no lookup is needed. connect to one of the available upstream servers
-                 route = NginxRouteLookUpConnector.getClient().getUpstreamMailServer(authProtocol);
+                 ServiceLocator.Entry serviceEntry = NginxRouteLookUpConnector.getClient().getUpstreamMailServer();
+                 route = serviceEntry == null ? null : serviceEntry.hostName + ":" + serviceEntry.servicePort;
             }
             ZimbraLog.misc.debug("got route %s",route);
             return ((MODE_HTTP ? PROTO_HTTP : PROTO_HTTPS) + "://" + route + "/service/soap");
