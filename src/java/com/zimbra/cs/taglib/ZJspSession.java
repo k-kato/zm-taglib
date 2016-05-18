@@ -506,8 +506,10 @@ public class ZJspSession {
         if (authToken == null || authToken.isEmpty()) {
             return null;
         } else {
-            //Force a authRequest with csrfSupported=1 so that the generated mailbox object has csrfToken.
-            ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context), true, true);
+            // For non-GET (POST) requests don't request the csrf token because those requests are likely not
+            // originating via standard navigation inside browser and could possibly be CSRF attack vectors
+            ZMailbox.Options options = new ZMailbox.Options(authToken, getSoapURL(context), true,
+                    "GET".equals(((HttpServletRequest) context.getRequest()).getMethod()));
             options.setClientIp(getRemoteAddr(context));
             ZMailbox mbox = ZMailbox.getMailbox(options);
             mbox.getAccountInfo(false);
