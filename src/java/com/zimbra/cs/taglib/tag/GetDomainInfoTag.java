@@ -26,6 +26,7 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 
 import com.zimbra.common.account.Key;
+import com.zimbra.common.auth.ZAuthToken;
 import com.zimbra.common.net.SocketFactories;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.DateUtil;
@@ -44,12 +45,16 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
     private String mVar;
     private Key.DomainBy mBy;
     private String mValue;
+    private String mCsrfToken;
+    private ZAuthToken mAuthToken;
 
     private static final Map<String, CachedDomain> mCache = new HashMap<String, CachedDomain>();
 
     public void setVar(String var) { this.mVar = var; }
     public void setBy(String by) throws ServiceException { this.mBy = Key.DomainBy.fromString(by); }
     public void setValue(String value) { this.mValue = value; }
+    public void setAuthtoken(ZAuthToken authToken) { this.mAuthToken = authToken; }
+    public void setCsrftoken(String csrfToken) { this.mCsrfToken = csrfToken; }
 
     private static final String DEFAULT_TTL_STR = "60m";
     private static final long DEFAULT_TTL = 60*60*1000;
@@ -69,14 +74,18 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
     private String getCacheKey() { return mBy +"/" + mValue; }
 
     private Domain checkCache() {
-        CachedDomain cd = mCache.get(getCacheKey());
-        if (cd != null) {
-            if (cd.expireTime > System.currentTimeMillis())
-                return cd.domain;
+        if (mAuthToken == null) {
+            CachedDomain cd = mCache.get(getCacheKey());
+            if (cd != null) {
+                if (cd.expireTime > System.currentTimeMillis())
+                    return cd.domain;
+            }
         }
         Domain d = getInfo();
-        synchronized(mCache) {
-            mCache.put(getCacheKey(), new CachedDomain(d));
+        if (mAuthToken == null) {
+            synchronized(mCache) {
+                mCache.put(getCacheKey(), new CachedDomain(d));
+            }
         }
         return d;
     }
@@ -86,6 +95,8 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
         try {
             sp.soapSetURI(URLUtil.getAdminURL());
             ZimbraLog.misc.debug("Using admin service URL %s", sp.soapGetURI());
+            sp.setAuthToken(mAuthToken);
+            sp.setCsrfToken(mCsrfToken);
         } catch (ServiceException e) {
             ZimbraLog.misc.error("Error while locating admin service", e);
             return null;
