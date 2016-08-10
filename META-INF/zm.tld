@@ -3022,7 +3022,7 @@
         <body-content>empty</body-content>
         <variable>
             <name-from-attribute>var</name-from-attribute>
-            <variable-class>com.zimbra.cs.account.Domain</variable-class>
+            <variable-class>com.zimbra.client.ZDomain</variable-class>
             <scope>AT_END</scope>
         </variable>
 

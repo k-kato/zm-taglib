@@ -1,23 +1,23 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2009, 2010, 2011, 2013, 2014, 2016 Synacor, Inc.
- *
+ * Copyright (C) 2009, 2010, 2011, 2013, 2014 Zimbra, Inc.
+ * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * version 2 of the License.
- *
+ * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * If not, see <http://www.gnu.org/licenses/>.
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.tag;
 
-import com.zimbra.cs.account.soap.SoapProvisioning;
-import com.zimbra.cs.account.Entry;
+import com.zimbra.client.ZDomain;
+import com.zimbra.client.ZSoapProvisioning;
 import com.zimbra.common.account.Key;
 import com.zimbra.common.localconfig.LC;
 import com.zimbra.common.soap.AdminConstants;
@@ -32,73 +32,43 @@ import java.io.IOException;
 
 public class GetFavIconTag extends ZimbraSimpleTag {
 
-	//
-	// Data
-	//
+    private String var;
+    private HttpServletRequest request;
 
-	private String var;
-	private HttpServletRequest request;
+    public void setVar(String var) {
+         this.var = var;
+   }
 
-	//
-	// Public methods
-	//
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
 
-	// properties
+    public void doTag() throws JspException, IOException {
+        try {
+            String soapUri = LC.zimbra_admin_service_scheme.value() + LC.zimbra_zmprov_default_soap_server.value() +':' +
+                               LC.zimbra_admin_service_port.intValue() + AdminConstants.ADMIN_SERVICE_URI;
 
-	public void setVar(String var) {
-		this.var = var;
-	}
+            ZSoapProvisioning provisioning = new ZSoapProvisioning();
+            provisioning.soapSetURI(soapUri);
 
-	public void setRequest(HttpServletRequest request) {
-		this.request = request;
-	}
+            String serverName = this.request.getParameter("customerDomain");
 
-	// simple tag methods
-
-	public void doTag() throws JspException, IOException {
-		try {
-			// get provisioning
-			String soapUri =
-				LC.zimbra_admin_service_scheme.value() +
-				LC.zimbra_zmprov_default_soap_server.value() +
-				':' +
-				LC.zimbra_admin_service_port.intValue() +
-				AdminConstants.ADMIN_SERVICE_URI
-			;
-
-			SoapProvisioning provisioning = new SoapProvisioning();
-			provisioning.soapSetURI(soapUri);
-
-			// get serverName
-			String serverName = this.request.getParameter("customerDomain");
-			// TODO: Is this possible in this context? Does it matter?
-//			if(serverName==null || serverName.trim().length() == 0) {
-//				serverName = getServletConfig().getInitParameter(P_SERVER_NAME);
-//			}
-			if (serverName == null) {
-				serverName = HttpUtil.getVirtualHost(this.request);
-			}
+            if (serverName == null) {
+                serverName = HttpUtil.getVirtualHost(this.request);
+            }
 
 			// get info
-			Entry info = provisioning.getDomainInfo(Key.DomainBy.virtualHostname, serverName);
-			if (info == null) {
-				info = provisioning.getConfig();
-			}
-			if (info != null) {
-			    String favicon = info.getAttr("zimbraSkinFavicon");
-				getJspContext().setAttribute(this.var, favicon, PageContext.REQUEST_SCOPE);
-			}
-			else {
-				if (ZimbraLog.webclient.isDebugEnabled()) {
-					ZimbraLog.webclient.debug("unable to get domain or config info");
-				}
-			}
-		}
-		catch (Exception e) {
-			if (ZimbraLog.webclient.isDebugEnabled()) {
-				ZimbraLog.webclient.debug("error getting favicon: "+e.getMessage());
-			}
-		}
-	}
+            ZDomain info = provisioning.getDomainInfo(Key.DomainBy.virtualHostname, serverName);
+            if (info != null) {
+                String favicon = info.getSkinFavicon();
+                getJspContext().setAttribute(this.var, favicon, PageContext.REQUEST_SCOPE);
+            } else {
+                ZimbraLog.webclient.debug("unable to get domain info");
+            }
+        }
+        catch (Exception e) {
+                ZimbraLog.webclient.debug("error getting favicon:", e);
+        }
+   }
 
 } // class GetFavIconTag
