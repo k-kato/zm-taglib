@@ -1,17 +1,17 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Server
- * Copyright (C) 2007, 2009, 2010, 2011, 2013, 2014, 2016 Synacor, Inc.
- *
+ * Copyright (C) 2007, 2009, 2010, 2011, 2013, 2014 Zimbra, Inc.
+ * 
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software Foundation,
  * version 2 of the License.
- *
+ * 
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
  * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * If not, see <http://www.gnu.org/licenses/>.
  * ***** END LICENSE BLOCK *****
  */
 package com.zimbra.cs.taglib.tag;
@@ -23,8 +23,8 @@ import com.zimbra.common.net.SocketFactories;
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.soap.AdminConstants;
 import com.zimbra.common.util.DateUtil;
-import com.zimbra.cs.account.Domain;
-import com.zimbra.cs.account.soap.SoapProvisioning;
+import com.zimbra.client.ZDomain;
+import com.zimbra.client.ZSoapProvisioning;
 
 import javax.servlet.jsp.JspContext;
 import javax.servlet.jsp.JspException;
@@ -67,21 +67,21 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
 
     private String getCacheKey() { return mBy +"/" + mValue; }
 
-    private Domain checkCache() {
+    private ZDomain checkCache() {
         CachedDomain cd = mCache.get(getCacheKey());
         if (cd != null) {
             if (cd.expireTime > System.currentTimeMillis())
                 return cd.domain;
         }
-        Domain d = getInfo();
+        ZDomain d = getInfo();
         synchronized(mCache) {
             mCache.put(getCacheKey(), new CachedDomain(d));
         }
         return d;
     }
 
-    private Domain getInfo() {
-        SoapProvisioning sp = new SoapProvisioning();
+    private ZDomain getInfo() {
+        ZSoapProvisioning sp = new ZSoapProvisioning();
         String mServer = LC.zimbra_zmprov_default_soap_server.value();
         int mPort = LC.zimbra_admin_service_port.intValue();
         sp.soapSetURI(LC.zimbra_admin_service_scheme.value()+mServer+":"+mPort+ AdminConstants.ADMIN_SERVICE_URI);
@@ -94,9 +94,9 @@ public class GetDomainInfoTag extends ZimbraSimpleTag {
     }
 
     static class CachedDomain {
-        public Domain domain;
+        public ZDomain domain;
         public long expireTime;
 
-        public CachedDomain(Domain d) { domain = d; expireTime = System.currentTimeMillis() + sCacheTtl; }
+        public CachedDomain(ZDomain d) { domain = d; expireTime = System.currentTimeMillis() + sCacheTtl; }
     }
 }
