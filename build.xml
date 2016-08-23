@@ -3,7 +3,7 @@
     <import file="../zm-zcs/ant-global.xml" />
 
     <property environment="env"/>
-
+    <property name="root.dir" location=""/>
     <property name="jarfile" location="${build.dir}/zimbrataglib.jar" />
     <property name="jar.file" value="zimbrataglib.jar" />
 
@@ -19,9 +19,11 @@
     </target>
 
     <target name="jar" depends="compile" description="Creates the jar file">
-        <antcall target="zimbra-jar">
-            <param name="implementation.title" value="Zimbra Tag Lib"/>
-        </antcall>
+        <jar destfile="${jarfile}">
+            <fileset dir="${build.dir}/classes"/>
+            <fileset dir="${root.dir}" includes="META-INF/**"/>
+            <fileset dir="resources"/>
+        </jar>
     </target>
 
 </project>
