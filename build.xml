@@ -5,7 +5,6 @@
     <property environment="env"/>
     <property name="root.dir" location=""/>
     <property name="jarfile" location="${build.dir}/zimbrataglib.jar" />
-    <property name="jar.file" value="zimbrataglib.jar" />
 
     <target name="docs" depends="jar" description="build tld docs in build/docs directory">
         <java fork="true" jar="jars/tlddoc.jar" failonerror="true">
@@ -18,13 +17,40 @@
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="jar" depends="compile" description="Creates the jar file">
-        <jar destfile="${jarfile}">
-            <fileset dir="${build.dir}/classes"/>
-            <fileset dir="${root.dir}" includes="META-INF/**"/>
-            <fileset dir="resources"/>
-        </jar>
+    <target name="copybuilddependencies" description="Temporarily copies com folder from build/classes and resources/*.properties to root directory">
+        <copy todir="${root.dir}">
+            <fileset dir="${root.dir}/resources/">
+                <include name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${root.dir}/com">
+            <fileset dir="${build.dir}/classes/com"/>
+        </copy>
+    </target>
+
+    <target name="deletetaglibpropertyfile" description="Deletes the temporarily copied ZimbraTL.properties file from root directory">
+        <delete>
+            <fileset dir="${root.dir}/" includes="*.properties"/>
+        </delete>
+        <delete includeEmptyDirs="true">
+            <fileset dir="${root.dir}/" includes="com/"/>
+        </delete>
+    </target>
+
+    <!--
+        The includes param in antcall copies an entire directory and adds it to the file jar.
+        In case of resources folder we need only the property files inside it but it copies the entire directory structure.
+        Hence, temporarily copying all the .properties files and /com folder from build/classes to root directory, adding them in the includes param and then deleting later.
+    -->
+
+    <target name="jar" depends="compile, copybuilddependencies" description="Creates the jar file">
+        <antcall target="zimbra-jar">
+            <param name="implementation.title" value="Zimbra Taglib"/>
+            <!-- Overriding the base directory path used in ant-global.xml's zimbra-jar target -->
+            <param name="jar.build.dir" value="." />
+            <param name="includes" value="com/**, META-INF/**, *.properties" />
+        </antcall>
+        <antcall target="deletetaglibpropertyfile"></antcall>
     </target>
 
 </project>
-        

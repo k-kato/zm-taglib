@@ -1,17 +1,21 @@
 Steps to build
 --------------
 
-1. mkdir ~/.zcs-deps
+1. Clone the repo
 
-2. Ensure that the following jars are present under ~/.zcs-deps dir:
-ant-contrib-1.0b1.jar (You can get this from perforce ZimbraCommon/jars)
-zimbracommon.jar (you can build this from zm-common repo)
-zimbrasoap.jar (you can build this from zm-soap repo)
-zimbraclient.jar (you can build this from zm-client repo)
-zimbrastore.jar (you can build this from zm-store repo)
+  `git clone ssh://git@stash.corp.synacor.com:7999/zimbra/zm-taglib.git`
 
-3. git clone ssh://git@stash.corp.synacor.com:7999/zimbra/zm-zcs.git ../zm-zcs
+2. Run the command
 
-4. git clone https://github.com/Zimbra/zimbra-package-stub.git ../zimbra-package-stub
+    `ant clean publish-local`
+ 
+## Dependencies
+- `zm-store`
+- `zm-soap`
+- `zm-client`
+- `zm-common`
+- `ThirdParty Jars`
 
-5. ant jar
+## Artifacts
+- `zm-taglib.jar`
+- Class files for `/src`
