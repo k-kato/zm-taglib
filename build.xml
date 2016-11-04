@@ -17,7 +17,7 @@
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="copybuilddependencies" description="Temporarily copies com folder from build/classes and resources/*.properties to root directory">
+    <target name="copy-build-dependencies" description="Temporarily copies com folder from build/classes and resources/*.properties to root directory">
         <copy todir="${root.dir}">
             <fileset dir="${root.dir}/resources/">
                 <include name="*.properties"/>
@@ -28,7 +28,7 @@
         </copy>
     </target>
 
-    <target name="deletetaglibpropertyfile" description="Deletes the temporarily copied ZimbraTL.properties file from root directory">
+    <target name="delete-duplicate-dependencies" description="Deletes the temporarily copied ZimbraTL.properties file from root directory">
         <delete>
             <fileset dir="${root.dir}/" includes="*.properties"/>
         </delete>
@@ -43,14 +43,14 @@
         Hence, temporarily copying all the .properties files and /com folder from build/classes to root directory, adding them in the includes param and then deleting later.
     -->
 
-    <target name="jar" depends="compile, copybuilddependencies" description="Creates the jar file">
+    <target name="jar" depends="compile, copy-build-dependencies" description="Creates the jar file">
         <antcall target="zimbra-jar">
             <param name="implementation.title" value="Zimbra Taglib"/>
             <!-- Overriding the base directory path used in ant-global.xml's zimbra-jar target -->
             <param name="jar.build.dir" value="." />
             <param name="includes" value="com/**, META-INF/**, *.properties" />
         </antcall>
-        <antcall target="deletetaglibpropertyfile"></antcall>
+        <antcall target="delete-duplicate-dependencies"></antcall>
     </target>
 
 </project>
