@@ -21,10 +21,10 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import net.spy.memcached.HashAlgorithm;
-
 import com.zimbra.common.service.ServiceException;
 import com.zimbra.common.util.memcached.ZimbraMemcachedClient;
+
+import net.spy.memcached.DefaultHashAlgorithm;
 
 public class MemcachedConnector {
 
@@ -62,7 +62,7 @@ public class MemcachedConnector {
     public static void reloadConfig() throws ServiceException {
         String[] serverList = null;
         boolean useBinaryProtocol = false;
-        String hashAlgorithm =  HashAlgorithm.KETAMA_HASH.toString();
+        String hashAlgorithm =  DefaultHashAlgorithm.KETAMA_HASH.toString();
         int expirySeconds = 86400;
         long timeoutMillis = 10000;
         try {
