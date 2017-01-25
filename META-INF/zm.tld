@@ -3026,6 +3026,24 @@
             <scope>AT_END</scope>
         </variable>
 
+       <attribute>
+            <description>
+                auth token to use.
+            </description>
+            <name>authtoken</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <description>
+                csrf token
+            </description>
+            <name>csrftoken</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
         <attribute>
             <description>
                 Name of the exported session scoped variable to store the domain in.
