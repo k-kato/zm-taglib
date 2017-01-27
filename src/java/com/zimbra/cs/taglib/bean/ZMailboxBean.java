@@ -27,6 +27,7 @@ import com.zimbra.client.ZMailbox;
 import com.zimbra.client.ZPrefs;
 import com.zimbra.client.ZSignature;
 import com.zimbra.common.service.ServiceException;
+import com.zimbra.common.auth.ZAuthToken;
 
 import java.net.URI;
 import java.util.List;
@@ -120,4 +121,6 @@ public class ZMailboxBean {
 	}
 
     public String getCsrfToken() throws ServiceException { return mMbox.getCsrfToken(); }
+
+    public ZAuthToken getAuthToken() throws ServiceException { return mMbox.getAuthToken(); }
 }
