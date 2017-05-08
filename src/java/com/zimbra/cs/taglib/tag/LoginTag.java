@@ -194,7 +194,7 @@ public class LoginTag extends ZimbraSimpleTag {
             String refer = mbox.getAuthResult().getRefer();
             boolean needRefer = (refer != null && !refer.equalsIgnoreCase(serverName));
 
-            if ((mAuthToken == null || mAuthTokenInUrl || mTwoFactorCode != null) && !needRefer) {
+            if ((mAuthToken == null || mAuthTokenInUrl || (mTwoFactorCode != null && mTwoFactorCode.length() > 0)) && !needRefer) {
                 //Rewrite the ZM_AUTH_TOKEN cookie in case of successful two factor authentication
                 setCookie(response,
                         mbox.getAuthToken(),
