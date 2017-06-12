@@ -1327,6 +1327,14 @@
         <name>logout</name>
         <tag-class>com.zimbra.cs.taglib.tag.LogoutTag</tag-class>
         <body-content>empty</body-content>
+        <attribute>
+            <description>
+                Identify admin console is generating this request or webclient
+            </description>
+            <name>isAdmin</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
     </tag>
 
     <tag>
