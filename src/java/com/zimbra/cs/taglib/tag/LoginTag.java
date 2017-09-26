@@ -17,6 +17,7 @@
 package com.zimbra.cs.taglib.tag;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 
 import com.zimbra.client.ZAuthResult;
+import com.zimbra.client.ZGetInfoResult;
 import com.zimbra.client.ZMailbox;
 import com.zimbra.common.auth.ZAuthToken;
 import com.zimbra.common.service.ServiceException;
@@ -202,6 +204,16 @@ public class LoginTag extends ZimbraSimpleTag {
                         mRememberMe,
                         mbox.getAuthResult().getExpires());
             }
+            final ZGetInfoResult accountInfo = mbox.getAccountInfo(false);
+            String publicUrlBase = accountInfo.getPublicURLBase();
+            URL url = new URL(publicUrlBase);
+            if (!url.getHost().equalsIgnoreCase(request.getServerName())) {
+                publicUrlBase = request.getScheme().toLowerCase() + "://" + url.getHost();
+            } else {
+                publicUrlBase = request.getScheme().toLowerCase() + "://" + request.getServerName();
+            }
+            pageContext.setAttribute("redirectBaseURL", publicUrlBase);
+
 
             ZAuthResult authResult = mbox.getAuthResult();
             if (authResult.getTrustedToken() != null) {
