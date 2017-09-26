@@ -7317,6 +7317,12 @@
     </function>
 
     <function>
+        <name>buildRedirectURL</name>
+        <function-class>com.zimbra.cs.taglib.ZJspSession</function-class>
+        <function-signature>java.lang.String buildRedirectURL(javax.servlet.jsp.PageContext, java.lang.String)</function-signature>
+    </function>
+
+    <function>
         <name>getChangePasswordUrl</name>
         <function-class>com.zimbra.cs.taglib.ZJspSession</function-class>
         <function-signature>java.lang.String getChangePasswordUrl(javax.servlet.jsp.PageContext,java.lang.String)</function-signature>
