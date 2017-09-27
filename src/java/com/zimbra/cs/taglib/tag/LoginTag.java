@@ -122,6 +122,14 @@ public class LoginTag extends ZimbraSimpleTag {
         */
     }
 
+    private String computePort(HttpServletRequest request) {
+        if ("https".equalsIgnoreCase(request.getScheme())) {
+            return request.getServerPort() == 443 ? "" : ":" + request.getServerPort();
+        } else {
+            return request.getServerPort() == 80 ? "" : ":" + request.getServerPort();
+        }
+    }
+
     @Override
     public void doTag() throws JspException, IOException {
         JspContext jctxt = getJspContext();
@@ -208,12 +216,11 @@ public class LoginTag extends ZimbraSimpleTag {
             String publicUrlBase = accountInfo.getPublicURLBase();
             URL url = new URL(publicUrlBase);
             if (!url.getHost().equalsIgnoreCase(request.getServerName())) {
-                publicUrlBase = request.getScheme().toLowerCase() + "://" + url.getHost();
+                publicUrlBase = request.getScheme().toLowerCase() + "://" + url.getHost() + computePort(request);
             } else {
-                publicUrlBase = request.getScheme().toLowerCase() + "://" + request.getServerName();
+                publicUrlBase = request.getScheme().toLowerCase() + "://" + request.getServerName() + computePort(request);
             }
             pageContext.setAttribute("redirectBaseURL", publicUrlBase);
-
 
             ZAuthResult authResult = mbox.getAuthResult();
             if (authResult.getTrustedToken() != null) {
