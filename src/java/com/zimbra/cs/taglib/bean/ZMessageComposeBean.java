@@ -552,7 +552,8 @@ public class ZMessageComposeBean {
             color = Integer.parseInt(mColor);
             Color colorObj = Color.fromInt(color);
             return colorObj.getName();
-        } catch (NumberFormatException | ServiceException e) {
+        } catch (NumberFormatException e) {
+        } catch (ServiceException e) {
         }
         return null;
     }

@@ -340,6 +340,7 @@ public class ZComposeUploaderBean {
 
         int color = Byte.toUnsignedInt(com.zimbra.common.mailbox.Color.getMappedColor(getParam(F_color)));
         compose.setColor(String.valueOf(color));
+        // compose.setRgb(null); // custom color is not supported
 
         if (mIsMobile) {
             /* In mobile client, sendUID in the request might be used before because mobile client caches the previous responses.
