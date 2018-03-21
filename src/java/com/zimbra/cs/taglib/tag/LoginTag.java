@@ -42,7 +42,6 @@ import com.zimbra.common.util.ZimbraCookie;
 import com.zimbra.common.util.ngxlookup.NginxAuthServer;
 import com.zimbra.cs.taglib.ZJspSession;
 import com.zimbra.cs.taglib.ngxlookup.NginxRouteLookUpConnector;
-import com.zimbra.cs.account.AccountServiceException;
 import com.zimbra.cs.account.AccountServiceException.AuthFailedServiceException;
 
 import org.json.JSONObject;
