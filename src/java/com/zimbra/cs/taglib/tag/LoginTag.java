@@ -131,7 +131,7 @@ public class LoginTag extends ZimbraSimpleTag {
             PageContext pageContext = (PageContext) jctxt;
             HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
-            if (request.getParameter("captchaId") != null  && request.getParameter("captchaInput") != null && !isCaptchaValid(request.getParameter("captchaId"), request.getParameter("captchaInput"))) {
+            if(request.getParameter("g-recaptcha-response")!= null && !isCaptchaValid("6LdfLE0UAAAAAC3rf4G4oepXp7H0AEEegdfeDvUA", request.getParameter("g-recaptcha-response"))){
                 throw AuthFailedServiceException.INVALID_CAPTCHA();
             }
 
