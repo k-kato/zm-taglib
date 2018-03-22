@@ -301,12 +301,10 @@ public class LoginTag extends ZimbraSimpleTag {
 
     public static boolean isCaptchaValid(String captchaId, String captchaInput) {
         try {
-            String zimbraCaptchaApiUrl = Provisioning.getInstance().getConfig().getAttr(Provisioning.A_zimbraCaptchaApiUrl, "");
-            
-            String url = zimbraCaptchaApiUrl + "/verifyCaptcha?"
-                    + "captchaId=" + URLEncoder.encode(captchaId, "UTF-8")
-                    + "&captchaInput=" + URLEncoder.encode(captchaInput, "UTF-8");
-            InputStream res = new URL(url.trim()).openStream();
+            String url = "https://www.google.com/recaptcha/api/siteverify?"
+                    + "secret=" + URLEncoder.encode(secretKey, "UTF-8")
+                    + "&response=" + URLEncoder.encode(response, "UTF-8");
+            InputStream res = new URL(url).openStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(res, Charset.forName("UTF-8")));
 
             StringBuilder sb = new StringBuilder();
