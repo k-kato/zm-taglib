@@ -46,7 +46,6 @@ import com.zimbra.cs.taglib.ngxlookup.NginxRouteLookUpConnector;
 import com.zimbra.cs.account.AccountServiceException.AuthFailedServiceException;
 
 import org.json.JSONObject;
-import com.zimbra.common.util.ZimbraLog;
 
 public class LoginTag extends ZimbraSimpleTag {
 
