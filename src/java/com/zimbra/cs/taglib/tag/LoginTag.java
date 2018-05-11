@@ -160,21 +160,13 @@ public class LoginTag extends ZimbraSimpleTag {
                 options.setAuthAuthToken(true);
             } else {
                 String virtualHost = getVirtualHost(request);
-                boolean zimbraAuthDomainCheckEnabled = Provisioning.getInstance().getConfig().getBooleanAttr(Provisioning.A_zimbraAuthDomainCheckEnabled, false);
 
-                if (zimbraAuthDomainCheckEnabled && mUsername != null && !mUsername.isEmpty() && mUsername.indexOf("@") != -1) {
+                if (mUsername != null && !mUsername.isEmpty() && mUsername.indexOf("@") != -1) {
                     String usernameSplit[]= mUsername.split("@");
 
-                    Domain currentDomainObj = Provisioning.getInstance().getDomainByVirtualHostname(virtualHost);
-                    if (currentDomainObj == null) {
-                        throw AuthFailedServiceException.AUTH_FAILED(mUsername, "", virtualHost.concat(" virtual domain does not exist"));
-                    }
-
-                    String currentDomainName = currentDomainObj.getDomainName();
-
                     // check if user domain matches current virtual host.
-                    if (!currentDomainName.equals(usernameSplit[1])) {
-                        throw AuthFailedServiceException.AUTH_FAILED(mUsername, "", "Invalid username for domain = ".concat(currentDomainName));
+                    if (!virtualHost.equals(usernameSplit[1])) {
+                        throw AuthFailedServiceException.AUTH_FAILED(mUsername, "", "Invalid username for virtual host = ".concat(virtualHost));
                     }
                 }
                 options.setAccount(mUsername);
