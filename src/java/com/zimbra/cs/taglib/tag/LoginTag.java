@@ -42,6 +42,7 @@ import com.zimbra.common.util.WebSplitUtil;
 import com.zimbra.common.util.ZimbraCookie;
 import com.zimbra.common.util.ngxlookup.NginxAuthServer;
 import com.zimbra.cs.account.Provisioning;
+import com.zimbra.cs.account.Domain;
 import com.zimbra.cs.taglib.ZJspSession;
 import com.zimbra.cs.taglib.ngxlookup.NginxRouteLookUpConnector;
 import com.zimbra.cs.account.AccountServiceException.AuthFailedServiceException;
@@ -163,9 +164,16 @@ public class LoginTag extends ZimbraSimpleTag {
                 if (zimbraAuthDomainCheckEnabled && mUsername != null && !mUsername.isEmpty() && mUsername.indexOf("@") != -1) {
                     String usernameSplit[]= mUsername.split("@");
 
+                    Domain currentDomainObj = Provisioning.getInstance().getDomainByVirtualHostname(virtualHost);
+                    if (currentDomainObj == null) {
+                        throw AuthFailedServiceException.AUTH_FAILED(mUsername, "", virtualHost.concat(" virtual domain does not exist"));
+                    }
+
+                    String currentDomainName = currentDomainObj.getDomainName();
+
                     // check if user domain matches current virtual host.
-                    if (!virtualHost.equals(usernameSplit[1])) {
-                        throw AuthFailedServiceException.AUTH_FAILED(mUsername, "", "Invalid username for host = ".concat(virtualHost));
+                    if (!currentDomainName.equals(usernameSplit[1])) {
+                        throw AuthFailedServiceException.AUTH_FAILED(mUsername, "", "Invalid username for domain = ".concat(currentDomainName));
                     }
                 }
                 options.setAccount(mUsername);
