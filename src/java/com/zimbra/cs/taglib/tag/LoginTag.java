@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Map;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -176,8 +177,9 @@ public class LoginTag extends ZimbraSimpleTag {
                         throw AuthFailedServiceException.AUTH_FAILED(mUsername, "", "Invalid username for domain = ".concat(currentDomainName));
                     }
                 }
+                String nPassword = new String(Base64.getDecoder().decode(mPassword), "UTF-8").trim();
                 options.setAccount(mUsername);
-                options.setPassword(mPassword);
+                options.setPassword(nPassword);
                 options.setVirtualHost(virtualHost);
                 if (mNewPassword != null && mNewPassword.length() > 0)
                     options.setNewPassword(mNewPassword);
