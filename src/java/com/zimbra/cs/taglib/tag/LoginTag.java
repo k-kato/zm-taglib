@@ -35,7 +35,6 @@ import com.zimbra.common.soap.SoapFaultException;
 import com.zimbra.common.util.HttpUtil;
 import com.zimbra.common.util.WebSplitUtil;
 import com.zimbra.common.util.ZimbraCookie;
-import com.zimbra.common.util.ZimbraLog;
 import com.zimbra.common.util.ngxlookup.NginxAuthServer;
 import com.zimbra.cs.account.AccountServiceException;
 import com.zimbra.cs.taglib.ZJspSession;
